@@ -13,7 +13,7 @@ The app should be able to handle the following requirements:
      -  (string) Description
      -  (DateTime) Deadline (Not required)
      -  (Enum or string) Priority
-     -  (string) Last comment
+     -  (git string) Last comment
      -  List<Scientist>? Assignee (Not Required)
 
 - On these data collection, the scientists should be able to do the following things:
