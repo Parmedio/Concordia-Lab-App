@@ -1,6 +1,7 @@
 # Endpoints
 > Consuming the Trello Api we will access to two main endpoints only:
 > (Note that the token must be obtained for each individual scientist so that their actions can be identified.)
+> (Not that all Get Endpoints could respond with null or empty objects!)
 
 ## Get Cards On A List
 Endpoint  
