@@ -54,6 +54,8 @@
   - ExperimentService
     - <TrelloExperimentDTO>Add(TrelloExperimentDTO)
 - AutoMapperProfiles
+- DataTransferLogic
+  - DataTransferContext
 - 
 ## MVC (Depend on BusinessLogic)
 
