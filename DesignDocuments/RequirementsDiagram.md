@@ -9,14 +9,19 @@
     - Id
     - Virtual IEnumerable<Experiment>? Experiments
   - Scientist
+    - TrelloToken
+    - TrelloMemberId
     - Name
     - Id
   - Experiment
+    - Id
+    - TrelloId
     - Title
     - Description
     - Deadline?
     - Priority {High, Medium, Low}
     - LastComment
+    - LastCommentDate
     - IEnumerable<Int>? ScientistIds
     - ListId
     - 
@@ -80,3 +85,8 @@ User => Update (View) => DashboardController (BusinessDto) => Services (Business
                                         (if connection up) => (Conversion to TrelloDTO) TrelloController (TrelloDTO) => EndpointAPIPut (TrelloDTO)
 
 ConnectionChecker => TrelloController () => EndpointAPIGetAll() => TrelloDto (conversione to businessDTO) => Services (BusinessDTO) => Repository(Model)
+
+Token 
+    84e8497b38d06466068cb84e759535e6
+Token:
+    ATTA2d87cd3b6b98b3b4294110ff54605e4fb247316cf486b60b0939e3de9a7b2d9369AB1757
