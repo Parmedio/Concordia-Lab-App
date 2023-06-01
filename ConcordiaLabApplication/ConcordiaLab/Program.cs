@@ -16,7 +16,6 @@ namespace ConcordiaLab
             builder.Services.AddHttpClient<IApiReceiver, ApiReceiver>();
             builder.Services.AddTransient<IUriCreatorFactory, UriCreatorFactory>();
             builder.Services.AddTransient<IApiSender, ApiSender>();
-            builder.Services.AddTransient<Test1>();
             builder.Services.AddLogging();
 
             var app = builder.Build();
@@ -40,7 +39,6 @@ namespace ConcordiaLab
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
 
-            app.Services.GetService<Test1>().Run();
             app.Run();
         }
     }
