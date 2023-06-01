@@ -1,5 +1,5 @@
 ﻿namespace BusinessLogic.DTOs.BusinessDTO;
 
-public record BusinessCardDto
+public record BusinessExperimentDto
 {
 }
