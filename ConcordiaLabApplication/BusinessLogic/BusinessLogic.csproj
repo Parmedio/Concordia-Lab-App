@@ -6,4 +6,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="ConnectionChecker\Abstract\" />
+    <Folder Include="ConnectionChecker\Concrete\" />
+    <Folder Include="DataTransferLogic\Abstract\" />
+    <Folder Include="DataTransferLogic\Concrete\" />
+    <Folder Include="AutomapperProfiles\" />
+  </ItemGroup>
+
 </Project>
