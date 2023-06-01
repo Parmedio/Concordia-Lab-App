@@ -1,3 +1,9 @@
+
+
+using BusinessLogic.APIConsumers.Abstract;
+using BusinessLogic.APIConsumers.Concrete;
+using BusinessLogic.APIConsumers.UriCreators;
+
 namespace ConcordiaLab
 {
     public class Program
@@ -5,9 +11,13 @@ namespace ConcordiaLab
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddHttpClient<IApiReceiver, ApiReceiver>();
+            builder.Services.AddTransient<IUriCreatorFactory, UriCreatorFactory>();
+            builder.Services.AddTransient<IApiSender, ApiSender>();
+            builder.Services.AddTransient<Test1>();
+            builder.Services.AddLogging();
 
             var app = builder.Build();
 
@@ -25,11 +35,12 @@ namespace ConcordiaLab
             app.UseRouting();
 
             app.UseAuthorization();
-
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
+
+            app.Services.GetService<Test1>().Run();
             app.Run();
         }
     }
