@@ -23,5 +23,6 @@ public interface IDataService
 
     // E' meglio prendersi qui l'oggetto scientistDTO chiedendolo al DB tramite repository o e' piu'
     // facile lavorare passando gia' alla web app sottostante un oggetto di tipo ScientistDTO?
-    public void AddComment(BusinessExperimentDto businessCardDto, int scientistId);
+    public void AddComment(BusinessExperimentDto businessExperimentDto, int scientistId);
+    public void MoveExperiment(BusinessExperimentDto businessExperimentDto, int scientistId);
 }
