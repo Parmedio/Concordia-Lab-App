@@ -1,6 +1,6 @@
-﻿using ConcordiaLab.Mock_Data.MockModels;
+﻿using ConcordiaLab.Controllers.Mock_Data.MockModels;
 
-namespace ConcordiaLab.Mock_Data.Mock_Gateway
+namespace ConcordiaLab.Controllers.Mock_Data.Mock_Gateway
 {
     public class MockGatewayList
     {
@@ -12,6 +12,6 @@ namespace ConcordiaLab.Mock_Data.Mock_Gateway
         };
 
         public IEnumerable<MockList> GetAll() => _mockList;
-        public MockList? GetById(int id) => _mockList.SingleOrDefault(ms => ms.Id == id);
+        public MockList? GetById(int id) => _mockList.SingleOrDefault(ml => ml.Id == id);
     }
 }

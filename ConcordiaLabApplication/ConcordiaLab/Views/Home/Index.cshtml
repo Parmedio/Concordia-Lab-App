@@ -1,8 +1,50 @@
-﻿@{
+﻿@*@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>*@
+
+@model ConcordiaLab.Controllers.Mock_Data.ViewModel.MockDashboard
+
+@{
+    ViewData["Title"] = "Concordia Dashboard";
+    Layout = "_Layout";
+}
+
+<h1 class="display-5">@ViewData["Title"]</h1>
+
+<div class="d-flex flex-row">
+    @foreach (var list in Model.Lists)
+    {
+        <div class="d-flex flex-column w-100">
+            <h3>@list.Name</h3>
+            @foreach (var experiment in list.Experiments)
+            {
+                <div class="card w-60 m-2 mr-10">
+                    <div class="card-body">
+                        <h5 class="card-title">@experiment.Title</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">
+                            <b>Scientists:</b><br />
+                            @{
+                                var scientistsCount = experiment.Scientists.Count();
+                                var scientistsList = string.Join(", ", experiment.Scientists.Select(s => $"{s.Name} {s.Surname}"));
+
+                                if (scientistsCount > 0)
+                                {
+                                    <span>@scientistsList</span>
+                                }
+                            }
+                        </h6>
+                        <p class="card-text"><b>Description:</b> @experiment.Description</p>
+                        <p class="card-text"><b>Due Date:</b> @experiment.DueDate?.ToString("yyyy-MM-dd HH:mm:ss")</p>
+                        <p class="card-text"><b>Priority:</b> @experiment.Priority</p>
+                        <p class="card-text"><b>Last Comment:</b> @experiment.LastComment</p>
+                    </div>
+                </div>
+            }
+        </div>
+    }
 </div>

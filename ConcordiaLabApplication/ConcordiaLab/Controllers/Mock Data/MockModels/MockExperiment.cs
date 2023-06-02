@@ -1,4 +1,4 @@
-﻿namespace ConcordiaLab.Mock_Data.MockModels
+﻿namespace ConcordiaLab.Controllers.Mock_Data.MockModels
 {
     public record MockExperiment
     {
@@ -8,7 +8,8 @@
         public DateTime? DueDate { get; set; }
         public string? Priority { get; set; }
         public string? LastComment { get; set; }
-        public IEnumerable<int>? Scientist { get; set; } //passo gli ID dei vari MockScientist
+        public IEnumerable<int>? IntScientists { get; set; } //passo gli ID dei vari MockScientist
+        public IEnumerable<MockScientist>? Scientists { get; set; }
 
         public MockExperiment(int id, string title, string description, DateTime? dueDate, string? priority, string? lastComment, IEnumerable<int>? scientist)
         {
@@ -18,7 +19,7 @@
             DueDate = dueDate;
             Priority = priority;
             LastComment = lastComment;
-            Scientist = scientist;
+            IntScientists = scientist;
         }
     }
 }

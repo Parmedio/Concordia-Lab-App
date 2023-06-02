@@ -1,3 +1,5 @@
+using ConcordiaLab.Controllers.Mock_Data.Mock_Gateway;
+
 namespace ConcordiaLab
 {
     public class Program
@@ -8,6 +10,9 @@ namespace ConcordiaLab
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddScoped<MockGatewayList>();
+            builder.Services.AddScoped<MockGatewayExperiment>();
+            builder.Services.AddScoped<MockGatewayScientist>();
 
             var app = builder.Build();
 

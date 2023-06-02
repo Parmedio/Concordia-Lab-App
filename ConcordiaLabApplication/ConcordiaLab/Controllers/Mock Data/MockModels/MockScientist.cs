@@ -1,4 +1,4 @@
-﻿namespace ConcordiaLab.Mock_Data.MockModels
+﻿namespace ConcordiaLab.Controllers.Mock_Data.MockModels
 {
     public record MockScientist
     {

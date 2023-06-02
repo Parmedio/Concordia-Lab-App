@@ -1,6 +1,6 @@
-﻿using ConcordiaLab.Mock_Data.MockModels;
+﻿using ConcordiaLab.Controllers.Mock_Data.MockModels;
 
-namespace ConcordiaLab.Mock_Data
+namespace ConcordiaLab.Controllers.Mock_Data.Mock_Gateway
 {
     public class MockGatewayScientist
     {
