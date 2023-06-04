@@ -8,7 +8,7 @@
         public DateTime? DueDate { get; set; }
         public string? Priority { get; set; }
         public string? LastComment { get; set; }
-        public IEnumerable<int>? IntScientists { get; set; } //passo gli ID dei vari MockScientist
+        public IEnumerable<int>? IntScientists { get; set; }
         public IEnumerable<MockScientist>? Scientists { get; set; }
 
         public MockExperiment(int id, string title, string description, DateTime? dueDate, string? priority, string? lastComment, IEnumerable<int>? scientist)
@@ -17,6 +17,16 @@
             Title = title;
             Description = description;
             DueDate = dueDate;
+            Priority = priority;
+            LastComment = lastComment;
+            IntScientists = scientist;
+        }
+
+        public MockExperiment(int id, string title, string description, string? priority, string? lastComment, IEnumerable<int>? scientist)
+        {
+            Id = id;
+            Title = title;
+            Description = description;
             Priority = priority;
             LastComment = lastComment;
             IntScientists = scientist;

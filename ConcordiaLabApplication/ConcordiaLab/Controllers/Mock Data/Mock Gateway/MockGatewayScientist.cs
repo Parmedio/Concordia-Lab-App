@@ -6,8 +6,8 @@ namespace ConcordiaLab.Controllers.Mock_Data.Mock_Gateway
     {
         private readonly IEnumerable<MockScientist> _mockScientists = new List<MockScientist>
         {
-            new(1, "Alberto", "Viezzi"),
-            new(2, "Dario", "Viezzi"),
+            new(1, "Mario", "Rossi"),
+            new(2, "Luca", "Verdi"),
             new(3, "Marco", "Da Pieve"),
             new(4, "Gabriele", "Cecutti"),
             new(5, "Alessandro", "Ferluga")
