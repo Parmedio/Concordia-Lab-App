@@ -6,7 +6,6 @@ using ConcordiaLab.Models;
 using Microsoft.AspNetCore.Mvc;
 
 using System.Diagnostics;
-using System.Linq;
 
 namespace ConcordiaLab.Controllers
 {
@@ -29,6 +28,11 @@ namespace ConcordiaLab.Controllers
         {
             _logger.LogInformation("Message.Index was called");
             return View(BuildViewModel());
+        }
+        public IActionResult Detail(int id)
+        {
+            _logger.LogInformation("Message.Detail was called");
+            return View(BuildExpModel(id));
         }
 
         public IActionResult Privacy()
@@ -72,6 +76,24 @@ namespace ConcordiaLab.Controllers
                 });
 
             return new(lists);
+        }
+
+        private MockExperimentDetails BuildExpModel(int ExpId)
+        {
+            var scientists = _mockGatewayScientist.GetAll();
+
+            var experiment = _mockGatewayExperiment.GetById(ExpId)!;
+
+            var expScientists = experiment.IntScientists?
+                .SelectMany(id => scientists.Where(scientist => id == scientist.Id));
+
+            var detailedExperiment = new MockExperiment(experiment.Id, experiment.Title, experiment.Description, experiment.DueDate, experiment.Priority, experiment.LastComment, experiment.IntScientists)
+            {
+                Scientists = expScientists
+            };
+       
+
+            return new MockExperimentDetails(detailedExperiment);
         }
     }
 }
