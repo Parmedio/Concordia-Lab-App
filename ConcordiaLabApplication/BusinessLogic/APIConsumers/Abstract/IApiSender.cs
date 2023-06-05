@@ -1,4 +1,5 @@
-﻿using BusinessLogic.DTOs.TrelloDtos;
+﻿using BusinessLogic.DTOs.BusinessDTO;
+using BusinessLogic.DTOs.TrelloDtos;
 
 namespace BusinessLogic.APIConsumers.Abstract;
 
