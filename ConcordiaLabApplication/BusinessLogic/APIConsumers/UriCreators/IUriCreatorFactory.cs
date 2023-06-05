@@ -2,6 +2,7 @@
 {
     public interface IUriCreatorFactory
     {
-        Uri GetAllCardsOnToDoList();
+        string GetAllCardsOnToDoList();
+        string GetAllCommentsOnABoard();
     }
 }

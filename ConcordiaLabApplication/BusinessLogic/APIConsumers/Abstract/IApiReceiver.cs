@@ -5,6 +5,6 @@ namespace BusinessLogic.APIConsumers.Abstract;
 public interface IApiReceiver
 {
     public Task<IEnumerable<TrelloExperimentDto>?> GetAllExperimentsInToDoList();
-    public IEnumerable<TrelloCommentDto> GetAllComments();
+    public Task<IEnumerable<TrelloCommentDto>?> GetAllComments();
 
 }

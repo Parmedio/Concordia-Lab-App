@@ -1,12 +1,11 @@
 ﻿using BusinessLogic.APIConsumers.Abstract;
-using BusinessLogic.DTOs.BusinessDTO;
 using BusinessLogic.DTOs.TrelloDtos;
 
 namespace BusinessLogic.APIConsumers.Concrete;
 
 public class ApiSender : IApiSender
 {
-    public bool AddAComment(BusinessCommentDto commentDto)
+    public bool AddAComment(TrelloCommentDto commentDto)
     {
         throw new NotImplementedException();
     }

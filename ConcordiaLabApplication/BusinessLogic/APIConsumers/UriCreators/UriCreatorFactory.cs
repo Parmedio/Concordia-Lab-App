@@ -8,23 +8,32 @@ public class UriCreatorFactory : IUriCreatorFactory
     private readonly string _apiKey;
     private readonly string _concordiaToken;
     private readonly string _ToDoListId;
-    private readonly Uri _baseUri;
+    private readonly string _BoardId;
 
     public UriCreatorFactory(IConfiguration configuration)
     {
         _configuration = configuration;
         _apiKey = _configuration.GetSection("TrelloAuthorization").GetSection("Key").Value!;
         _concordiaToken = _configuration.GetSection("TrelloAuthorization").GetSection("Token").Value!;
-        _baseUri = new Uri(_configuration.GetSection("TrelloUrlToUse").GetSection("baseUrl").Value!);
 #if DEBUG
         _ToDoListId = _configuration.GetSection("TrelloTestEnvironment").GetSection("List").GetSection("idToDo").Value!;
+        _BoardId = _configuration.GetSection("TrelloTestEnvironment").GetSection("idBoard").Value!;
 #else
         _ToDoListId = _configuration.GetSection("TrelloIDsDevelopment").GetSection("List").GetSection("idToDo").Value!;
-# endif
+        _BoardId = _configuration.GetSection("TrelloIDsDevelopment").GetSection("idBoard").Value!;
+#endif
     }
 
-    public Uri GetAllCardsOnToDoList()
+    public string GetAllCardsOnToDoList()
     {
-        return new Uri(_baseUri, $"lists/{_ToDoListId}/cards?key={_apiKey}&token={_concordiaToken}");
+        return $"lists/{_ToDoListId}/cards?{GetBaseAuth()}";
     }
+
+    public string GetAllCommentsOnABoard()
+    {
+        return $"boards/{_BoardId}/actions?filter=commentCard&{GetBaseAuth()}";
+    }
+
+    private string GetBaseAuth()
+        => $"key={_apiKey}&token={_concordiaToken}";
 }

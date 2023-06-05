@@ -8,25 +8,26 @@ namespace BusinessLogic.APIConsumers.Concrete;
 
 public class ApiReceiver : IApiReceiver
 {
-    private readonly HttpClient _httpClient;
+    private readonly IHttpClientFactory _httpClientFactory;
     private readonly IUriCreatorFactory _uriCreator;
-    public ApiReceiver(HttpClient httpClient, IUriCreatorFactory uriCreatorFactory)
+    public ApiReceiver(IHttpClientFactory httpClientFactory, IUriCreatorFactory uriCreatorFactory)
     {
-        _httpClient = httpClient;
+        _httpClientFactory = httpClientFactory;
         _uriCreator = uriCreatorFactory;
     }
 
     public async Task<IEnumerable<TrelloExperimentDto>?> GetAllExperimentsInToDoList()
     {
-        Uri getAllComments = _uriCreator.GetAllCardsOnToDoList();
-        var response = await _httpClient.GetFromJsonAsync<IEnumerable<TrelloExperimentDto>?>(getAllComments);
-        Console.WriteLine(response);
+        var client = _httpClientFactory.CreateClient("ApiConsumer");
+        var response = await client.GetFromJsonAsync<IEnumerable<TrelloExperimentDto>?>(_uriCreator.GetAllCardsOnToDoList());
         return response;
 
     }
 
-    public IEnumerable<TrelloCommentDto> GetAllComments()
+    public async Task<IEnumerable<TrelloCommentDto>?> GetAllComments()
     {
-        throw new NotImplementedException();
+        var client = _httpClientFactory.CreateClient("ApiConsumer");
+        var response = await client.GetFromJsonAsync<IEnumerable<TrelloCommentDto>?>(_uriCreator.GetAllCommentsOnABoard());
+        return response;
     }
 }

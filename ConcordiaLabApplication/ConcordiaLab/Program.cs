@@ -1,7 +1,3 @@
-
-
-using BusinessLogic.APIConsumers.Abstract;
-using BusinessLogic.APIConsumers.Concrete;
 using BusinessLogic.APIConsumers.UriCreators;
 
 namespace ConcordiaLab
@@ -13,9 +9,11 @@ namespace ConcordiaLab
             var builder = WebApplication.CreateBuilder(args);
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Services.AddHttpClient<IApiReceiver, ApiReceiver>();
+            builder.Services.AddHttpClient("ApiConsumer", client =>
+            {
+                client.BaseAddress = new Uri(builder.Configuration.GetSection("TrelloUrlToUse")!.GetSection("baseUrl").Value!);
+            });
             builder.Services.AddTransient<IUriCreatorFactory, UriCreatorFactory>();
-            builder.Services.AddTransient<IApiSender, ApiSender>();
             builder.Services.AddLogging();
 
             var app = builder.Build();
@@ -34,6 +32,7 @@ namespace ConcordiaLab
             app.UseRouting();
 
             app.UseAuthorization();
+
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
