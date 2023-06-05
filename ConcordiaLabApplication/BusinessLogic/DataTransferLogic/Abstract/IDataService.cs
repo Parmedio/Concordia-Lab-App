@@ -15,6 +15,8 @@ public interface IDataService
     // Dovrebbe restituirmi tutte le liste inerenti allo scienziato in teoria, quindi tutte le liste con i soli esperimenti assegnati allo scienziato oppure
     // non assegnati a nessuno
 
+    public Task<bool> UpdateConnectionStateAsync(bool connectionState);
+
     public List<BusinessListDto>? GetAllLists(int scientistId);
 
     // Per L'API ho bisogno di: Conversione IdList locale a IdTrelloList
@@ -32,4 +34,6 @@ public interface IDataService
     // facile lavorare passando gia' alla web app sottostante un oggetto di tipo ScientistDTO?
     public void AddComment(BusinessExperimentDto businessExperimentDto, int scientistId);
     public void MoveExperiment(BusinessExperimentDto businessExperimentDto, int scientistId);
+
+
 }

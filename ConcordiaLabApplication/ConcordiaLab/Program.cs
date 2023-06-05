@@ -1,4 +1,8 @@
+using BackgroundServices;
+
 using BusinessLogic.APIConsumers.UriCreators;
+using BusinessLogic.DataTransferLogic.Abstract;
+using BusinessLogic.DataTransferLogic.Concrete;
 
 namespace ConcordiaLab
 {
@@ -12,9 +16,14 @@ namespace ConcordiaLab
             builder.Services.AddHttpClient("ApiConsumer", client =>
             {
                 client.BaseAddress = new Uri(builder.Configuration.GetSection("TrelloUrlToUse")!.GetSection("baseUrl").Value!);
+                client.Timeout = TimeSpan.FromSeconds(Convert.ToDouble(builder.Configuration.GetSection("ClientInfo").GetSection("timeout").Value!));
             });
             builder.Services.AddTransient<IUriCreatorFactory, UriCreatorFactory>();
             builder.Services.AddLogging();
+            builder.Services.AddSingleton<ConnectionChecker>();
+            builder.Services.AddScoped<IDataService, DataService>();
+            builder.Services.AddTransient<IRetrieveConnectionTimeInterval, RetrieveConnectionTimeInterval>();
+            builder.Services.AddHostedService<ConnectionChecker>(provider => provider.GetRequiredService<ConnectionChecker>());
 
             var app = builder.Build();
 
