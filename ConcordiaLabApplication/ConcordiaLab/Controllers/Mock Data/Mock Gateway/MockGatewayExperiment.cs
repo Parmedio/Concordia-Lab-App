@@ -4,7 +4,7 @@ namespace ConcordiaLab.Controllers.Mock_Data.Mock_Gateway
 {
     public class MockGatewayExperiment
     {
-        private readonly static string descrizione = "Charmander (ヒトカゲ Hitokage?) è un Pokémon appartenente alla prima generazione. Ideato da Atsuko Nishida e fissato nel suo aspetto finale da Ken Sugimori,[1][2] Charmander fa la sua prima apparizione nel 1996 nei videogiochi Pokémon Rosso e Blu come uno dei Pokémon iniziali che i giocatori possono scegliere per cominciare la loro avventura. Compare inoltre nella maggior parte dei titoli successivi, in videogiochi spin-off, nella serie televisiva anime, nel Pokémon Trading Card Game e nel merchandising derivato dalla serie.Charmander appare sulle copertine di Pokémon Link!, Pokémon Mystery Dungeon: Squadra Rossa e Pokémon Mystery Dungeon: Squadra di soccorso DX. Il Pokémon appare nel film live action Pokémon: Detective Pikachu. Nel contesto del franchise, Charmander è un Pokémon di stadio base di tipo Fuoco. Il suo numero identificativo Pokédex è 4. Si evolve in Charmeleon al raggiungimento di uno specifico livello. L'allenatore Ash Ketchum ha posseduto un esemplare del Pokémon, in seguito evolutosi in Charizard. Rosso di Pokémon: Le origini e Blu di Pokémon Adventures hanno inoltre ricevuto un Charmander come loro Pokémon iniziale. Anche Richie possiede un esemplare di Charmander.";
+        private readonly static string descrizione = "Charmander (ヒトカゲ Hitokage?) è un Pokémon appartenente alla prima generazione. Ideato da Atsuko Nishida e fissato nel suo aspetto finale da Ken Sugimori. Charmander fa la sua prima apparizione nel 1996 nei videogiochi Pokémon Rosso e Blu come uno dei Pokémon iniziali che i giocatori possono scegliere per cominciare la loro avventura. Compare inoltre nella maggior parte dei titoli successivi, in videogiochi spin-off, nella serie televisiva anime, nel Pokémon Trading Card Game e nel merchandising derivato dalla serie.Charmander appare sulle copertine di Pokémon!";
 
         private readonly IEnumerable<MockExperiment> _mockExperiment = new List<MockExperiment>
         {
@@ -18,6 +18,7 @@ namespace ConcordiaLab.Controllers.Mock_Data.Mock_Gateway
         };
 
         public IEnumerable<MockExperiment> GetAll() => _mockExperiment;
+        public IEnumerable<MockExperiment> GetAllFromScientistId(int scientistId) => _mockExperiment.Where(experiment => experiment.IntScientists.Contains(scientistId));
         public MockExperiment? GetById(int id) => _mockExperiment.SingleOrDefault(me => me.Id == id);
     }
 }

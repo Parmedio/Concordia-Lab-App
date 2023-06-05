@@ -24,12 +24,15 @@
                         <h6 class="card-subtitle mb-2 text-muted">
                             <b>Scientists:</b><br />
                             @{
-                                var scientistsCount = experiment.Scientists.Count();
-                                var scientistsList = string.Join(", ", experiment.Scientists.Select(s => $"{s.Name[0]}. {s.Surname}"));
-
-                                if (scientistsCount > 0)
+                                if (experiment.Scientists != null)
                                 {
-                                    <span>@scientistsList</span>
+                                    var scientistsCount = experiment.Scientists.Count();
+                                    var scientistsList = string.Join(", ", experiment.Scientists.Select(s => $"{s.Name[0]}. {s.Surname}"));
+
+                                    if (scientistsCount > 0)
+                                    {
+                                        <span>@scientistsList</span>
+                                    }
                                 }
                             }
                         </h6>

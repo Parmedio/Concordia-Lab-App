@@ -1,4 +1,5 @@
 using ConcordiaLab.Controllers.Mock_Data.Mock_Gateway;
+using ConcordiaLab.Controllers.Mock_Data;
 
 namespace ConcordiaLab
 {
@@ -13,6 +14,7 @@ namespace ConcordiaLab
             builder.Services.AddScoped<MockGatewayList>();
             builder.Services.AddScoped<MockGatewayExperiment>();
             builder.Services.AddScoped<MockGatewayScientist>();
+            //builder.Services.AddSingleton<UserSetting>();
 
             var app = builder.Build();
 

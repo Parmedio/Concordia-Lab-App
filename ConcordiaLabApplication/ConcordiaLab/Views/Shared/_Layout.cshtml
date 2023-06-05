@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@using ConcordiaLab.Controllers.Mock_Data.MockModels;
+
+@{
+    var scientists = ViewData["Scientists"] as IEnumerable<MockScientist> ?? Enumerable.Empty<MockScientist>();
+    var selectedScientistId = ViewData["SelectedScientistId"] as int?;
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -10,23 +17,21 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Concordia Lab</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+        <nav class="navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                 </div>
+                <form id="scientist-form" asp-controller="Home" asp-action="Index" method="get">
+                    <select id="scientist-dropdown" class="form-select" name="scientistId" onchange="document.getElementById('scientist-form').submit()">
+                        <option value="0" selected="@(selectedScientistId == 0)">All Scientist</option>
+                        @foreach (var scientist in scientists)
+                        {
+                            <option value="@scientist.Id" selected="@(scientist.Id == selectedScientistId)">@scientist.Name @scientist.Surname</option>
+                        }
+                    </select>
+                </form>
             </div>
         </nav>
     </header>
@@ -47,3 +52,26 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+<style>
+    .bg-custom {
+        background-color: lightgrey;
+        width: 20%;
+    }
+
+    .user-name {
+        background-color: white;
+        width: 60%;
+        text-align: center;
+        border-radius: 4px;
+        margin: 2px;
+    }
+
+    .login {
+        width: 40%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 2px;
+    }
+</style>
