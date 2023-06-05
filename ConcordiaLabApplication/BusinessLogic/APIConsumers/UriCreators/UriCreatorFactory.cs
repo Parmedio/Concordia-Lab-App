@@ -24,6 +24,11 @@ public class UriCreatorFactory : IUriCreatorFactory
 #endif
     }
 
+    public string AddACommentOnACard(string cardId, string text, string authToken)
+    {
+        return $"cards/{cardId}/actions/comments?text={text}&key={_apiKey}&token={authToken}";
+    }
+
     public string GetAllCardsOnToDoList()
     {
         return $"lists/{_ToDoListId}/cards?{GetBaseAuth()}";
@@ -32,6 +37,11 @@ public class UriCreatorFactory : IUriCreatorFactory
     public string GetAllCommentsOnABoard()
     {
         return $"boards/{_BoardId}/actions?filter=commentCard&{GetBaseAuth()}";
+    }
+
+    public string UpdateAnExperiment(string cardId, string listId, string authToken)
+    {
+        return $"cards/{cardId}?idList={listId}&key={_apiKey}&token={authToken}";
     }
 
     private string GetBaseAuth()

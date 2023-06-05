@@ -1,27 +1,31 @@
 ﻿using BusinessLogic.APIConsumers.Abstract;
-using BusinessLogic.DTOs.TrelloDtos;
+using BusinessLogic.APIConsumers.UriCreators;
 
 namespace BusinessLogic.APIConsumers.Concrete;
 
 public class ApiSender : IApiSender
 {
-    public bool AddAComment(TrelloCommentDto commentDto)
+
+    private readonly IHttpClientFactory _clientFactory;
+    private readonly IUriCreatorFactory _uriCreatorFactory;
+
+    public ApiSender(IHttpClientFactory clientFactory, IUriCreatorFactory uriCreatorFactory)
     {
-        throw new NotImplementedException();
+        _clientFactory = clientFactory;
+        _uriCreatorFactory = uriCreatorFactory;
     }
 
-    public bool AddAllLastComments(IEnumerable<TrelloCommentDto> comments)
+    public async Task<bool> AddAComment(string cardId, string commentText, string authToken)
     {
-        throw new NotImplementedException();
+        var client = _clientFactory.CreateClient();
+        var response = await client.PostAsync(_uriCreatorFactory.AddACommentOnACard(cardId, commentText, authToken), null);
+        return response.IsSuccessStatusCode;
     }
 
-    public bool UpdateAllExperiments(IEnumerable<TrelloExperimentDto> experiments)
+    public async Task<bool> UpdateAnExperiment(string cardId, string newListId, string authToken)
     {
-        throw new NotImplementedException();
-    }
-
-    public bool UpdateAnExperiment(TrelloExperimentDto experiment)
-    {
-        throw new NotImplementedException();
+        var client = _clientFactory.CreateClient();
+        var response = await client.PostAsync(_uriCreatorFactory.UpdateAnExperiment(cardId, newListId, authToken), null);
+        return response.IsSuccessStatusCode;
     }
 }

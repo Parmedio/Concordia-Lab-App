@@ -54,5 +54,20 @@ namespace ConcordiaAppTestLayer
             _sut.GetAllCardsOnToDoList().Should().Be(releaseUrl);
 #endif
         }
+
+        [Fact]
+        public void CheckUrlForAddAComment()
+        {
+
+            string url = "cards/64761756c338bac930497a59/actions/comments?text=Could you test also for Temperature = 50?&key=9ba27d32be683843dd1ffb346ae07641&token=ATTA5d17675c2460799412382fd90bfb3b94b0eb355646b6941dd87ac9eb77aa080dD1F24193";
+            _sut.AddACommentOnACard("64761756c338bac930497a59", "Could you test also for Temperature = 50?", "ATTA5d17675c2460799412382fd90bfb3b94b0eb355646b6941dd87ac9eb77aa080dD1F24193").Should().Be(url);
+        }
+
+        [Fact]
+        public void CheckUrlForUpdateAnExperiment()
+        {
+            string url = "cards/64761756c338bac930497a59?idList=64760975fbea80d6ef329081&key=9ba27d32be683843dd1ffb346ae07641&token=ATTAd93cf67ec0072d821ff32e199156a675ed9301feea0f899df160829b3f14082dAB1E41AD";
+            _sut.UpdateAnExperiment("64761756c338bac930497a59", "64760975fbea80d6ef329081", "ATTAd93cf67ec0072d821ff32e199156a675ed9301feea0f899df160829b3f14082dAB1E41AD").Should().Be(url);
+        }
     }
 }

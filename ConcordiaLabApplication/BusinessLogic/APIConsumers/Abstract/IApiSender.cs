@@ -1,11 +1,7 @@
-﻿using BusinessLogic.DTOs.TrelloDtos;
-
-namespace BusinessLogic.APIConsumers.Abstract;
+﻿namespace BusinessLogic.APIConsumers.Abstract;
 
 public interface IApiSender
 {
-    public bool UpdateAllExperiments(IEnumerable<TrelloExperimentDto> experiments);
-    public bool AddAComment(TrelloCommentDto commentDto);
-    public bool AddAllLastComments(IEnumerable<TrelloCommentDto> comments);
-    public bool UpdateAnExperiment(TrelloExperimentDto experiment);
+    public Task<bool> AddAComment(string cardId, string commentText, string authToken);
+    public Task<bool> UpdateAnExperiment(string cardId, string newListId, string authToken);
 }
