@@ -1,7 +1,6 @@
 
 using BackgroundServices;
 
-using BusinessLogic.APIConsumers.Abstract;
 using BusinessLogic.APIConsumers.Concrete;
 using BusinessLogic.APIConsumers.UriCreators;
 using BusinessLogic.DataTransferLogic.Abstract;

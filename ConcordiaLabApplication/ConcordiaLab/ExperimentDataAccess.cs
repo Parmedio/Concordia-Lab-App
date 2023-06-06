@@ -26,7 +26,7 @@ namespace ConcordiaLab
         }
         public Experiment? Update(Experiment experiment)
         {
-            return _experimentRepository?.Update(experiment);  
+            return _experimentRepository?.Update(experiment);
         }
         public IEnumerable<Experiment> GetAll()
         {

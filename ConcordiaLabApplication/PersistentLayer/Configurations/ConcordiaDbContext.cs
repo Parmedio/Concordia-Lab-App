@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+
 using PersistentLayer.Models;
 
 namespace PersistentLayer.Configurations;
