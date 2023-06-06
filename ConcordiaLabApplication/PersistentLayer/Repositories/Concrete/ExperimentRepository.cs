@@ -73,7 +73,7 @@ public class ExperimentRepository : IExperimentRepository
 
     public int GetLocalIdByTrelloId (string trelloId)
     {
-        throw new NotImplementedException();
+        return _dbContext.Experiments.AsNoTracking().SingleOrDefault(e => e.TrelloId.Equals(trelloId)).Id;
     }
 
     public Experiment? Remove(int experimentId)

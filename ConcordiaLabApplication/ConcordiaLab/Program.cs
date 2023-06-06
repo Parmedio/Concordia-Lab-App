@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using PersistentLayer.Configurations;
 using PersistentLayer.Repositories.Abstract;
 using PersistentLayer.Repositories.Concrete;
+using PersistentLayerTest;
 
 namespace ConcordiaLab
 {
@@ -37,6 +38,7 @@ namespace ConcordiaLab
             builder.Services.AddDbContext<ConcordiaDbContext>(options =>
                   options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             builder.Services.AddScoped<IExperimentRepository, ExperimentRepository>();
+            builder.Services.AddScoped<ExperimentRepositoryFixture>();
 
             var app = builder.Build();
 
