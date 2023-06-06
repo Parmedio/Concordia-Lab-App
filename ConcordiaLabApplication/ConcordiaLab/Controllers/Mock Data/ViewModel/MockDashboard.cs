@@ -4,17 +4,15 @@ namespace ConcordiaLab.Controllers.Mock_Data.ViewModel
 {
     public class MockDashboard
     {
-        public MockDashboard(IEnumerable<MockList> mockLists, IEnumerable<MockScientist> allScientist)
+        public MockDashboard(IEnumerable<MockList> mockLists)
         {
             Lists = mockLists;
-            AllScientists = allScientist;
         }
 
-        public MockDashboard() : this(new List<MockList>(), new List<MockScientist>())
+        public MockDashboard() : this(new List<MockList>())
         {
         }
 
         public IEnumerable<MockList> Lists { get; }
-        public IEnumerable<MockScientist> AllScientists { get; }
     }
 }

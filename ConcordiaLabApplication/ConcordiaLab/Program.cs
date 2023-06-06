@@ -14,7 +14,7 @@ namespace ConcordiaLab
             builder.Services.AddScoped<MockGatewayList>();
             builder.Services.AddScoped<MockGatewayExperiment>();
             builder.Services.AddScoped<MockGatewayScientist>();
-            //builder.Services.AddSingleton<UserSetting>();
+            builder.Services.AddSingleton<UserSetting>();
 
             var app = builder.Build();
 

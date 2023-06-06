@@ -4,6 +4,7 @@
     ViewData["Title"] = "Experiment Dashboard";
     ViewData["Institution"] = "Concordia Lab";
     Layout = "_Layout";
+    var selectedScientistId = ViewData["SelectedScientistId"] as int?;
 }
 
 <h1 class="display-5">@ViewData["Title"]</h1>
@@ -19,7 +20,7 @@
                     <div class="card-body">
                         <div class="d-flex align-items-center mb-1">
                             <h5 class="experiment-title w-100">@experiment.Title</h5>
-                            <a class="btn btn-outline-secondary flex-shrink-1" asp-action="Detail" asp-route-id="@experiment.Id">details</a>
+                            <a class="btn btn-outline-secondary flex-shrink-1" asp-action="Detail" asp-route-experimentId="@experiment.Id" asp-route-scientistId="@selectedScientistId">details</a>
                         </div>
                         <h6 class="card-subtitle mb-2 text-muted">
                             <b>Scientists:</b><br />

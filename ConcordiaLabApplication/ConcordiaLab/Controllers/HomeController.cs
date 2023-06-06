@@ -1,4 +1,5 @@
-﻿using ConcordiaLab.Controllers.Mock_Data.Mock_Gateway;
+﻿using ConcordiaLab.Controllers.Mock_Data;
+using ConcordiaLab.Controllers.Mock_Data.Mock_Gateway;
 using ConcordiaLab.Controllers.Mock_Data.MockModels;
 using ConcordiaLab.Controllers.Mock_Data.ViewModel;
 using ConcordiaLab.Models;
@@ -15,33 +16,40 @@ namespace ConcordiaLab.Controllers
         private readonly MockGatewayList _mockGatewayList;
         private readonly MockGatewayExperiment _mockGatewayExperiment;
         private readonly MockGatewayScientist _mockGatewayScientist;
-        //private readonly UserSetting _userSetting;
+        private readonly UserSetting _userSetting;
 
-        public HomeController(ILogger<HomeController> logger, MockGatewayList mockGatewayList, MockGatewayExperiment mockGatewayExperiment, MockGatewayScientist mockGatewayScientist) //, UserSetting userSetting
+        public HomeController(ILogger<HomeController> logger, MockGatewayList mockGatewayList, MockGatewayExperiment mockGatewayExperiment, MockGatewayScientist mockGatewayScientist, UserSetting userSetting)
         {
             _logger = logger;
             _mockGatewayList = mockGatewayList;
             _mockGatewayExperiment = mockGatewayExperiment;
             _mockGatewayScientist = mockGatewayScientist;
-            //_userSetting = userSetting;
+            _userSetting = userSetting;
         }
 
         public IActionResult Index(int scientistId = 0)
         {
             _logger.LogInformation("Message.Index was called");
 
-            var scientists = _mockGatewayScientist.GetAll();
-            ViewData["Scientists"] = scientists;
             ViewData["SelectedScientistId"] = scientistId;
+            ViewData["Scientists"] = _mockGatewayScientist.GetAll();
 
             var dashboard = BuildIndexPerStatus(scientistId);
             return View(dashboard);
         }
 
-        public IActionResult Detail(int id)
+        public IActionResult Detail(int experimentId, int scientistId)
         {
             _logger.LogInformation("Message.Detail was called");
-            return View(BuildDetailViewModel(id));
+
+            var detail = BuildDetailedExperiment(experimentId);
+
+            ViewData["ExperimentId"] = experimentId;
+            ViewData["ExperimentScientistIds"] = detail.Experiment.IntScientists?.ToList() ?? new List<int>();
+            ViewData["SelectedScientistId"] = scientistId;
+            ViewData["Scientists"] = _mockGatewayScientist.GetAll();
+
+            return View(detail);
         }
 
         public IActionResult Privacy()
@@ -83,10 +91,10 @@ namespace ConcordiaLab.Controllers
                     };
                 });
 
-            return new MockDashboard(lists, scientists);
+            return new MockDashboard(lists);
         }
 
-        private MockExperimentDetails BuildDetailViewModel(int ExpId)
+        private MockExperimentDetails BuildDetailedExperiment(int ExpId)
         {
             var scientists = _mockGatewayScientist.GetAll();
 

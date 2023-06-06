@@ -3,6 +3,8 @@
 @{
     var scientists = ViewData["Scientists"] as IEnumerable<MockScientist> ?? Enumerable.Empty<MockScientist>();
     var selectedScientistId = ViewData["SelectedScientistId"] as int?;
+    var experimentId = ViewData["ExperimentId"] as int?;
+    var experimentScientistIds = ViewData["ExperimentScientistIds"] as IEnumerable<int> ?? Enumerable.Empty<int>();
 }
 
 <!DOCTYPE html>
@@ -23,7 +25,9 @@
                     <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                     <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                 </div>
-                <form id="scientist-form" asp-controller="Home" asp-action="Index" method="get">
+
+                <form id="scientist-form" method="get" asp-controller="Home" asp-action="@ViewContext.RouteData.Values["action"]">
+                    <input type="hidden" name="experimentId" value="@ViewData["ExperimentId"]"/>
                     <select id="scientist-dropdown" class="form-select" name="scientistId" onchange="document.getElementById('scientist-form').submit()">
                         <option value="0" selected="@(selectedScientistId == 0)">All Scientist</option>
                         @foreach (var scientist in scientists)
@@ -32,6 +36,7 @@
                         }
                     </select>
                 </form>
+
             </div>
         </nav>
     </header>
@@ -75,3 +80,20 @@
         margin: 2px;
     }
 </style>
+<script>
+    $(function () {
+        var experimentScientistIds = @(ViewData["ExperimentScientistIds"] != null ? Html.Raw(Json.Serialize(ViewData["ExperimentScientistIds"])) : "[]");
+        var currentAction = "@(ViewContext.RouteData.Values["action"].ToString())";
+
+        $('#scientist-dropdown').change(function () {
+            var selectedScientistId = $(this).val();
+            var isInExperimentScientists = experimentScientistIds.includes(parseInt(selectedScientistId));
+            if (currentAction === "Detail" && isInExperimentScientists) {
+                $('#scientist-form').attr('action', '/Home/Detail');
+            } else {
+                $('#scientist-form').attr('action', '/Home/Index');
+            }
+            $('#scientist-form').submit();
+        });
+    });
+</script>

@@ -4,6 +4,7 @@
     ViewData["Title"] = "Experiment Detail";
     Layout = "_Layout";
     var experiment = Model.Experiment;
+    var selectedScientistId = ViewData["SelectedScientistId"] as int?;
 }
 
 <h1 class="display-5">@ViewData["Title"]</h1>
@@ -53,7 +54,7 @@
     </div>
 </div>
 
-<a class="btn btn-outline-primary" asp-action="Index">go back</a>
+<a class="btn btn-outline-primary" asp-action="Index" asp-route-scientistId="@selectedScientistId">go back</a>
 
 <style>
     .experiment-title {
