@@ -17,7 +17,7 @@ namespace PersistentLayerTest
         public ExperimentRepositoryFixture()
         {
             var dbContextOptions = new DbContextOptionsBuilder<ConcordiaDbContext>()
-                .UseInMemoryDatabase("TestDatabase")
+                .UseInMemoryDatabase("ConcordiaLab")
                 .Options;
 
             DbContext = new ConcordiaDbContext(dbContextOptions);

@@ -12,7 +12,7 @@ public record Experiment(int Id = default, string TrelloId = null!, string Title
 
     public virtual IEnumerable<Comment>? Comments { get; set; }
     [NotMapped]
-    public IEnumerable<int>? CommentsIds { get; set; }
+    public IEnumerable<int>? CommentsIds { get; set; } // non serve?
 
     public virtual IEnumerable<Scientist>? Scientists { get; set; }
     [NotMapped]

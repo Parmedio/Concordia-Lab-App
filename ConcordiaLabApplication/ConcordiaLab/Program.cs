@@ -5,6 +5,10 @@ using BusinessLogic.APIConsumers.Concrete;
 using BusinessLogic.APIConsumers.UriCreators;
 using BusinessLogic.DataTransferLogic.Abstract;
 using BusinessLogic.DataTransferLogic.Concrete;
+using Microsoft.EntityFrameworkCore;
+using PersistentLayer.Configurations;
+using PersistentLayer.Repositories.Abstract;
+using PersistentLayer.Repositories.Concrete;
 
 namespace ConcordiaLab
 {
@@ -29,6 +33,10 @@ namespace ConcordiaLab
             builder.Services.AddHostedService(provider => provider.GetRequiredService<ConnectionChecker>());
             builder.Services.AddTransient<IDataHandlerFactory, DataHandlerFactory>();
             builder.Services.AddTransient<ClientService>();
+
+            builder.Services.AddDbContext<ConcordiaDbContext>(options =>
+                  options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            builder.Services.AddScoped<IExperimentRepository, ExperimentRepository>();
 
             var app = builder.Build();
 

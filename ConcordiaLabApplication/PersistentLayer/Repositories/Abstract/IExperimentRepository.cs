@@ -12,4 +12,6 @@ public interface IExperimentRepository
     public Experiment? Update(Experiment experiment);
     public IEnumerable<Experiment> GetAll();
     public Experiment? GetById(int experimentId);
+    public int GetLocalIdByTrelloId(string trelloId);
+    public Comment GetLastCommentWithTrelloIdNull(Experiment experiment);
 }

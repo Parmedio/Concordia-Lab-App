@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLogic", "BusinessLo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcordiaAppTestLayer", "ConcordiaAppTestLayer\ConcordiaAppTestLayer.csproj", "{9A1E50E4-3423-40F0-9067-3345A97DA64C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackgroundServices", "BackgroundService\BackgroundServices.csproj", "{D857DE11-8239-4DA8-A55A-8B5FB7F6A6A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackgroundServices", "BackgroundService\BackgroundServices.csproj", "{D857DE11-8239-4DA8-A55A-8B5FB7F6A6A0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersistentLayerTest", "PersistentLayerTest\PersistentLayerTest.csproj", "{FF12A514-03A1-4DD0-AC38-3F3EEDD9E527}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{D857DE11-8239-4DA8-A55A-8B5FB7F6A6A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D857DE11-8239-4DA8-A55A-8B5FB7F6A6A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D857DE11-8239-4DA8-A55A-8B5FB7F6A6A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF12A514-03A1-4DD0-AC38-3F3EEDD9E527}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF12A514-03A1-4DD0-AC38-3F3EEDD9E527}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF12A514-03A1-4DD0-AC38-3F3EEDD9E527}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF12A514-03A1-4DD0-AC38-3F3EEDD9E527}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
