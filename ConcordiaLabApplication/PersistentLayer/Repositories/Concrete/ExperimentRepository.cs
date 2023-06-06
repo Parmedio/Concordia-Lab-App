@@ -1,11 +1,18 @@
-﻿using PersistentLayer.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using PersistentLayer.Configurations;
+using PersistentLayer.Models;
 using PersistentLayer.Repositories.Abstract;
 
 namespace PersistentLayer.Repositories.Concrete;
 
 public class ExperimentRepository : IExperimentRepository
 {
-    public Experiment Add(List<Experiment> experiments)
+    private readonly ConcordiaDbContext _dbContext;
+
+    public ExperimentRepository(ConcordiaDbContext dbContext)
+        => _dbContext = dbContext;
+
+    public IEnumerable<Experiment> Add(IEnumerable<Experiment> experiments)
     {
         throw new NotImplementedException();
     }
@@ -20,27 +27,17 @@ public class ExperimentRepository : IExperimentRepository
         throw new NotImplementedException();
     }
 
-    public IEnumerable<Experiment> GetById(int experimentId)
+    public Experiment? GetById(int experimentId)
     {
         throw new NotImplementedException();
     }
 
-    public Experiment Remove(int experimentId)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Experiment Update(int experimentId, int listIdDestination)
+    public Experiment? Remove(int experimentId)
     {
         throw new NotImplementedException();
     }
 
     public Experiment Update(Experiment experiment)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Experiment Update(int experimentId, string comment)
     {
         throw new NotImplementedException();
     }

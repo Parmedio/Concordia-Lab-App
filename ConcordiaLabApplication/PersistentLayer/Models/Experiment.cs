@@ -1,10 +1,9 @@
-﻿namespace PersistentLayer.Models;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace PersistentLayer.Models;
 
 public record Experiment (int Id = default, string TrelloId = null!, string Title = null!, string Description = null!, DateTime? DeadLine = default)
 { 
-    public virtual Priority? Priority { get; set; }
-    public int PriorityId { get; set; }
-
     public virtual Label? Label { get; set; }
     public int LabelId { get; set; }
 
@@ -12,6 +11,10 @@ public record Experiment (int Id = default, string TrelloId = null!, string Titl
     public int ListId { get; set; }
 
     public virtual IEnumerable<Comment>? Comments { get; set; }
+    [NotMapped]
+    public IEnumerable<int>? CommentsIds { get; set; }
 
     public virtual IEnumerable<Scientist>? Scientists { get; set; }
+    [NotMapped]
+    public virtual IEnumerable<int>? ScientistsIds { get; set; }
 }

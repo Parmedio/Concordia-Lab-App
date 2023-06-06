@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using PersistentLayer.Configurations;
+using PersistentLayer.Repositories.Abstract;
+using PersistentLayer.Repositories.Concrete;
 
 namespace ConcordiaLab
 {
@@ -8,12 +10,13 @@ namespace ConcordiaLab
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-
             builder.Services.AddDbContext<ConcordiaDbContext>(options =>
                         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            builder.Services.AddScoped<IExperimentRepository, ExperimentRepository>();
+            builder.Services.AddScoped<ExperimentDataAccess>();
 
             var app = builder.Build();
 
