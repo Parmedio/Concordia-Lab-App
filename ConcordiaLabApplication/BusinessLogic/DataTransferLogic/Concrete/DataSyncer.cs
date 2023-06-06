@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 
 using BusinessLogic.APIConsumers.Abstract;
+using BusinessLogic.DataTransferLogic.Abstract;
 using BusinessLogic.DTOs.TrelloDtos;
 using BusinessLogic.Exceptions;
 
@@ -12,7 +13,7 @@ using PersistentLayer.Repositories.Abstract;
 
 namespace BusinessLogic.DataTransferLogic.Concrete;
 
-public class DataSyncer
+public class DataSyncer : IDataSyncer
 {
     private readonly IApiSender _sender;
     private readonly IApiReceiver _receiver;
