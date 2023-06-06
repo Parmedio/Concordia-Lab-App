@@ -22,10 +22,10 @@ public class ApiSender : IApiSender
         return response.IsSuccessStatusCode;
     }
 
-    public async Task<bool> UpdateAnExperiment(string cardId, string newListId, string authToken)
+    public async Task<bool> UpdateAnExperiment(string cardId, string newListId)
     {
         var client = _clientFactory.CreateClient();
-        var response = await client.PostAsync(_uriCreatorFactory.UpdateAnExperiment(cardId, newListId, authToken), null);
+        var response = await client.PostAsync(_uriCreatorFactory.UpdateAnExperiment(cardId, newListId), null);
         return response.IsSuccessStatusCode;
     }
 }
