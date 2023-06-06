@@ -1,7 +1,9 @@
-using Microsoft.EntityFrameworkCore;
-using PersistentLayer.Configurations;
-using PersistentLayer.Repositories.Abstract;
-using PersistentLayer.Repositories.Concrete;
+
+using BackgroundServices;
+
+using BusinessLogic.APIConsumers.UriCreators;
+using BusinessLogic.DataTransferLogic.Abstract;
+using BusinessLogic.DataTransferLogic.Concrete;
 
 namespace ConcordiaLab
 {
@@ -10,13 +12,19 @@ namespace ConcordiaLab
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Services.AddDbContext<ConcordiaDbContext>(options =>
-                        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-            builder.Services.AddScoped<IExperimentRepository, ExperimentRepository>();
-            builder.Services.AddScoped<ExperimentDataAccess>();
+            builder.Services.AddHttpClient("ApiConsumer", client =>
+            {
+                client.BaseAddress = new Uri(builder.Configuration.GetSection("TrelloUrlToUse")!.GetSection("baseUrl").Value!);
+                client.Timeout = TimeSpan.FromSeconds(Convert.ToDouble(builder.Configuration.GetSection("ClientInfo").GetSection("timeout").Value!));
+            });
+            builder.Services.AddTransient<IUriCreatorFactory, UriCreatorFactory>();
+            builder.Services.AddLogging();
+            builder.Services.AddSingleton<ConnectionChecker>();
+            builder.Services.AddScoped<IDataService, DataService>();
+            builder.Services.AddTransient<IRetrieveConnectionTimeInterval, RetrieveConnectionTimeInterval>();
+            builder.Services.AddHostedService(provider => provider.GetRequiredService<ConnectionChecker>());
 
             var app = builder.Build();
 
@@ -41,7 +49,7 @@ namespace ConcordiaLab
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
-            await app.RunAsync();
+            app.Run();
         }
     }
 }
