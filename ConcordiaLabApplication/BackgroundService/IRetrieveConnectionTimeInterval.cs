@@ -2,5 +2,5 @@
 
 public interface IRetrieveConnectionTimeInterval
 {
-    bool IsTimeInInterval();
+    (bool, TimeSpan) IsTimeInInterval(DateTime currentDate);
 }

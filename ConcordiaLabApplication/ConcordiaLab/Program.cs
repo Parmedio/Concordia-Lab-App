@@ -23,7 +23,7 @@ namespace ConcordiaLab
             builder.Services.AddSingleton<ConnectionChecker>();
             builder.Services.AddScoped<IDataService, DataService>();
             builder.Services.AddTransient<IRetrieveConnectionTimeInterval, RetrieveConnectionTimeInterval>();
-            builder.Services.AddHostedService<ConnectionChecker>(provider => provider.GetRequiredService<ConnectionChecker>());
+            builder.Services.AddHostedService(provider => provider.GetRequiredService<ConnectionChecker>());
 
             var app = builder.Build();
 
