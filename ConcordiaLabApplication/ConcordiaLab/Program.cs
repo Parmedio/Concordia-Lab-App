@@ -1,5 +1,6 @@
 
 using AutoMapper;
+
 using BackgroundServices;
 
 using BusinessLogic.APIConsumers.Concrete;
@@ -37,21 +38,22 @@ public class Program
             client.Timeout = TimeSpan.FromSeconds(Convert.ToDouble(builder.Configuration.GetSection("ClientInfo").GetSection("timeout").Value!));
         });
 
+        builder.Services.AddDbContext<ConcordiaDbContext>(options =>
+              options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
         builder.Services.AddAutoMapper(cfg => cfg.AddProfile(configuration));
-
-        builder.Services.AddScoped<IApiSender, ApiSender>();
-        builder.Services.AddTransient<IUriCreatorFactory, UriCreatorFactory>();
-        builder.Services.AddLogging();
-        builder.Services.AddSingleton<ConnectionChecker>();
-        builder.Services.AddScoped<IDataService, DataService>();
-        builder.Services.AddTransient<IRetrieveConnectionTimeInterval, RetrieveConnectionTimeInterval>();
         builder.Services.AddHostedService(provider => provider.GetRequiredService<ConnectionChecker>());
+        builder.Services.AddLogging();
+
+        builder.Services.AddSingleton<ConnectionChecker>();
+        builder.Services.AddScoped<IApiSender, ApiSender>();
+        builder.Services.AddScoped<IDataService, DataService>();
+        builder.Services.AddScoped<IExperimentRepository, ExperimentRepository>();
+        builder.Services.AddTransient<IUriCreatorFactory, UriCreatorFactory>();
+        builder.Services.AddTransient<IDataSyncer, DataSyncer>();
+        builder.Services.AddTransient<IRetrieveConnectionTimeInterval, RetrieveConnectionTimeInterval>();
         builder.Services.AddTransient<IDataHandlerFactory, DataHandlerFactory>();
         builder.Services.AddTransient<ClientService>();
 
-        builder.Services.AddDbContext<ConcordiaDbContext>(options =>
-              options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-        builder.Services.AddScoped<IExperimentRepository, ExperimentRepository>();
 
         var app = builder.Build();
 
