@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+
 using PersistentLayer.Configurations;
 using PersistentLayer.Models;
 using PersistentLayer.Repositories.Abstract;
@@ -71,7 +72,7 @@ public class ExperimentRepository : IExperimentRepository
         throw new NotImplementedException();
     }
 
-    public int GetLocalIdByTrelloId (string trelloId)
+    public int? GetLocalIdByTrelloId(string trelloId)
     {
         throw new NotImplementedException();
     }
