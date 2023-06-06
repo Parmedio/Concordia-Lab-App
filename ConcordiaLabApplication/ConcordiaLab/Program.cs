@@ -1,3 +1,4 @@
+
 using BackgroundServices;
 
 using BusinessLogic.APIConsumers.UriCreators;
@@ -8,7 +9,7 @@ namespace ConcordiaLab
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
             // Add services to the container.
@@ -26,6 +27,8 @@ namespace ConcordiaLab
             builder.Services.AddHostedService(provider => provider.GetRequiredService<ConnectionChecker>());
 
             var app = builder.Build();
+
+            await app.MigrateAsync();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -45,7 +48,6 @@ namespace ConcordiaLab
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
-
 
             app.Run();
         }
