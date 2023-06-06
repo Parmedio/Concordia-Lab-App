@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PersistentLayer.Models
+﻿namespace PersistentLayer.Models
 {
-    public record Label (int Id = default, string TrelloId = null!, string Title = null!);
+    public record Label(int Id = default, string TrelloId = null!, string Title = null!);
 }

@@ -7,8 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="ConnectionChecker\Abstract\" />
-    <Folder Include="ConnectionChecker\Concrete\" />
     <Folder Include="AutomapperProfiles\" />
   </ItemGroup>
 

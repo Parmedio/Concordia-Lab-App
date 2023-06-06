@@ -1,4 +1,4 @@
-﻿using BusinessLogic.DataTransferLogic.Abstract;
+﻿using BusinessLogic.DataTransferLogic.Concrete;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,7 +40,7 @@ public class ConnectionChecker : BackgroundService
             try
             {
                 await using AsyncServiceScope asyncScope = _scopeFactory.CreateAsyncScope();
-                IDataService dataService = asyncScope.ServiceProvider.GetRequiredService<IDataService>();
+                ClientService dataService = asyncScope.ServiceProvider.GetRequiredService<ClientService>();
                 string connectionState;
                 (bool, TimeSpan) connectionInfo = _timeRetriever.IsTimeInInterval(DateTime.Now);
 

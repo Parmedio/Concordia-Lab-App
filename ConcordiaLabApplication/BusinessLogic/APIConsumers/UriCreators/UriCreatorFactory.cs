@@ -39,9 +39,9 @@ public class UriCreatorFactory : IUriCreatorFactory
         return $"boards/{_BoardId}/actions?filter=commentCard&{GetBaseAuth()}";
     }
 
-    public string UpdateAnExperiment(string cardId, string listId, string authToken)
+    public string UpdateAnExperiment(string cardId, string listId)
     {
-        return $"cards/{cardId}?idList={listId}&key={_apiKey}&token={authToken}";
+        return $"cards/{cardId}?idList={listId}&{GetBaseAuth()}";
     }
 
     private string GetBaseAuth()

@@ -67,7 +67,7 @@ namespace ConcordiaAppTestLayer
         public void CheckUrlForUpdateAnExperiment()
         {
             string url = "cards/64761756c338bac930497a59?idList=64760975fbea80d6ef329081&key=9ba27d32be683843dd1ffb346ae07641&token=ATTAd93cf67ec0072d821ff32e199156a675ed9301feea0f899df160829b3f14082dAB1E41AD";
-            _sut.UpdateAnExperiment("64761756c338bac930497a59", "64760975fbea80d6ef329081", "ATTAd93cf67ec0072d821ff32e199156a675ed9301feea0f899df160829b3f14082dAB1E41AD").Should().Be(url);
+            _sut.UpdateAnExperiment("64761756c338bac930497a59", "64760975fbea80d6ef329081").Should().Be(url);
         }
     }
 }
