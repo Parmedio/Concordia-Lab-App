@@ -19,7 +19,33 @@ public class ExperimentRepository : IExperimentRepository
 
     public Experiment Add(Experiment experiment)
     {
-        throw new NotImplementedException();
+        var entity = _dbContext.Experiments.Add(experiment);
+        if (experiment.ScientistsIds != null)
+        {
+            var scientists = _dbContext.Scientist.Where(s => experiment.ScientistsIds.Contains(s.Id));
+            experiment.Scientists = scientists.ToList();
+        }
+
+        if (experiment.CommentsIds != null)
+        {
+            var comments = _dbContext.Comments.Where(c => experiment.CommentsIds.Contains(c.Id));
+            experiment.Comments = comments.ToList();
+        }
+
+        if (experiment.LabelId != 0)
+        {
+            var label = _dbContext.Labels.FirstOrDefault(l => l.Id == experiment.LabelId);
+            experiment.Label = label;
+        }
+
+        if (experiment.ListId != 0)
+        {
+            var list = _dbContext.Lists.FirstOrDefault(l => l.Id == experiment.ListId);
+            experiment.List = list;
+        }
+
+        _dbContext.SaveChanges();
+        return entity.Entity;
     }
 
     public IEnumerable<Experiment> GetAll()

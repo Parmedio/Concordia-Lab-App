@@ -1,5 +1,8 @@
+using Microsoft.EntityFrameworkCore;
+using Moq;
 using PersistentLayer.Configurations;
 using PersistentLayer.Models;
+using PersistentLayer.Repositories.Abstract;
 using PersistentLayer.Repositories.Concrete;
 
 namespace PersistentLayerTest
@@ -7,17 +10,42 @@ namespace PersistentLayerTest
     [Collection("DbContextCollection")]
     public class ExperimentRepositoryTests : IClassFixture<ExperimentRepositoryFixture>
     {
-        private readonly ExperimentRepositoryFixture _sut;
+        private readonly ExperimentRepository _sut;
 
-        public ExperimentRepositoryTests(ExperimentRepositoryFixture experimentRepository) 
+        public ExperimentRepositoryTests(ExperimentRepositoryFixture sut)
         {
-            _sut = experimentRepository;
+            _sut = sut.ExperimentRepository;
         }
 
         [Fact]
-        public void Add_Experiments_Should_Add_Experiments_To_Database()
+        public void Add_Experiment_Should_Add_Experiment_To_Database()
         {
+            var experiment = new Experiment
+            {
+                TrelloId = "TrelloId",
+                Title = "Experiment 1",
+                Description = "This is an experiment",
+                DeadLine = DateTime.Now.AddDays(7),
+                LabelId = 4,
+                ListId = 1,
+                CommentsIds = new List<int> { 2 },
+                ScientistsIds = new List<int> { 1, 2, 3 }
+            };
+
+            var addedExperiment = _sut.Add(experiment);
+
+            Assert.NotNull(addedExperiment);
+            Assert.Equal(experiment.Id, addedExperiment.Id);
+            Assert.Equal(experiment.TrelloId, addedExperiment.TrelloId);
+            Assert.Equal(experiment.Title, addedExperiment.Title);
+            Assert.Equal(experiment.Description, addedExperiment.Description);
+            Assert.Equal(experiment.DeadLine, addedExperiment.DeadLine);
+            Assert.Equal(experiment.LabelId, addedExperiment.LabelId);
+            Assert.Equal(experiment.ListId, addedExperiment.ListId);
+            Assert.Equal(experiment.CommentsIds, addedExperiment.CommentsIds);
+            Assert.Equal(experiment.ScientistsIds, addedExperiment.ScientistsIds);
         }
+
         public void Should_Return_All_Experiments()
         {
 
