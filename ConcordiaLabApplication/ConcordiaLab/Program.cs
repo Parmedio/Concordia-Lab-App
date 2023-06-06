@@ -1,4 +1,3 @@
-
 using BackgroundServices;
 
 using BusinessLogic.APIConsumers.Concrete;
