@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace PersistentLayerTest
 {
-    [CollectionDefinition("DbContextCollection")]
-    public class DbContextCollection : ICollectionFixture<DbContextFixture>
+    [CollectionDefinition("ExperimentRepositoryCollection")]
+    public class ExperimentRepositoryCollection : ICollectionFixture<ExperimentRepositoryFixture>
     {
     }
 
