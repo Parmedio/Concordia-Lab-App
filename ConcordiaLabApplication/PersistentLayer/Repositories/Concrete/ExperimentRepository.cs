@@ -78,7 +78,13 @@ public class ExperimentRepository : IExperimentRepository
 
     public Experiment? Remove(int experimentId)
     {
-        throw new NotImplementedException();
+        var experiment = _dbContext.Experiments.AsNoTracking().SingleOrDefault(e => e.Id == experimentId);
+        if (experiment != null)
+        {
+            _dbContext.Remove(experiment);
+            _dbContext.SaveChanges();
+        }
+        return experiment;
     }
 
     public Experiment Update(Experiment experiment)

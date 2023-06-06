@@ -5,6 +5,7 @@ using PersistentLayer.Configurations;
 using PersistentLayer.Models;
 using PersistentLayer.Repositories.Abstract;
 using PersistentLayer.Repositories.Concrete;
+using System.ComponentModel.DataAnnotations;
 
 namespace PersistentLayerTest
 {
@@ -81,19 +82,27 @@ namespace PersistentLayerTest
             //Assert.Equal(4, result.Count());
         }
 
+        [Fact]
         public void Get_Should_Return_Null_With_Id_Not_Existing()
         {
-
+            var result = _sut.GetById(0);
+            Assert.Null(result);
         }
 
+        [Fact]
         public void Should_Remove_Experiment_From_Database()
         {
-
+            var removedExperiment = _sut.Remove(3);
+            Assert.NotNull(removedExperiment);
+            var retrievedExperiment = _sut.GetById(3);
+            Assert.Null(retrievedExperiment);
         }
 
+        [Fact]
         public void Remove_Should_Return_Null_With_Id_To_Remove_Not_Existing()
         {
-
+            var result = _sut.Remove(0);
+            Assert.Null(result);
         }
 
         public void Should_Update_Experiment_In_Database()
