@@ -98,7 +98,7 @@ namespace PersistentLayerTest
         [Fact]
         public void Should_Return_LocalId_With_TrelloId()
         {
-            var result = _sut.GetLocalId("vrvrgdwrr43");
+            var result = _sut.GetLocalIdByTrelloId("vrvrgdwrr43");
             Assert.Equal(result, 1);
         }
 

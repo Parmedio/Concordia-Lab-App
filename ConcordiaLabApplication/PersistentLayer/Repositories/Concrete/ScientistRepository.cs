@@ -1,10 +1,5 @@
 ﻿using PersistentLayer.Configurations;
 using PersistentLayer.Repositories.Abstract;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PersistentLayer.Repositories.Concrete
 {
@@ -17,7 +12,9 @@ namespace PersistentLayer.Repositories.Concrete
 
         public int? GetLocalIdByTrelloId(string trelloId)
         {
-            return _dbContext.Scientists.SingleOrDefault( s => s.TrelloMemberId == trelloId).Id;
+            var scientist = _dbContext.Scientists.SingleOrDefault(s => s.TrelloMemberId == trelloId);
+            if (scientist != null) return scientist.Id;
+            return null;
         }
     }
 }

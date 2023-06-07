@@ -16,7 +16,7 @@ public interface IExperimentRepository
 
     public Experiment? GetById(int experimentId);
 
-    public int GetLocalId(string trelloId);
+    public int? GetLocalIdByTrelloId(string trelloId);
 
     public Comment? GetLastCommentWhereTrelloIdIsNull(int experimentId);
 }

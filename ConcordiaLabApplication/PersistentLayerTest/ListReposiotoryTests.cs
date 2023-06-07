@@ -45,7 +45,7 @@ namespace PersistentLayerTest
         [Fact]
         public void Shoul_Return_Lists_Of_A_Scientist_By_ScientisId()
         {
-            var result = _sut.GetByScientistId(1); // questo scienziato ha due liste
+            var result = _sut.GetByScientistId(1); 
             Assert.Equal(2, result.Count());
             foreach (var list in result)
             {

@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
 using PersistentLayer.Configurations;
 using PersistentLayer.Models;
 using PersistentLayer.Repositories.Abstract;
@@ -79,10 +78,10 @@ public class ExperimentRepository : IExperimentRepository
             .FirstOrDefault();
     }
 
-    public int GetLocalId(string trelloId)
+    public int? GetLocalIdByTrelloId(string trelloId)
     {
         var experiment = _dbContext.Experiments.AsNoTracking().SingleOrDefault(e => e.TrelloId.Equals(trelloId));
-        if (experiment == null) return 0;
+        if (experiment == null) return null;
         return experiment.Id;
     }
 

@@ -18,5 +18,9 @@ public class ConcordiaDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Comment>()
+            .HasIndex(c => c.TrelloId)
+            .IsUnique();
+        base.OnModelCreating(modelBuilder);
     }
 }
