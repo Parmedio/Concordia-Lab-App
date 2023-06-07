@@ -4,6 +4,8 @@ using BusinessLogic.DataTransferLogic.Concrete;
 using BusinessLogic.DTOs.BusinessDTO;
 using BusinessLogic.Exceptions;
 
+using ConcordiaAppTestLayer.MockData;
+
 using FluentAssertions;
 
 using Moq;

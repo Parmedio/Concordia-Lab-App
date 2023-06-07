@@ -6,4 +6,5 @@ public interface ICommentRepository
 {
     public int? AddComment(Comment comment);
     public Comment? GetCommentByTrelloId(string trelloId);
+    public int? GetLocalIdByTrelloId(string trelloId);
 }

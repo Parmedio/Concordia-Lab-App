@@ -2,7 +2,7 @@
 
 using PersistentLayer.Models;
 
-namespace ConcordiaAppTestLayer;
+namespace ConcordiaAppTestLayer.MockData;
 
 public static class DataServiceMockData
 {

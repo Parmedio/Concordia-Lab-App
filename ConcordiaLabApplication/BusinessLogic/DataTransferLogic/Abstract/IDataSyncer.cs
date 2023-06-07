@@ -1,8 +1,10 @@
-﻿namespace BusinessLogic.DataTransferLogic.Abstract
+﻿using PersistentLayer.Models;
+
+namespace BusinessLogic.DataTransferLogic.Abstract
 {
     public interface IDataSyncer
     {
-        Task<bool> Download();
+        Task<(IEnumerable<int>?, IEnumerable<Experiment>?)> Download();
         Task<bool> Upload();
     }
 }

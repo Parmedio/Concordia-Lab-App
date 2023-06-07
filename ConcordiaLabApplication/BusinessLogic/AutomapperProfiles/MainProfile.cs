@@ -15,7 +15,6 @@ public class MainProfile : Profile
     public MainProfile()
     {
         CreateMap<TrelloCommentDto, Comment>()
-            .ForCtorParam("Id", opt => opt.MapFrom(src => src.DatabaseID))
             .ForCtorParam("TrelloId", opt => opt.MapFrom(src => src.Id))
             .ForCtorParam("Body", opt => opt.MapFrom(src => src.Data.Text))
             .ForCtorParam("Date", opt => opt.MapFrom(src => src.Date))

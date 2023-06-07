@@ -77,6 +77,11 @@ public class ExperimentRepository : IExperimentRepository
         throw new NotImplementedException();
     }
 
+    public int? GetLocalIdLabelByTrelloIdLabel(string trelloIdLabel)
+    {
+        throw new NotImplementedException();
+    }
+
     public Experiment? Move(int experimentId, int listId)
     {
         throw new NotImplementedException();
