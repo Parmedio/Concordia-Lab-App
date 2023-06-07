@@ -27,7 +27,7 @@ public class ExperimentRepository : IExperimentRepository
 
         if (experiment.ScientistsIds != null)
         {
-            var scientists = _dbContext.Scientist.AsNoTracking().Where(s => experiment.ScientistsIds.Contains(s.Id));
+            var scientists = _dbContext.Scientists.AsNoTracking().Where(s => experiment.ScientistsIds.Contains(s.Id));
             entity.Entity.Scientists = scientists.ToList();
         }
 
@@ -45,7 +45,7 @@ public class ExperimentRepository : IExperimentRepository
 
         if (experiment.ListId != 0)
         {
-            var list = _dbContext.Lists.AsNoTracking().FirstOrDefault(l => l.Id == experiment.ListId);
+            var list = _dbContext.EntityLists.AsNoTracking().FirstOrDefault(l => l.Id == experiment.ListId);
             entity.Entity.List = list;
         }
         return entity.Entity;
@@ -93,7 +93,7 @@ public class ExperimentRepository : IExperimentRepository
             current.ListId = listIdDestination;
             _dbContext.SaveChanges();
 
-            var scientists = _dbContext.Scientist.AsNoTracking().Where(s => current.ScientistsIds.Contains(s.Id));
+            var scientists = _dbContext.Scientists.AsNoTracking().Where(s => current.ScientistsIds.Contains(s.Id));
             var comments = _dbContext.Comments.AsNoTracking().Where(c => current.CommentsIds.Contains(c.Id));
             var label = _dbContext.Labels.AsNoTracking().FirstOrDefault(l => l.Id == current.LabelId);
 
