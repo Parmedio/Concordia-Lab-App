@@ -1,7 +1,8 @@
 ﻿namespace BusinessLogic.DTOs.BusinessDTO;
 
-public class BusinessListDto
+public record BusinessListDto
 {
-    IEnumerable<BusinessExperimentDto>? Experiments { get; set; }
+    public int Id { get; set; } = 0!;
+    public IEnumerable<BusinessExperimentDto>? Experiments { get; set; }
 
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 
+using BusinessLogic.DTOs.BusinessDTO;
 using BusinessLogic.DTOs.TrelloDtos;
 
 using PersistentLayer.Models;
@@ -19,7 +20,10 @@ public class MainProfile : Profile
             .ForCtorParam("Body", opt => opt.MapFrom(src => src.Data.Text))
             .ForCtorParam("Date", opt => opt.MapFrom(src => src.Date))
             .ForCtorParam("CreatorName", opt => opt.MapFrom(src => src.MemberCreator.Username));
-
+        CreateMap<BusinessCommentDto, Comment>();
+        CreateMap<Comment, BusinessCommentDto>(); // Non so se e' necessario
+        CreateMap<Experiment, BusinessExperimentDto>();
         CreateMap<TrelloExperimentDto, Experiment>();
+        CreateMap<ListEntity, BusinessListDto>();
     }
 }

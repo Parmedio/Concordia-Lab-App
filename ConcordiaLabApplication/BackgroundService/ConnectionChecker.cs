@@ -55,8 +55,9 @@ public class ConnectionChecker : BackgroundService
                     }
 
                     connectionState = await dataService.UpdateConnectionStateAsync(true) ? "Online" : "Offline";
+                    Task sync = dataService.SyncDataAsyncs();
                     _logger.LogInformation($"Executed new cycle. current connection state is {connectionState}");
-
+                    await sync;
                 }
                 else if (_connectionAchieved)
                 {
