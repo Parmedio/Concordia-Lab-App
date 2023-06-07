@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PersistentLayer.Configurations;
 
@@ -11,9 +12,11 @@ using PersistentLayer.Configurations;
 namespace PersistentLayer.Migrations
 {
     [DbContext(typeof(ConcordiaDbContext))]
-    partial class ConcordiaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230607083400_AddCreatorName")]
+    partial class AddCreatorName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,17 +66,13 @@ namespace PersistentLayer.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("TrelloId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ExperimentId");
 
                     b.HasIndex("ScientistId");
-
-                    b.HasIndex("TrelloId")
-                        .IsUnique()
-                        .HasFilter("[TrelloId] IS NOT NULL");
 
                     b.ToTable("Comments");
                 });
@@ -155,7 +154,7 @@ namespace PersistentLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EntityLists");
+                    b.ToTable("Lists");
                 });
 
             modelBuilder.Entity("PersistentLayer.Models.Scientist", b =>
@@ -180,7 +179,7 @@ namespace PersistentLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Scientists");
+                    b.ToTable("Scientist");
                 });
 
             modelBuilder.Entity("ExperimentScientist", b =>

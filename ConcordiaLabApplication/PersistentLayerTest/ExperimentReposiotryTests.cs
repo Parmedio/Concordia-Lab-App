@@ -48,10 +48,38 @@ namespace PersistentLayerTest
             Assert.Equal(experiment.DeadLine, addedExperiment.DeadLine);
             Assert.Equal(experiment.LabelId, addedExperiment.LabelId);
             Assert.Equal(experiment.ListId, addedExperiment.ListId);
-            Assert.Equal(experiment.ScientistsIds, addedExperiment.Scientists.Select (s => s.Id));
+            Assert.Equal(experiment.ScientistsIds, addedExperiment.Scientists.Select(s => s.Id));
             Assert.Equal(experiment.Label, addedExperiment.Label);
             Assert.Equal(experiment.List, addedExperiment.List);
         }
+
+        [Fact]
+        public void Add_Experiments_Should_Add_Experiments_To_Database()
+        {
+
+            var experiments = new List<Experiment>
+            {
+                new Experiment
+                {
+                    TrelloId = "TrelloId1",
+                    Title = "Experiment 1",
+                    Description = "This is experiment 1",
+                    ListId = 1,
+                    LabelId = 4
+                },
+                new Experiment
+                {
+                    TrelloId = "TrelloId2",
+                    Title = "Experiment 2",
+                    Description = "This is experiment 2",
+                    ListId = 2,
+                    LabelId = 4,
+                }
+            };
+            var result = _sut.Add(experiments);
+            Assert.Equal(2, result.Count());
+        }
+
         [Fact]
         public void Should_Return_Specific_Experiment_By_Id()
         {
@@ -74,7 +102,7 @@ namespace PersistentLayerTest
             Assert.Equal(result, 1);
         }
 
-        [Fact]  
+        [Fact]
         public void Should_Return_All_Experiments()
         {
             var result = _sut.GetAll();
@@ -87,6 +115,13 @@ namespace PersistentLayerTest
         {
             var result = _sut.GetById(0);
             Assert.Null(result);
+        }
+
+        [Fact]
+        public void Should_Return_Last_Comment_Where_TrelloId_Is_null()
+        {
+            var result = _sut.GetLastCommentWhereTrelloIdIsNull(1);
+            Assert.NotNull(result);
         }
 
         [Fact]
@@ -105,14 +140,28 @@ namespace PersistentLayerTest
             Assert.Null(result);
         }
 
-        public void Should_Update_Experiment_In_Database()
+        [Fact]
+        public void Update_Should_Move_Experiment_In_Anoher_List()
         {
 
+            var existingExperiment = _sut.GetById(1);
+            Assert.NotNull(existingExperiment);
+
+            var updatedExperiment = _sut.Update(existingExperiment.Id, 2);
+
+            Assert.NotNull(updatedExperiment);
+            Assert.Equal(existingExperiment.Id, updatedExperiment.Id);
+            Assert.Equal(2, updatedExperiment.ListId);
+            Assert.NotNull(updatedExperiment.Scientists);
+            Assert.NotNull(updatedExperiment.Comments);
+            Assert.NotNull(updatedExperiment.Label);
         }
 
-        public void Update_Should_Return_Null_With_Id_Not_Existing()
+        [Fact]
+        public void Should_Return_LabelId_By_ExperimentTrelloId()
         {
-
+            var result = _sut.GetLabelId("vrvrgdwrr43");
+            Assert.Equal(result, 4);
         }
     }
 }
