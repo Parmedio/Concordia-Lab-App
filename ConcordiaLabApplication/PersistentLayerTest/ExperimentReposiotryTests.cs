@@ -98,7 +98,7 @@ namespace PersistentLayerTest
         [Fact]
         public void Should_Return_LocalId_With_TrelloId()
         {
-            var result = _sut.GetLocalIdByTrelloId("vrvrgdwrr43");
+            var result = _sut.GetLocalId("vrvrgdwrr43");
             Assert.Equal(result, 1);
         }
 
@@ -115,6 +115,13 @@ namespace PersistentLayerTest
         {
             var result = _sut.GetById(0);
             Assert.Null(result);
+        }
+
+        [Fact]
+        public void Should_Return_Last_Comment_Where_TrelloId_Is_null()
+        {
+            var result = _sut.GetLastCommentWhereTrelloIdIsNull(1);
+            Assert.NotNull(result);
         }
 
         [Fact]
@@ -148,6 +155,13 @@ namespace PersistentLayerTest
             Assert.NotNull(updatedExperiment.Scientists);
             Assert.NotNull(updatedExperiment.Comments);
             Assert.NotNull(updatedExperiment.Label);
+        }
+
+        [Fact]
+        public void Should_Return_LabelId_By_ExperimentTrelloId()
+        {
+            var result = _sut.GetLabelId("vrvrgdwrr43");
+            Assert.Equal(result, 4);
         }
     }
 }

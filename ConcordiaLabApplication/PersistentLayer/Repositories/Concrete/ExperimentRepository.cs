@@ -69,9 +69,21 @@ public class ExperimentRepository : IExperimentRepository
                                      .SingleOrDefault(e => e.Id == experimentId);
     }
 
-    public int? GetLocalIdByTrelloId(string trelloId)
+    public Comment? GetLastCommentWhereTrelloIdIsNull(int experimentId)
     {
-        return _dbContext.Experiments.AsNoTracking().SingleOrDefault(e => e.TrelloId.Equals(trelloId)).Id;
+        return _dbContext.Experiments.AsNoTracking()
+            .Include(e => e.Comments)
+            .Where(e => e.Id == experimentId && e.TrelloId == null)
+            .SelectMany(e => e.Comments)
+            .OrderByDescending(c => c.Date)
+            .FirstOrDefault();
+    }
+
+    public int GetLocalId(string trelloId)
+    {
+        var experiment = _dbContext.Experiments.AsNoTracking().SingleOrDefault(e => e.TrelloId.Equals(trelloId));
+        if (experiment == null) return 0;
+        return experiment.Id;
     }
 
     public Experiment? Remove(int experimentId)
@@ -85,7 +97,7 @@ public class ExperimentRepository : IExperimentRepository
         return experiment;
     }
 
-    public Experiment Update(int experimentId, int listIdDestination)
+    public Experiment? Update(int experimentId, int listIdDestination)
     {
         var current = _dbContext.Experiments.SingleOrDefault(e => e.Id == experimentId);
         if (current != null)
@@ -102,6 +114,14 @@ public class ExperimentRepository : IExperimentRepository
             current.Label = label;
         }
         return current;
+    }
 
+    public int GetLabelId (string trelloId)
+    {
+        var experiment = _dbContext.Experiments.AsNoTracking()
+            .Include(e => e.Label)
+            .SingleOrDefault(e => e.TrelloId == trelloId);
+        if (experiment != null) return experiment.LabelId;
+        return 0;
     }
 }
