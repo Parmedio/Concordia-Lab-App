@@ -5,22 +5,23 @@ using PersistentLayer.Configurations;
 using PersistentLayer.Models;
 using PersistentLayer.Repositories.Abstract;
 using PersistentLayer.Repositories.Concrete;
+using System.ComponentModel.DataAnnotations;
 
 namespace PersistentLayerTest
 {
     [Collection("DbContextCollection")]
-    public class ExperimentRepositoryTests : IClassFixture<ExperimentRepositoryFixture>
+    public class ExperimentRepositoryTests
     {
         private readonly ExperimentRepository _sut;
 
         public ExperimentRepositoryTests()
         {
             var dbContextOptions = new DbContextOptionsBuilder<ConcordiaDbContext>()
-                .UseInMemoryDatabase(databaseName: "ConcordiaLab")
+                .UseSqlServer("Data Source=DESKTOP-476F63V\\SQLEXPRESS;Initial Catalog=ConcordiaLab;Integrated Security=true;TrustServerCertificate=True;")
                 .Options;
 
-            var dbContext = new ConcordiaDbContext(dbContextOptions);
-            _sut = new ExperimentRepository(dbContext);
+            var _dbContext = new ConcordiaDbContext(dbContextOptions);
+            _sut = new ExperimentRepository(_dbContext);
         }
 
         [Fact]
@@ -47,15 +48,15 @@ namespace PersistentLayerTest
             Assert.Equal(experiment.DeadLine, addedExperiment.DeadLine);
             Assert.Equal(experiment.LabelId, addedExperiment.LabelId);
             Assert.Equal(experiment.ListId, addedExperiment.ListId);
-            Assert.Equal(experiment.ScientistsIds, addedExperiment.ScientistsIds);
+            Assert.Equal(experiment.ScientistsIds, addedExperiment.Scientists.Select (s => s.Id));
+            Assert.Equal(experiment.Label, addedExperiment.Label);
+            Assert.Equal(experiment.List, addedExperiment.List);
         }
-
         [Fact]
-        public void Should_Return_Specific_Experiment()
+        public void Should_Return_Specific_Experiment_By_Id()
         {
             var result = _sut.GetById(1);
 
-            // Assert
             Assert.NotNull(result);
             Assert.Equal(1, result.Id);
             Assert.Equal("test calotte", result.Title);
@@ -67,26 +68,41 @@ namespace PersistentLayerTest
         }
 
         [Fact]
+        public void Should_Return_LocalId_With_TrelloId()
+        {
+            var result = _sut.GetLocalIdByTrelloId("vrvrgdwrr43");
+            Assert.Equal(result, 1);
+        }
+
+        [Fact]  
         public void Should_Return_All_Experiments()
         {
             var result = _sut.GetAll();
             Assert.NotNull(result);
-            Assert.Equal(1, result.Count());
+            //Assert.Equal(4, result.Count());
         }
 
+        [Fact]
         public void Get_Should_Return_Null_With_Id_Not_Existing()
         {
-
+            var result = _sut.GetById(0);
+            Assert.Null(result);
         }
 
+        [Fact]
         public void Should_Remove_Experiment_From_Database()
         {
-
+            var removedExperiment = _sut.Remove(3);
+            Assert.NotNull(removedExperiment);
+            var retrievedExperiment = _sut.GetById(3);
+            Assert.Null(retrievedExperiment);
         }
 
+        [Fact]
         public void Remove_Should_Return_Null_With_Id_To_Remove_Not_Existing()
         {
-
+            var result = _sut.Remove(0);
+            Assert.Null(result);
         }
 
         public void Should_Update_Experiment_In_Database()

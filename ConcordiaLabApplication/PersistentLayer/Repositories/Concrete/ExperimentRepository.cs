@@ -74,12 +74,18 @@ public class ExperimentRepository : IExperimentRepository
 
     public int? GetLocalIdByTrelloId(string trelloId)
     {
-        throw new NotImplementedException();
+        return _dbContext.Experiments.AsNoTracking().SingleOrDefault(e => e.TrelloId.Equals(trelloId)).Id;
     }
 
     public Experiment? Remove(int experimentId)
     {
-        throw new NotImplementedException();
+        var experiment = _dbContext.Experiments.AsNoTracking().SingleOrDefault(e => e.Id == experimentId);
+        if (experiment != null)
+        {
+            _dbContext.Remove(experiment);
+            _dbContext.SaveChanges();
+        }
+        return experiment;
     }
 
     public Experiment Update(Experiment experiment)
