@@ -26,7 +26,6 @@ namespace PersistentLayerTest
             var comment = new Comment { TrelloId = "T1", Body = "Test Comment" };
             var commentId = _commentRepository.AddComment(comment);
             Assert.NotEqual(0, commentId);
-            _dbContext.Dispose();
         }
 
         [Fact]
