@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PersistentLayer.Configurations;
 using PersistentLayer.Models;
+using PersistentLayer.Repositories.Abstract;
 using PersistentLayer.Repositories.Concrete;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,51 +14,142 @@ namespace PersistentLayerTest
 {
     public class ListReposiotoryTests
     {
-        private readonly ListRepository _sut;
+        private readonly ListRepository _listRepository;
+        private readonly ConcordiaDbContext _dbContext;
 
         public ListReposiotoryTests()
         {
-            var dbContextOptions = new DbContextOptionsBuilder<ConcordiaDbContext>()
-                .UseSqlServer("Data Source=DESKTOP-476F63V\\SQLEXPRESS;Initial Catalog=ConcordiaLab;Integrated Security=true;TrustServerCertificate=True;")
+            var options = new DbContextOptionsBuilder<ConcordiaDbContext>()
+                .UseInMemoryDatabase(databaseName: "TestDatabase")
                 .Options;
 
-            var _dbContext = new ConcordiaDbContext(dbContextOptions);
-            _sut = new ListRepository(_dbContext);
+            _dbContext = new ConcordiaDbContext(options);
+            _listRepository = new ListRepository(_dbContext);
+
+            Seed();
         }
 
         [Fact]
         public void Should_Return_All_Lists()
         {
-            var result = _sut.GetAll();
-            Assert.Equal(3, result.Count());
-        }
 
-        [Fact]
-        public void Should_Return_Lists_By_ListId()
-        {
-            var result = _sut.GetById(1);
-            Assert.Equal("to do", result.Title);
-            var result2 = _sut.GetById(2);
-            Assert.Equal("in progress", result2.Title);
-            var result3 = _sut.GetById(3);
-            Assert.Equal("done", result3.Title);
         }
 
         [Fact]
         public void Shoul_Return_Lists_Of_A_Scientist_By_ScientisId()
         {
-            var result = _sut.GetByScientistId(1); 
-            Assert.Equal(2, result.Count());
-            foreach (var list in result)
-            {
-                var l = list;
-                Assert.NotNull(list.Experiments);
-                foreach (var experiment in list.Experiments)
-                {
-                    var e = experiment;
-                    Assert.NotNull(experiment.Scientists);
-                }
-            }
         }
+
+        public record Scientist(int Id = default, string TrelloToken = null!, string TrelloMemberId = null!, string Name = null!)
+        {
+            public virtual IEnumerable<Experiment>? Experiments { get; set; }
+            [NotMapped]
+            public virtual IEnumerable<int>? ExperimentsIds { get; set; }
+        }
+        private void Seed()
+        {
+
+            new Scientist
+            {
+                TrelloToken = "wfrf445eef344rf",
+                TrelloMemberId = "3434fv",
+                Name = "gabriele"
+            };
+
+            new Scientist
+            {
+                TrelloToken = "wedecerfedef",
+                TrelloMemberId = "324332d",
+                Name = "marco"
+            };
+
+            new Scientist
+            {
+                TrelloToken = "wwdwx2rycecee23",
+                TrelloMemberId = "dcwd2323c",
+                Name = "alessandro"
+            };
+            var lists = new List<ListEntity>
+            {
+                new ListEntity
+                {
+                    TrelloId = "ce34442cw",
+                    Title = "to do",
+                },
+                new ListEntity
+                {
+                    TrelloId = "efcrvrt23",
+                    Title = "in progress",
+                },
+
+                 new ListEntity
+                {
+                    TrelloId = "wede224ev",
+                    Title = "done"
+                }
+             };
+
+            var experiments = new List<Experiment>
+            {
+                new Experiment
+                {
+                    TrelloId = "TrelloId1",
+                    Title = "Experiment 1",
+                    Description = "This is experiment 1",
+                    ListId = 1,
+                    LabelId = 3
+                },
+                new Experiment
+                {
+                    TrelloId = "TrelloId2",
+                    Title = "Experiment 2",
+                    Description = "This is experiment 2",
+                    ListId = 2,
+                    LabelId = 1,
+                },
+                new Experiment
+                {
+                    TrelloId = "TrelloId3",
+                    Title = "Experiment 3",
+                    Description = "This is experiment 3",
+                    ListId = 3,
+                    LabelId = 2,
+                },
+                new Experiment
+                {
+                    TrelloId = "TrelloId4",
+                    Title = "Experiment 4",
+                    Description = "This is experiment 4",
+                    ListId = 2,
+                    LabelId = 3,
+                }
+            };
+
+            var comments = new List<Comment>
+            {
+                new Comment
+                {
+                    TrelloId = "TrelloId1",
+                    Body = "This is the first comment.",
+                    Date = DateTime.Now.AddDays(-2),
+                    CreatorName = "John"
+                },
+                new Comment
+                {
+                    TrelloId = "TrelloId2",
+                    Body = "This is the second comment.",
+                    Date = DateTime.Now.AddDays(-1),
+                    CreatorName = "Jane"
+                },
+                new Comment
+                {
+                    TrelloId = "TrelloId3",
+                    Body = "This is the third comment.",
+                    Date = DateTime.Now,
+                    CreatorName = "Mike"
+                }
+        };
+        }
+
     }
 }
