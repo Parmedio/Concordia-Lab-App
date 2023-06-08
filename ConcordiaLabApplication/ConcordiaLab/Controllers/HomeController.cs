@@ -41,14 +41,14 @@ namespace ConcordiaLab.Controllers
         public IActionResult Detail(int experimentId, int scientistId)
         {
             _logger.LogInformation("Message.Detail was called");
-
+            
             var detail = BuildDetailedExperiment(experimentId);
 
-            ViewData["ExperimentId"] = experimentId;
-            ViewData["ExperimentScientistIds"] = detail.Experiment.IntScientists?.ToList() ?? new List<int>();
-            ViewData["SelectedScientistId"] = scientistId;
             ViewData["Scientists"] = _mockGatewayScientist.GetAll();
-
+            ViewData["ExperimentId"] = experimentId;
+            ViewData["SelectedScientistId"] = scientistId;
+            ViewData["ExperimentScientistIds"] = detail.Experiment.IntScientists;
+            
             return View(detail);
         }
 

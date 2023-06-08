@@ -4,6 +4,9 @@ using BusinessLogic.APIConsumers.Concrete;
 using BusinessLogic.APIConsumers.UriCreators;
 using BusinessLogic.DataTransferLogic.Abstract;
 using BusinessLogic.DataTransferLogic.Concrete;
+using ConcordiaLab.Controllers;
+using ConcordiaLab.Controllers.Mock_Data;
+using ConcordiaLab.Controllers.Mock_Data.Mock_Gateway;
 using Microsoft.EntityFrameworkCore;
 using PersistentLayer.Configurations;
 using PersistentLayer.Repositories.Abstract;
@@ -33,13 +36,19 @@ namespace ConcordiaLab
             builder.Services.AddTransient<IDataHandlerFactory, DataHandlerFactory>();
             builder.Services.AddTransient<ClientService>();
 
-            builder.Services.AddDbContext<ConcordiaDbContext>(options =>
-                  options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-            builder.Services.AddScoped<IExperimentRepository, ExperimentRepository>();
+            //builder.Services.AddDbContext<ConcordiaDbContext>(options =>
+            //      options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            //builder.Services.AddScoped<IExperimentRepository, ExperimentRepository>();
+
+            builder.Services.AddScoped<MockGatewayScientist>();
+            builder.Services.AddScoped<MockGatewayExperiment>();
+            builder.Services.AddScoped<MockGatewayList>();
+            builder.Services.AddSingleton<UserSetting>();
 
             var app = builder.Build();
 
-            await app.MigrateAsync();
+
+            //await app.MigrateAsync();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
