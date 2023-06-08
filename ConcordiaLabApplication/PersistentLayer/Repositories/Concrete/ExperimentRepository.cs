@@ -85,6 +85,16 @@ public class ExperimentRepository : IExperimentRepository
         return experiment.Id;
     }
 
+    public int? GetLocalIdLabelByTrelloIdLabel(string trelloIdLabel)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Experiment? Move(int experimentId, int listId)
+    {
+        throw new NotImplementedException();
+    }
+
     public Experiment? Remove(int experimentId)
     {
         var experiment = _dbContext.Experiments.AsNoTracking().SingleOrDefault(e => e.Id == experimentId);

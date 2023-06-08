@@ -26,34 +26,37 @@ public class Program
 
         var builder = WebApplication.CreateBuilder(args);
         // Add services to the container.
-        //MapperConfigurationExpression configuration = new MapperConfigurationExpression();
-        //configuration.AddProfile(typeof(MainProfile));
-        //var mappingConfiguration = new MapperConfiguration(configuration);
-       // mappingConfiguration.AssertConfigurationIsValid();
+        MapperConfigurationExpression configuration = new MapperConfigurationExpression();
+        configuration.AddProfile(typeof(MainProfile));
+        var mappingConfiguration = new MapperConfiguration(configuration);
+        mappingConfiguration.AssertConfigurationIsValid();
 
 
         builder.Services.AddControllersWithViews();
-        //builder.Services.AddHttpClient("ApiConsumer", client =>
-        //{
-        //    client.BaseAddress = new Uri(builder.Configuration.GetSection("TrelloUrlToUse")!.GetSection("baseUrl").Value!);
-        //    client.Timeout = TimeSpan.FromSeconds(Convert.ToDouble(builder.Configuration.GetSection("ClientInfo").GetSection("timeout").Value!));
-        //});
+        builder.Services.AddHttpClient("ApiConsumer", client =>
+        {
+            client.BaseAddress = new Uri(builder.Configuration.GetSection("TrelloUrlToUse")!.GetSection("baseUrl").Value!);
+            client.Timeout = TimeSpan.FromSeconds(Convert.ToDouble(builder.Configuration.GetSection("ClientInfo").GetSection("timeout").Value!));
+        });
 
         builder.Services.AddDbContext<ConcordiaDbContext>(options =>
               options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-        //builder.Services.AddAutoMapper(cfg => cfg.AddProfile(configuration));
-        //builder.Services.AddHostedService(provider => provider.GetRequiredService<ConnectionChecker>());
-        //builder.Services.AddLogging();
+        builder.Services.AddAutoMapper(cfg => cfg.AddProfile(configuration));
+        builder.Services.AddHostedService(provider => provider.GetRequiredService<ConnectionChecker>());
+        builder.Services.AddLogging();
 
-        //builder.Services.AddSingleton<ConnectionChecker>();
-        //builder.Services.AddScoped<IApiSender, ApiSender>();
-        //builder.Services.AddScoped<IDataService, DataService>();
-        //builder.Services.AddScoped<IExperimentRepository, ExperimentRepository>();
-        //builder.Services.AddTransient<IUriCreatorFactory, UriCreatorFactory>();
-        //builder.Services.AddTransient<IDataSyncer, DataSyncer>();
-        //builder.Services.AddTransient<IRetrieveConnectionTimeInterval, RetrieveConnectionTimeInterval>();
-        //builder.Services.AddTransient<IDataHandlerFactory, DataHandlerFactory>();
-        //builder.Services.AddTransient<ClientService>();
+        builder.Services.AddSingleton<ConnectionChecker>();
+        builder.Services.AddScoped<IApiSender, ApiSender>();
+        builder.Services.AddScoped<IDataService, DataService>();
+        builder.Services.AddScoped<IExperimentRepository, ExperimentRepository>();
+        builder.Services.AddTransient<IUriCreatorFactory, UriCreatorFactory>();
+        builder.Services.AddTransient<IDataSyncer, DataSyncer>();
+        builder.Services.AddTransient<IRetrieveConnectionTimeInterval, RetrieveConnectionTimeInterval>();
+        builder.Services.AddTransient<IDataHandlerFactory, DataHandlerFactory>();
+        builder.Services.AddTransient<IClientService, ClientService>();
+        builder.Services.AddTransient<ICommentDownloader, CommentDownloader>();
+        builder.Services.AddTransient<IExperimentDownloader, ExperimentDownloader>();
+        builder.Services.AddTransient<IUploader, Uploader>();
 
 
         var app = builder.Build();

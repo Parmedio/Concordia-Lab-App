@@ -16,7 +16,7 @@ public abstract class DataServiceDecorator : IDataService
         return _component.AddComment(businessCommentDto, scientistId);
     }
 
-    public virtual List<BusinessListDto>? GetAllLists(int scientistId)
+    public virtual IEnumerable<BusinessListDto> GetAllLists(int scientistId)
     {
         return _component.GetAllLists(scientistId);
     }

@@ -2,7 +2,6 @@
 
 public record TrelloCommentDto
 {
-    public int? DatabaseID { get; set; }
     public string Id { get; set; } = null!;
     public string IdMemberCreator { get; set; } = null!;
     public DataInTrelloCommentDto Data { get; set; } = null!;

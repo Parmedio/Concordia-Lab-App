@@ -18,5 +18,8 @@ public interface IExperimentRepository
 
     public int? GetLocalIdByTrelloId(string trelloId);
 
-    public Comment? GetLastCommentWhereTrelloIdIsNull(int experimentId);
+    public Comment GetLastCommentWithTrelloIdNull(Experiment experiment);
+  
+    public int? GetLocalIdLabelByTrelloIdLabel(string trelloIdLabel);
+
 }
