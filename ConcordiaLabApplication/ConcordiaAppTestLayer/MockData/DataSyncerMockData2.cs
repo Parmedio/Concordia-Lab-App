@@ -40,6 +40,7 @@ public class DataSyncerMockData2
     public List<TrelloCommentDto> AllCommentsOnTrello { get; set; }
     public List<Experiment> AddedExperiments { get; set; }
     public List<int> NewCommentIds { get; set; }
+    public Experiment LocalExperiment1InToDoToUpload { get; set; }
 
     public DataSyncerMockData2()
     {
@@ -51,6 +52,20 @@ public class DataSyncerMockData2
             DateTime.Parse("2022-4-11T12:00:00.000Z")
             )
         {
+            LabelId = 1,
+            ListId = 1,
+            ScientistsIds = new List<int>() { 1 }
+        };
+
+        LocalExperiment1InToDoToUpload = new Experiment(
+            1,
+            "aaa",
+            "esperimentoVecchio1",
+            "simpleDescription",
+            DateTime.Parse("2022-4-11T12:00:00.000Z")
+            )
+        {
+            Comments = new List<Comment>() { LocalComment1OnCard1 },
             LabelId = 1,
             ListId = 1,
             ScientistsIds = new List<int>() { 1 }

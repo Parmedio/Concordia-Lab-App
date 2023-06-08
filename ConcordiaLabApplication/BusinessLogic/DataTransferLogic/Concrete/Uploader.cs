@@ -29,7 +29,7 @@ public class Uploader : IUploader
     {
         foreach (var experiment in experiments)
         {
-            if (!_sender.UpdateAnExperiment(experiment.TrelloId, experiment.List!.TrelloId).IsCompletedSuccessfully)
+            if (!await _sender.UpdateAnExperiment(experiment.TrelloId, experiment.List!.TrelloId))
                 throw new UploadFailedException($"The process failed while uploading experiments. Failed at experiment: {experiment.Title}");
 
             Comment? commentToAdd = null;
@@ -37,7 +37,7 @@ public class Uploader : IUploader
             {
                 commentToAdd = experiment.Comments!.Where(p => p.TrelloId is null && p.Date == experiment.Comments!.Max(g => g.Date)).FirstOrDefault();
                 if (!await _sender.AddAComment(experiment.TrelloId, commentToAdd!.Body, commentToAdd.Scientist!.TrelloToken))
-                    throw new UploadFailedException($"The process failed while uploading the experiment: {experiment.Title}. Error while trying to upload its latest comment {commentToAdd.Body}");
+                    throw new UploadFailedException($"The process failed while uploading the experiment: {experiment.Title}. Error while trying to upload its latest comment: {commentToAdd.Body}");
             }
 
         }
