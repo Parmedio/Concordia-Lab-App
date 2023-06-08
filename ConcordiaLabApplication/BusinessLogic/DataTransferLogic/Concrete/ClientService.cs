@@ -3,7 +3,7 @@ using BusinessLogic.DTOs.BusinessDTO;
 
 namespace BusinessLogic.DataTransferLogic.Concrete;
 
-public class ClientService : IDataService
+public class ClientService : IClientService
 {
     private static bool _connectionAvailable = false;
     private readonly IDataService _dataHandler;
@@ -45,8 +45,7 @@ public class ClientService : IDataService
     {
         if (_connectionAvailable)
         {
-            await _dataSyncer.Download();
-            await _dataSyncer.Upload();
+            await _dataSyncer.SynchronizeAsync();
         }
     }
 

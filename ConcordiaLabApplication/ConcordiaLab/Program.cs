@@ -52,7 +52,11 @@ public class Program
         builder.Services.AddTransient<IDataSyncer, DataSyncer>();
         builder.Services.AddTransient<IRetrieveConnectionTimeInterval, RetrieveConnectionTimeInterval>();
         builder.Services.AddTransient<IDataHandlerFactory, DataHandlerFactory>();
-        builder.Services.AddTransient<ClientService>();
+        builder.Services.AddTransient<IClientService, ClientService>();
+        builder.Services.AddTransient<ICommentDownloader, CommentDownloader>();
+        builder.Services.AddTransient<IExperimentDownloader, ExperimentDownloader>();
+        builder.Services.AddTransient<IUploader, Uploader>();
+
 
 
         var app = builder.Build();
