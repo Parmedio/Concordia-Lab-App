@@ -3,16 +3,18 @@ using BusinessLogic.DTOs.BusinessDTO;
 
 namespace BusinessLogic.DataTransferLogic.Concrete;
 
-public class ClientService : IDataService
+public class ClientService : IClientService
 {
     private static bool _connectionAvailable = false;
     private readonly IDataService _dataHandler;
+    private readonly IDataSyncer _dataSyncer;
     private readonly IDataHandlerFactory _dataHandlerFactory;
 
-    public ClientService(IDataHandlerFactory dataHandlerFactory)
+    public ClientService(IDataHandlerFactory dataHandlerFactory, IDataSyncer dataSyncer)
     {
         _dataHandlerFactory = dataHandlerFactory;
         _dataHandler = _dataHandlerFactory.DataServiceFactoryMethod(_connectionAvailable);
+        _dataSyncer = dataSyncer;
     }
 
     public async Task<bool> UpdateConnectionStateAsync(bool connectionState)
@@ -29,7 +31,7 @@ public class ClientService : IDataService
         return _dataHandler.AddComment(businessCommentDto, scientistId);
     }
 
-    public List<BusinessListDto>? GetAllLists(int scientistId)
+    public IEnumerable<BusinessListDto> GetAllLists(int scientistId)
     {
         return _dataHandler.GetAllLists(scientistId);
     }
@@ -38,4 +40,14 @@ public class ClientService : IDataService
     {
         return _dataHandler.MoveExperiment(businessExperimentDto);
     }
+
+    public async Task SyncDataAsyncs()
+    {
+        if (_connectionAvailable)
+        {
+            await _dataSyncer.SynchronizeAsync();
+        }
+    }
+
+
 }

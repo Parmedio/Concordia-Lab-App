@@ -1,10 +1,11 @@
-@model ConcordiaLab.Controllers.Mock_Data.ViewModel.MockExperimentDetails
+@model ConcordiaLab.Controllers.Mock_Data.ViewModel.ExperimentDetails
 
 @{
     ViewData["Title"] = "Experiment Detail";
     Layout = "_Layout";
     var experiment = Model.Experiment;
     var selectedScientistId = ViewData["SelectedScientistId"] as int?;
+    var selectedViewMode = ViewData["SelectedViewMode"] as string ?? string.Empty;
 }
 
 <h1 class="display-5">@ViewData["Title"]</h1>
@@ -54,7 +55,7 @@
     </div>
 </div>
 
-<a class="btn btn-outline-primary" asp-action="Index" asp-route-scientistId="@selectedScientistId">go back</a>
+<a class="btn btn-outline-primary" asp-action="@(selectedViewMode == "status" ? "index" : selectedViewMode)" asp-route-scientistId="@selectedScientistId">go back</a>
 
 <style>
     .experiment-title {

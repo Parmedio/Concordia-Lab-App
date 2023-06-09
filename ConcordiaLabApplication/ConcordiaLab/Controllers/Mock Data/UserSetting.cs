@@ -3,6 +3,7 @@
     public class UserSetting
     {
         public int CurrentUser { get; set; } = 0;
-        public string ViewSPreferences { get; set; } = "status";
+        public string ViewPreferences { get; set; } = "status";
+
     }
 }

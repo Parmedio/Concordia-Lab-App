@@ -15,11 +15,11 @@ public class ConnectionConcreteDecorator : DataServiceDecorator
     public override BusinessCommentDto AddComment(BusinessCommentDto businessCommentDto, int scientistId)
     {
         var comment = base.AddComment(businessCommentDto, scientistId);
-        _sender.AddAComment(comment.TrelloCardId, comment.commentText, comment.scientist.TrelloToken);
+        _sender.AddAComment(comment.TrelloCardId, comment.CommentText, comment.Scientist.TrelloToken);
         return comment;
     }
 
-    public override List<BusinessListDto>? GetAllLists(int scientistId)
+    public override IEnumerable<BusinessListDto> GetAllLists(int scientistId)
     {
         return base.GetAllLists(scientistId);
     }
