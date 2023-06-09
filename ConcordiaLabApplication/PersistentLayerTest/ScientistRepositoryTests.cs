@@ -1,40 +1,31 @@
-﻿using Microsoft.EntityFrameworkCore;
-using PersistentLayer.Configurations;
-using PersistentLayer.Models;
-using PersistentLayer.Repositories.Abstract;
+﻿using PersistentLayer.Configurations;
 using PersistentLayer.Repositories.Concrete;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PersistentLayerTest
 {
     public class ScientistRepositoryTests
     {
-        private readonly ScientistRepository _scientistRepository;
+        private readonly ScientistRepository _sut;
         private readonly ConcordiaDbContext _dbContext;
 
         public ScientistRepositoryTests()
         {
-            var options = new DbContextOptionsBuilder<ConcordiaDbContext>()
-                .UseInMemoryDatabase(databaseName: "TestDatabase")
-                .Options;
-
-            _dbContext = new ConcordiaDbContext(options);
-            _scientistRepository = new ScientistRepository(_dbContext);
+            _dbContext = new TestDatabaseFixture().CreateContext();
+            _sut = new ScientistRepository(_dbContext);
         }
 
         [Fact]
         public void Should_Retrun_LocalId_By_TrelloId()
         {
-            var existingScientist = new Scientist {Name = "gabriele", TrelloToken = "evrevr4545bgrbt", TrelloMemberId = "ece57v3" };
-            _dbContext.Scientists.Add(existingScientist);
-            _dbContext.SaveChanges();
+            var scientistId = _sut.GetLocalIdByTrelloId("3434fv");
+            Assert.Equal(1, scientistId);
+        }
 
-            var scientistId = _scientistRepository.GetLocalIdByTrelloId("ece57v3");
-            Assert.NotNull(scientistId);
+        [Fact]
+        public void Should_Retrun_Null_By_TrelloId_Not_Existing()
+        {
+            var scientistId = _sut.GetLocalIdByTrelloId("trelloIdNotExisting");
+            Assert.Null(scientistId);
         }
     }
 }

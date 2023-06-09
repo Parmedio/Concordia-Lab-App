@@ -1,49 +1,38 @@
-﻿using Microsoft.EntityFrameworkCore;
-using PersistentLayer.Configurations;
-using PersistentLayer.Models;
-using PersistentLayer.Repositories.Abstract;
+﻿using PersistentLayer.Configurations;
 using PersistentLayer.Repositories.Concrete;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PersistentLayerTest
 {
     public class ListReposiotoryTests
     {
-        private readonly ListRepository _listRepository;
+        private readonly ListRepository _sut;
         private readonly ConcordiaDbContext _dbContext;
 
         public ListReposiotoryTests()
         {
-            var options = new DbContextOptionsBuilder<ConcordiaDbContext>()
-                .UseInMemoryDatabase(databaseName: "TestDatabase")
-                .Options;
-
-            _dbContext = new ConcordiaDbContext(options);
-            _listRepository = new ListRepository(_dbContext);
+            _dbContext = new TestDatabaseFixture().CreateContext();
+            _sut = new ListRepository(_dbContext);
         }
 
         [Fact]
         public void Should_Return_All_Lists()
         {
-
+            var lists = _sut.GetAll();
+            Assert.Equal(3, lists.Count());
+            Assert.Equal("to do", lists.First().Title);
+            Assert.True(lists.All(l => l.Experiments.Any()));
+            Assert.True(lists.All(l => l.Experiments.All(e => e.Scientists.Any())));
         }
 
         [Fact]
         public void Shoul_Return_Lists_Of_A_Scientist_By_ScientisId()
         {
-        }
+            var lists = _sut.GetByScientistId(1);
 
-        public record Scientist(int Id = default, string TrelloToken = null!, string TrelloMemberId = null!, string Name = null!)
-        {
-            public virtual IEnumerable<Experiment>? Experiments { get; set; }
-            [NotMapped]
-            public virtual IEnumerable<int>? ExperimentsIds { get; set; }
-        }
-      
+            Assert.NotNull(lists);
+
+            Assert.Equal(3, lists.Count());
+            Assert.True(lists.All(l => l.Experiments.Any(e => e.Scientists.Any(s => s.Id == 1))));
+        }     
     }
 }
