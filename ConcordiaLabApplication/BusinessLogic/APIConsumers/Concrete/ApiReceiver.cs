@@ -2,9 +2,6 @@
 using BusinessLogic.APIConsumers.Abstract;
 using BusinessLogic.APIConsumers.UriCreators;
 using BusinessLogic.DTOs.TrelloDtos;
-
-using System.Net.Http.Json;
-
 namespace BusinessLogic.APIConsumers.Concrete;
 
 public class ApiReceiver : IApiReceiver
@@ -20,8 +17,9 @@ public class ApiReceiver : IApiReceiver
     public async Task<IEnumerable<TrelloExperimentDto>?> GetAllExperimentsInToDoList()
     {
         var client = _httpClientFactory.CreateClient("ApiConsumer");
-        var response = await client.GetFromJsonAsync<IEnumerable<TrelloExperimentDto>?>(_uriCreator.GetAllCardsOnToDoList());
-        return response;
+        var relativePath = _uriCreator.GetAllCardsOnToDoList();
+        var response = client.GetFromJsonAsync<IEnumerable<TrelloExperimentDto>?>(relativePath);
+        return await response;
 
     }
 
