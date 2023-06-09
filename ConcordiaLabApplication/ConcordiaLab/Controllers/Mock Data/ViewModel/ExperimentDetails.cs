@@ -2,9 +2,9 @@
 
 namespace ConcordiaLab.Controllers.Mock_Data.ViewModel
 {
-    public class MockExperimentDetails
+    public class ExperimentDetails
     {
-        public MockExperimentDetails(MockExperiment mockExperiments)
+        public ExperimentDetails(MockExperiment mockExperiments)
         {
             Experiment = mockExperiments;
         }

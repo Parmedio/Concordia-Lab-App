@@ -2,7 +2,6 @@
 {
     public interface IDataSyncer
     {
-        Task<bool> Download();
-        Task<bool> Upload();
+        public Task SynchronizeAsync();
     }
 }

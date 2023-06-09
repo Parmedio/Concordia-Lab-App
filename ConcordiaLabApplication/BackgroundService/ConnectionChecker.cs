@@ -1,4 +1,4 @@
-﻿using BusinessLogic.DataTransferLogic.Concrete;
+﻿using BusinessLogic.DataTransferLogic.Abstract;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,7 +40,7 @@ public class ConnectionChecker : BackgroundService
             try
             {
                 await using AsyncServiceScope asyncScope = _scopeFactory.CreateAsyncScope();
-                ClientService dataService = asyncScope.ServiceProvider.GetRequiredService<ClientService>();
+                IClientService dataService = asyncScope.ServiceProvider.GetRequiredService<IClientService>();
                 string connectionState;
                 (bool, TimeSpan) connectionInfo = _timeRetriever.IsTimeInInterval(DateTime.Now);
 
@@ -55,8 +55,9 @@ public class ConnectionChecker : BackgroundService
                     }
 
                     connectionState = await dataService.UpdateConnectionStateAsync(true) ? "Online" : "Offline";
+                    Task sync = dataService.SyncDataAsyncs();
                     _logger.LogInformation($"Executed new cycle. current connection state is {connectionState}");
-
+                    await sync;
                 }
                 else if (_connectionAchieved)
                 {

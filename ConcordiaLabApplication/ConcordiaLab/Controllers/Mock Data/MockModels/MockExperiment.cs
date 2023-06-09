@@ -8,6 +8,7 @@
         public DateTime? DueDate { get; set; }
         public string? Priority { get; set; }
         public string? LastComment { get; set; }
+        public int? BelongToList { get; set; }
         public IEnumerable<int>? IntScientists { get; set; }
         public IEnumerable<MockScientist>? Scientists { get; set; }
 
