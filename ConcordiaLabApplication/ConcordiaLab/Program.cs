@@ -8,7 +8,6 @@ using BusinessLogic.APIConsumers.UriCreators;
 using BusinessLogic.AutomapperProfiles;
 using BusinessLogic.DataTransferLogic.Abstract;
 using BusinessLogic.DataTransferLogic.Concrete;
-
 using Microsoft.EntityFrameworkCore;
 
 using PersistentLayer.Configurations;
@@ -35,6 +34,7 @@ public class Program
         builder.Services.AddControllersWithViews();
         builder.Services.AddHttpClient("ApiConsumer", client =>
         {
+
             client.BaseAddress = new Uri(builder.Configuration.GetSection("TrelloUrlToUse")!.GetSection("baseUrl").Value!);
             client.Timeout = TimeSpan.FromSeconds(Convert.ToDouble(builder.Configuration.GetSection("ClientInfo").GetSection("timeout").Value!));
         });
