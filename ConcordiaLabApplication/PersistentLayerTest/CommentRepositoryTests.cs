@@ -2,49 +2,52 @@
 using PersistentLayer.Configurations;
 using PersistentLayer.Models;
 using PersistentLayer.Repositories.Concrete;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PersistentLayerTest
 {
-    public class CommentRepositoryTests
+    public class CommentRepositoryTests : IDisposable
     {
         private readonly CommentRepository _sut;
+        private readonly ConcordiaDbContext _dbContext;
 
         public CommentRepositoryTests()
         {
-            var dbContextOptions = new DbContextOptionsBuilder<ConcordiaDbContext>()
-                .UseSqlServer("Data Source=DESKTOP-476F63V\\SQLEXPRESS;Initial Catalog=ConcordiaLab;Integrated Security=true;TrustServerCertificate=True;")
-                .Options;
-
-            var _dbContext = new ConcordiaDbContext(dbContextOptions);
-            _sut = new CommentRepository(_dbContext);
+            _dbContext = new TestDatabaseFixture().CreateContext();
+            _sut = new CommentRepository (_dbContext);
         }
 
         [Fact]
-        public void Should_Add_Comment_In_Db()
+        public void Add_Comment_Should_Return_CommentId_()
         {
-            var comment = new Comment
-            {
-                Body = "comment body",
-                Date = DateTime.Now,
-                ExperimentId = 1,
-                TrelloId = "refeferv",
-                CreatorName = "gabriele",
-                ScientistId = 1
-            };
-            var result = _sut.AddComment(comment);
-            Assert.NotEqual(0, result);
+            using var transaction = _dbContext.Database.BeginTransaction();
+
+            var comment = new Comment { TrelloId = "T1", Body = "Test Comment" };
+            var commentId = _sut.AddComment(comment);
+            Assert.NotEqual(0, commentId);
+
+            _dbContext.ChangeTracker.Clear();
         }
 
         [Fact]
-        public void Should_Return_Comment_By_TrelloId()
+        public void GetCommentByTrelloId_ExistingComment_Should_Return_Comment()
         {
-            var result = _sut.GetCommentByTrelloId("refeferv");
-            Assert.NotNull(result);
+
+            var comment = _sut.GetCommentByTrelloId("TrelloIdComment1");
+            Assert.NotNull(comment);
+            Assert.Equal("This is the first comment.", comment.Body);
+            Assert.Equal("Gabriele", comment.CreatorName);
+            Assert.Equal(1, comment.ExperimentId);
+            Assert.Equal(1, comment.ScientistId);
         }
+
+        [Fact]
+        public void GetCommentByTrelloId_Not_ExistingComment_Should_Return_Null()
+        {
+            var comment = _sut.GetCommentByTrelloId("NonExistingTrelloId");
+            Assert.Null(comment);
+        }
+
+        public void Dispose()
+            => _dbContext.Dispose();
     }
 }

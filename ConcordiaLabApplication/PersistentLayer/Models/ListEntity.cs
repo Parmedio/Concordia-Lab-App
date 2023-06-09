@@ -8,5 +8,4 @@ public record ListEntity(int Id = default, string TrelloId = null!, string Title
     public virtual IEnumerable<Experiment>? Experiments { get; set; }
     [NotMapped]
     public virtual IEnumerable<int>? ExperimentsIds { get; set; }
-    // anche comments?
 }
