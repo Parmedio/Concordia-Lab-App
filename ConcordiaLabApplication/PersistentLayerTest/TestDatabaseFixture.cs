@@ -38,10 +38,10 @@ namespace PersistentLayerTest
 
                         var experiments = new List<Experiment>
                         {
-                            new Experiment { TrelloId = "TrelloId1", Title = "Experiment 1", Description = "This is experiment 1", ListId = 1, LabelId = 3, ScientistsIds = new List<int> {1,2,3} },
-                            new Experiment { TrelloId = "TrelloId2", Title = "Experiment 2", Description = "This is experiment 2", ListId = 2, LabelId = 1, ScientistsIds = new List<int> {1,2} },
-                            new Experiment { TrelloId = "TrelloId3", Title = "Experiment 3", Description = "This is experiment 3", ListId = 3, LabelId = 2, ScientistsIds = new List<int> {1}},
-                            new Experiment { TrelloId = "TrelloId4", Title = "Experiment 4", Description = "This is experiment 4", ListId = 2, LabelId = 3, ScientistsIds = new List<int> {1,3} }
+                            new Experiment { TrelloId = "TrelloId1", Title = "Experiment 1", Description = "This is experiment 1", ListId = 1, LabelId = 3, Scientists = scientists },
+                            new Experiment { TrelloId = "TrelloId2", Title = "Experiment 2", Description = "This is experiment 2", ListId = 2, LabelId = 1, Scientists = scientists },
+                            new Experiment { TrelloId = "TrelloId3", Title = "Experiment 3", Description = "This is experiment 3", ListId = 3, LabelId = 2, Scientists = scientists},
+                            new Experiment { TrelloId = "TrelloId4", Title = "Experiment 4", Description = "This is experiment 4", ListId = 2, LabelId = 3, Scientists = scientists }
                         };
 
                         var comments = new List<Comment>
@@ -58,8 +58,6 @@ namespace PersistentLayerTest
                             new Label { TrelloId = "TrelloId2", Title = "medium priority" },
                             new Label { TrelloId = "TrelloId3", Title = "high priority" }
                         };
-                        context.EntityLists.AddRange(lists);
-                        context.SaveChanges();
                         context.Scientists.AddRange(scientists);
                         context.SaveChanges();
                         context.Labels.AddRange(labels);

@@ -28,8 +28,4 @@
     <ProjectReference Include="..\PersistentLayer\PersistentLayer.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="NewFolder\" />
-  </ItemGroup>
-
 </Project>

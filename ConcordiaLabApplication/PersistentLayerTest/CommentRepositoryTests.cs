@@ -1,11 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using PersistentLayer.Configurations;
+﻿using PersistentLayer.Configurations;
 using PersistentLayer.Models;
 using PersistentLayer.Repositories.Concrete;
 
 namespace PersistentLayerTest
 {
-    public class CommentRepositoryTests : IDisposable
+    public class CommentRepositoryTests
     {
         private readonly CommentRepository _sut;
         private readonly ConcordiaDbContext _dbContext;
@@ -21,11 +20,11 @@ namespace PersistentLayerTest
         {
             using var transaction = _dbContext.Database.BeginTransaction();
 
-            var comment = new Comment { TrelloId = "T1", Body = "Test Comment" };
+            var comment = new Comment { TrelloId = "rfgerre444f", Body = "Test Comment", ExperimentId = 1 };
             var commentId = _sut.AddComment(comment);
             Assert.NotEqual(0, commentId);
 
-            _dbContext.ChangeTracker.Clear();
+            transaction.Rollback();
         }
 
         [Fact]
@@ -46,8 +45,5 @@ namespace PersistentLayerTest
             var comment = _sut.GetCommentByTrelloId("NonExistingTrelloId");
             Assert.Null(comment);
         }
-
-        public void Dispose()
-            => _dbContext.Dispose();
     }
 }

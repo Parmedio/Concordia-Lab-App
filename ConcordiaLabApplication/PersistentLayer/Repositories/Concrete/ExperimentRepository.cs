@@ -30,12 +30,6 @@ public class ExperimentRepository : IExperimentRepository
             entity.Entity.Scientists = scientists.ToList();
         }
 
-        if (experiment.CommentsIds != null)
-        {
-            var comments = _dbContext.Comments.AsNoTracking().Where(c => experiment.CommentsIds.Contains(c.Id));
-            entity.Entity.Comments = comments.ToList();
-        }
-
         if (experiment.LabelId != 0)
         {
             var label = _dbContext.Labels.AsNoTracking().SingleOrDefault(l => l.Id == experiment.LabelId);
@@ -100,25 +94,12 @@ public class ExperimentRepository : IExperimentRepository
 
     public Experiment? Update(int experimentId, int listIdDestination)
     {
-        var current = _dbContext.Experiments.SingleOrDefault(e => e.Id == experimentId);
+        var current = GetById(experimentId);
         if (current != null)
         {
             current.ListId = listIdDestination;
             _dbContext.SaveChanges();
-
-            if (current.ScientistsIds != null)
-            {
-                var scientists = _dbContext.Scientists.AsNoTracking().Where(s => current.ScientistsIds.Contains(s.Id));
-                current.Scientists = scientists;
-            }
-            if (current.CommentsIds != null)
-            {
-                var comments = _dbContext.Comments.AsNoTracking().Where(c => current.CommentsIds.Contains(c.Id));
-                current.Comments = comments;
-            }        
-            var label = _dbContext.Labels.AsNoTracking().FirstOrDefault(l => l.Id == current.LabelId);
-            current.Label = label;
-        }
+        }        
         return current;
     }
 
