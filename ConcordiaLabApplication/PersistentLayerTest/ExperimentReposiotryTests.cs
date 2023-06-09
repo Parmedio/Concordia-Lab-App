@@ -47,7 +47,7 @@ namespace PersistentLayerTest
             Assert.Equal(experiment.List, addedExperiment.List);
             Assert.Equal(experiment.ListId, addedExperiment.ListId);
 
-            _dbContext.ChangeTracker.Clear();
+            transaction.Rollback();
         }
 
         [Fact]
@@ -75,6 +75,7 @@ namespace PersistentLayerTest
             };
             var result = _sut.Add(experiments);
             Assert.Equal(2, result.Count());
+
             transaction.Rollback();
         }
 
@@ -98,6 +99,7 @@ namespace PersistentLayerTest
         {
             var result = _sut.GetLocalIdByTrelloId("TrelloId1");
             Assert.Equal(result, 1);
+
         }
 
         [Fact]
@@ -117,7 +119,7 @@ namespace PersistentLayerTest
         [Fact(Skip = "method not used")]
         public void Should_Return_Last_Comment_Where_TrelloId_Is_null()
         {
-            var result = _sut.GetLastCommentWhereTrelloIdIsNull(1);
+            var result = _sut.GetLastCommentWithTrelloIdNull(1);
             Assert.NotNull(result);
         }
 
@@ -161,7 +163,7 @@ namespace PersistentLayerTest
         [Fact]
         public void Should_Return_LabelId_By_ExperimentTrelloId()
         {
-            var result = _sut.GetLabelId("TrelloId3");
+            var result = _sut.GetLocalIdLabelByTrelloIdLabel("TrelloLabelId2");
             Assert.Equal(result, 2);
         }
     }

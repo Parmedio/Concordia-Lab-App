@@ -54,9 +54,9 @@ namespace PersistentLayerTest
 
                         var labels = new List<Label>
                         {
-                            new Label { TrelloId = "TrelloId1", Title = "low priority" },
-                            new Label { TrelloId = "TrelloId2", Title = "medium priority" },
-                            new Label { TrelloId = "TrelloId3", Title = "high priority" }
+                            new Label { TrelloId = "TrelloLabelId1", Title = "low priority" },
+                            new Label { TrelloId = "TrelloLabelId2", Title = "medium priority" },
+                            new Label { TrelloId = "TrelloLabelId3", Title = "high priority" }
                         };
                         context.Scientists.AddRange(scientists);
                         context.SaveChanges();

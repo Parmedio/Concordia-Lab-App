@@ -7,6 +7,4 @@ public record BusinessCommentDto
     public string CommentText { get; set; } = null!;
 
     public BusinessScientistDto Scientist { get; set; } = null!;
-
-
 }

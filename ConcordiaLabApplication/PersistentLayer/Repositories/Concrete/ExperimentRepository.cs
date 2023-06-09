@@ -65,7 +65,7 @@ public class ExperimentRepository : IExperimentRepository
                                      .SingleOrDefault(e => e.Id == experimentId);
     }
 
-    public Comment? GetLastCommentWhereTrelloIdIsNull(int experimentId)
+    public Comment? GetLastCommentWithTrelloIdNull(int experimentId)
     {
         return _dbContext.Experiments.AsNoTracking()
             .Include(e => e.Comments)
@@ -84,12 +84,12 @@ public class ExperimentRepository : IExperimentRepository
 
     public int? GetLocalIdLabelByTrelloIdLabel(string trelloIdLabel)
     {
-        throw new NotImplementedException();
-    }
-
-    public Experiment? Move(int experimentId, int listId)
-    {
-        throw new NotImplementedException();
+        var label = _dbContext.Experiments.AsNoTracking()
+            .Include(e => e.Label)
+            .Select(e => e.Label)
+            .SingleOrDefault(l => l!.TrelloId == trelloIdLabel);
+        if (label != null) return label.Id;
+        return null;
     }
 
     public Experiment? Remove(int experimentId)
@@ -112,19 +112,5 @@ public class ExperimentRepository : IExperimentRepository
             _dbContext.SaveChanges();
         }        
         return current;
-    }
-    public int? GetLabelId(string trelloId)
-
-    {
-        var experiment = _dbContext.Experiments.AsNoTracking()
-            .Include(e => e.Label)
-            .SingleOrDefault(e => e.TrelloId == trelloId);
-        if (experiment != null) return experiment.LabelId;
-        return null;
-    }
-
-    public Comment GetLastCommentWithTrelloIdNull(Experiment experiment)
-    {
-        throw new NotImplementedException();
     }
 }

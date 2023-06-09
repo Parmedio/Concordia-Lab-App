@@ -21,6 +21,8 @@ namespace PersistentLayer.Repositories.Concrete
         }
 
         public Comment? GetCommentByTrelloId(string trelloId)
-            => _dbContext.Comments.AsNoTracking().SingleOrDefault(c => c.TrelloId == trelloId);      
+            => _dbContext.Comments.AsNoTracking()
+            .Include (c => c.Scientist)
+            .SingleOrDefault(c => c.TrelloId == trelloId);      
     }
 }
