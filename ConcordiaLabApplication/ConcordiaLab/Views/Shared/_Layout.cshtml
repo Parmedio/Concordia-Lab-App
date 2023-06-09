@@ -1,8 +1,12 @@
 ﻿@using ConcordiaLab.Controllers.Mock_Data.MockModels;
 
 @{
-    var scientists = ViewData["Scientists"] as IEnumerable<MockScientist> ?? Enumerable.Empty<MockScientist>();
+    var viewMode = ViewData["ViewMode"] as IEnumerable<string> ?? Enumerable.Empty<string>();
+    var selectedViewMode = ViewData["SelectedViewMode"] as string ?? string.Empty;
+
     var experimentId = ViewData["ExperimentId"] as int?;
+
+    var scientists = ViewData["Scientists"] as IEnumerable<MockScientist> ?? Enumerable.Empty<MockScientist>();
     var selectedScientistId = ViewData["SelectedScientistId"] as int?;
 }
 
@@ -24,16 +28,35 @@
                     <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                     <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                 </div>
-                <form id="scientist-form" method="get" asp-controller="Home" asp-action="@ViewContext.RouteData.Values["action"]">
-                    <input type="hidden" name="experimentId" value="@ViewData["ExperimentId"]"/>
-                    <select id="scientist-dropdown" class="form-select" name="scientistId" onchange="document.getElementById('scientist-form').submit()">
-                        <option value="0" selected="@(selectedScientistId == 0)">All Scientist</option>
-                        @foreach (var scientist in scientists)
-                        {
-                            <option value="@scientist.Id" selected="@(scientist.Id == selectedScientistId)">@scientist.Name @scientist.Surname</option>
-                        }
-                    </select>
-                </form>
+                <div class="d-flex justify-content-center align-items-center" style="width: 30%;">
+                    <div class="select-box">
+                        <h6 class="select-topic">user</h6>
+                        <form class="select-dropdown" id="scientist-form" method="get" asp-controller="Home" asp-action="@ViewContext.RouteData.Values["action"]">
+                            <input type="hidden" name="experimentId" value="@ViewData["ExperimentId"]" />
+                            <input type="hidden" name="selectedViewMode" value="@ViewData["SelectedViewMode"]" />
+                            <select id="scientist-dropdown" class="form-select" name="scientistId" onchange="document.getElementById('scientist-form').submit()">
+                                <option value="0" selected="@(selectedScientistId == 0)">All Scientist</option>
+                                @foreach (var scientist in scientists)
+                                {
+                                    <option value="@scientist.Id" selected="@(scientist.Id == selectedScientistId)">@scientist.Name[0]. @scientist.Surname</option>
+                                }
+                            </select>
+                        </form>
+                    </div>
+                    <div class="select-box">
+                        <h6 class="select-topic">view by</h6>
+                        <form class="select-dropdown" id="viewmode-form" method="get" asp-controller="Home" asp-action="@ViewContext.RouteData.Values["action"]">
+                            <input type="hidden" name="experimentId" value="@ViewData["ExperimentId"]" />
+                            <input type="hidden" name="scientistId" value="@ViewData["SelectedScientistId"]" />
+                            <select id="viewmode-dropdown" class="form-select" name="selectedViewMode" onchange="document.getElementById('viewmode-form').submit()">
+                                @foreach (var mode in viewMode)
+                                {
+                                    <option value="@mode" selected="@(mode == selectedViewMode)">@mode</option>
+                                }
+                            </select>
+                        </form>
+                    </div>
+                </div>
             </div>
         </nav>
     </header>
@@ -42,7 +65,6 @@
             @RenderBody()
         </main>
     </div>
-
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2023 - Concordia Lab - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
@@ -57,27 +79,80 @@
 
 <script>
     $(function () {
-        var experimentScientistIds = @(ViewData["ExperimentScientistIds"] != null ? Html.Raw(Json.Serialize(ViewData["ExperimentScientistIds"])) : "[]");
-
         var currentAction = "@(ViewContext.RouteData.Values["action"].ToString())";
+        var experimentScientistIds = @(ViewData["ExperimentScientistIds"] != null ? Html.Raw(Json.Serialize(ViewData["ExperimentScientistIds"])) : "[]");
         
         $('#scientist-dropdown').change(function () {
-            var selectedScientistId = $(this).val();
+            var selectedScientistId = this.value;
             var selectedScientistIsInExperiment = experimentScientistIds.includes(parseInt(selectedScientistId));
+            var selectedViewMode = document.getElementById('viewmode-dropdown').value;
+
             if (currentAction === "Detail" && selectedScientistIsInExperiment) {
+
                 $('#scientist-form').attr('action', '/Home/Detail');
-            } else {
+
+            } else if (selectedViewMode === "priority") {
+
+                $('#scientist-form input[name="experimentId"]').remove();
+                $('#scientist-form input[name="selectedViewMode"]').remove();
+                $('#scientist-form').attr('action', '/Home/Priority');
+
+            } else if (selectedViewMode === "status") {
+
+                $('#scientist-form input[name="experimentId"]').remove();
+                $('#scientist-form input[name="selectedViewMode"]').remove();
                 $('#scientist-form').attr('action', '/Home/Index');
+
             }
             $('#scientist-form').submit();
+        });
+
+        $('#viewmode-dropdown').change(function () {
+            var selectedScientistId = document.getElementById('scientist-dropdown').value;
+            var selectedScientistIsInExperiment = experimentScientistIds.includes(parseInt(selectedScientistId));
+            var selectedViewMode = this.value;
+
+            if (currentAction === "Detail" && selectedScientistIsInExperiment) {
+
+                $('#viewmode-form').attr('action', '/Home/Detail');
+
+            } else if (selectedViewMode === "priority") {
+
+                $('#viewmode-form input[name="experimentId"]').remove();
+                $('#viewmode-form input[name="selectedViewMode"]').remove();
+                $('#viewmode-form').attr('action', '/Home/Priority');
+            
+            } else if (selectedViewMode === "status") {
+
+                $('#viewmode-form input[name="experimentId"]').remove();
+                $('#viewmode-form input[name="selectedViewMode"]').remove();
+                $('#viewmode-form').attr('action', '/Home/Index');
+            }
+
+            $('#viewmode-form').submit();
         });
     });
 </script>
 
 <style>
-    .bg-custom {
-        background-color: lightgrey;
-        width: 20%;
+    .select-box {
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        background-color: whitesmoke;
+        width: 50%;
+        border-radius: 4px;
+        margin: 4px 6px 4px 0px;
+    }
+
+    .select-topic {
+        width:40%;
+        padding: 8px 0px 0px 0px;
+        text-align: center;
+    }
+
+    .select-dropdown {
+        width: 60%;
     }
 
     .user-name {

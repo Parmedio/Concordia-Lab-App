@@ -67,7 +67,7 @@ namespace ConcordiaLab
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Home}/{action=Priority}/{id?}");
 
             app.Run();
         }
