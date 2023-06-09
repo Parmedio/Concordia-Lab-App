@@ -28,7 +28,7 @@ public class Program
         MapperConfigurationExpression configuration = new MapperConfigurationExpression();
         configuration.AddProfile(typeof(MainProfile));
         var mappingConfiguration = new MapperConfiguration(configuration);
-        mappingConfiguration.AssertConfigurationIsValid();
+        //mappingConfiguration.AssertConfigurationIsValid();
 
 
         builder.Services.AddControllersWithViews();

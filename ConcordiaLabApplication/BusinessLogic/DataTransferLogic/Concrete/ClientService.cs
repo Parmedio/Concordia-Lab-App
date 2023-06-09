@@ -6,9 +6,9 @@ namespace BusinessLogic.DataTransferLogic.Concrete;
 public class ClientService : IClientService
 {
     private static bool _connectionAvailable = false;
+    private readonly IDataHandlerFactory _dataHandlerFactory;
     private readonly IDataService _dataHandler;
     private readonly IDataSyncer _dataSyncer;
-    private readonly IDataHandlerFactory _dataHandlerFactory;
 
     public ClientService(IDataHandlerFactory dataHandlerFactory, IDataSyncer dataSyncer)
     {

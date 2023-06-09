@@ -1,10 +1,7 @@
-
-using BusinessLogic.APIConsumers.UriCreators;
 namespace BusinessLogic.APIConsumers.Concrete;
 
 public class ApiSender : IApiSender
 {
-
     private readonly IHttpClientFactory _clientFactory;
     private readonly IUriCreatorFactory _uriCreatorFactory;
 

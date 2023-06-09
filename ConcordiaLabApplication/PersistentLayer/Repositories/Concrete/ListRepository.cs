@@ -16,8 +16,10 @@ public class ListRepository : IListRepository
     {
         return _dbContext.EntityLists
             .AsNoTracking()
-            .Include(l => l.Experiments)
-            .ThenInclude(e => e.Scientists);
+            .Include(l => l.Experiments!)
+                .ThenInclude(e => e.Scientists!)
+            .Include(l => l.Experiments!)
+                .ThenInclude(e => e.Label);
     }
 
     public ListEntity? GetById(int id)
@@ -30,8 +32,8 @@ public class ListRepository : IListRepository
     public IEnumerable<ListEntity> GetByScientistId(int scientistId)
     {
         return _dbContext.EntityLists.AsNoTracking()
-            .Include(l => l.Experiments)
+            .Include(l => l.Experiments!)
             .ThenInclude(e => e.Scientists)
-            .Where(l => l.Experiments.Any(e => e.Scientists.Select(s => s.Id).Contains(scientistId)));
+            .Where(l => l.Experiments!.Any(e => e.Scientists!.Select(s => s.Id).Contains(scientistId)));
     }
 }
