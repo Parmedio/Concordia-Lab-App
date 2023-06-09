@@ -3,11 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33627.172
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcordiaLab", "ConcordiaLab\ConcordiaLab.csproj", "{84149879-83BD-4F88-ABCC-BAAE766975D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcordiaLab", "ConcordiaLab\ConcordiaLab.csproj", "{84149879-83BD-4F88-ABCC-BAAE766975D0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersistentLayer", "PersistentLayer\PersistentLayer.csproj", "{E196648C-8F29-47B6-9F59-668FA4748182}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersistentLayer", "PersistentLayer\PersistentLayer.csproj", "{E196648C-8F29-47B6-9F59-668FA4748182}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLogic", "BusinessLogic\BusinessLogic.csproj", "{BB3DDC68-2D4B-48C5-BF09-F1FA8031018F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLogic", "BusinessLogic\BusinessLogic.csproj", "{BB3DDC68-2D4B-48C5-BF09-F1FA8031018F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcordiaAppTestLayer", "ConcordiaAppTestLayer\ConcordiaAppTestLayer.csproj", "{9A1E50E4-3423-40F0-9067-3345A97DA64C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackgroundServices", "BackgroundService\BackgroundServices.csproj", "{D857DE11-8239-4DA8-A55A-8B5FB7F6A6A0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersistentLayerTest", "PersistentLayerTest\PersistentLayerTest.csproj", "{FF12A514-03A1-4DD0-AC38-3F3EEDD9E527}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +33,18 @@ Global
 		{BB3DDC68-2D4B-48C5-BF09-F1FA8031018F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB3DDC68-2D4B-48C5-BF09-F1FA8031018F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB3DDC68-2D4B-48C5-BF09-F1FA8031018F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A1E50E4-3423-40F0-9067-3345A97DA64C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A1E50E4-3423-40F0-9067-3345A97DA64C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A1E50E4-3423-40F0-9067-3345A97DA64C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A1E50E4-3423-40F0-9067-3345A97DA64C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D857DE11-8239-4DA8-A55A-8B5FB7F6A6A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D857DE11-8239-4DA8-A55A-8B5FB7F6A6A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D857DE11-8239-4DA8-A55A-8B5FB7F6A6A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D857DE11-8239-4DA8-A55A-8B5FB7F6A6A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF12A514-03A1-4DD0-AC38-3F3EEDD9E527}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF12A514-03A1-4DD0-AC38-3F3EEDD9E527}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF12A514-03A1-4DD0-AC38-3F3EEDD9E527}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF12A514-03A1-4DD0-AC38-3F3EEDD9E527}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,8 +1,174 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model ConcordiaLab.Controllers.Mock_Data.ViewModel.Dashboard
+
+@{
+    ViewData["Title"] = "Experiment Dashboard";
+    ViewData["Institution"] = "Concordia Lab";
+    Layout = "_Layout";
+
+    var selectedScientistId = ViewData["SelectedScientistId"] as int?;
+    var selectedViewMode = ViewData["SelectedViewMode"] as string ?? string.Empty;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<h1 class="display-5">@ViewData["Title"]</h1>
+
+<div class="d-flex flex-row">
+    @foreach (var list in Model.Lists)
+    {
+        <div class="d-flex flex-column w-100 list">
+            <h3 class="my-3 ps-3">@list.Name</h3>
+            @foreach (var experiment in list.Experiments)
+            {
+                <div class="custom-card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-1">
+                            <h5 class="experiment-title w-100">@experiment.Title</h5>
+                            <a class="btn btn-outline-secondary flex-shrink-1" asp-action="Detail" asp-route-experimentId="@experiment.Id" asp-route-scientistId="@selectedScientistId" asp-route-selectedViewMode="@selectedViewMode">details</a>
+                        </div>
+                        <h6 class="card-subtitle mb-2 text-muted">
+                            <b>Scientists:</b><br />
+                            @{
+                                if (experiment.Scientists != null)
+                                {
+                                    var scientistsCount = experiment.Scientists.Count();
+                                    var scientistsList = string.Join(", ", experiment.Scientists.Select(s => $"{s.Name[0]}. {s.Surname}"));
+
+                                    if (scientistsCount > 0)
+                                    {
+                                        <span>@scientistsList</span>
+                                    }
+                                }
+                            }
+                        </h6>
+                        <div class="d-flex">
+                            <div class="d-flex align-items-center w-50 bg-custom me-1 rounded-2">
+                                
+                                <svg class="segment" xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z" />
+                                </svg>
+                                <p class="priority"><b>@experiment.Priority</b></p>
+                            </div>
+                            <div class="d-flex align-items-center w-50 bg-custom ms-1 rounded-2">
+                                <svg class="segment" xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z" />
+                                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z" />
+                                </svg>
+                                <p class="due-date">@(experiment.DueDate != null ? experiment.DueDate?.ToString("dd ") + experiment.DueDate?.ToString("MMM").Substring(0, 3).ToUpper() : "no date")</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
 </div>
+
+<style>
+    .list{
+        border-radius: 8px;
+        margin-right: 8px;
+    }
+    .experiment-title {
+        margin: 0px 0px 0px 0px;
+        padding: 0px;
+    }
+    .custom-card{
+        width: 18rem;
+        border-radius: 10px;
+        border: 1px solid lightgrey;
+        background-color: white;
+        box-shadow: 0px 0px 14px lightgrey;
+        margin: 0px 5px 10px 5px;
+        padding: 0px;
+    }
+
+    .bg-custom {
+        background-color: lightgrey;
+    }
+
+    .segment {
+        width: 30%;
+        display: flex;
+        align-items: center;
+        justify-content: end;
+        margin: 0px;
+    }
+
+    .priority{
+        width: 70%;
+        text-align: center;
+        border-radius: 4px;
+        margin: 6px 6px 6px 0px;
+    }
+   
+    .due-date {
+        width: 70%;
+        text-align: center;
+        border-radius: 4px;
+        margin: 6px 6px 6px 0px;
+        background-color: white;
+    }
+
+    .low {
+        color: gray;
+        background-color: whitesmoke;
+    }
+
+    .medium {
+        color: darkgoldenrod;
+        background-color: khaki;
+    }
+
+    .high {
+        color: darkred;
+        background-color: mistyrose;
+    }
+
+    .to-do {
+        background: linear-gradient(180deg, rgba(207,207,207,0.6) 0%, rgba(253,187,45,0) 60%);
+    }
+
+    .in-progress {
+        background: linear-gradient(180deg, rgba(132,215,255,0.6) 0%, rgba(253,187,45,0) 60%);
+    }
+
+    .completed {
+        background: linear-gradient(180deg, rgba(124,255,132,0.6) 0%, rgba(253,187,45,0) 60%);
+    }
+</style>
+
+<script>
+    var elements = document.getElementsByClassName('priority');
+    var i = elements.length - 1;
+
+    while (i >= 0) {
+        var element = elements[i];
+        var priority = element.innerText.trim();
+
+        if (priority === 'Low') {
+            element.classList.add('low');
+        } else if (priority === 'Medium') {
+            element.classList.add('medium');
+        } else if (priority === 'High') {
+            element.classList.add('high');
+        }
+
+        i--;
+    }
+
+    var lists = document.getElementsByClassName('d-flex flex-column w-100 list');
+
+    for (var i = 0; i < lists.length; i++) {
+        var list = lists[i];
+        var heading = list.querySelector('h3.my-3');
+        var text = heading.innerText.trim();
+
+        if (text === 'To Do') {
+            list.classList.add('to-do');
+        } else if (text === 'In Progress') {
+            list.classList.add('in-progress');
+        } else if (text === 'Completed') {
+            list.classList.add('completed');
+        }
+    }
+</script>
+

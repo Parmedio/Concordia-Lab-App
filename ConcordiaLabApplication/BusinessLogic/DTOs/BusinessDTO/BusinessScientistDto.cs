@@ -2,4 +2,6 @@
 
 public record BusinessScientistDto
 {
+    public int Id { get; set; }
+    public string TrelloToken { get; set; } = null!;
 }
