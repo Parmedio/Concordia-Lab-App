@@ -61,7 +61,7 @@ public class DataService : IDataService
 
     public BusinessExperimentDto MoveExperiment(BusinessExperimentDto businessExperimentDto)
     {
-        BusinessExperimentDto? updatedExperiment = _mapper.Map<BusinessExperimentDto?>(_experimentRepository.Move(businessExperimentDto.Id, businessExperimentDto.ListId));
+        BusinessExperimentDto? updatedExperiment = _mapper.Map<BusinessExperimentDto?>(_experimentRepository.Update(businessExperimentDto.Id, businessExperimentDto.ListId));
         if (updatedExperiment is null)
         {
             string additionalInfo = _experimentRepository.GetById(businessExperimentDto.Id) is null ? "\nNo experiment with corresponding Id found in the database" : string.Empty;

@@ -108,8 +108,8 @@ public class DataServiceTests
     [Fact]
     public void MoveExperimentShouldWork()
     {
-        Mock.Get(_experimentRepository).Setup(p => p.Move(0, 2)).Returns(DataServiceMockData.experiment1);
-        Mock.Get(_mapper).Setup(p => p.Map<BusinessExperimentDto>(_experimentRepository.Move(0, 2))).Returns(DataServiceMockData.businessExperimentDto1);
+        Mock.Get(_experimentRepository).Setup(p => p.Update(0, 2)).Returns(DataServiceMockData.experiment1);
+        Mock.Get(_mapper).Setup(p => p.Map<BusinessExperimentDto>(_experimentRepository.Update(0, 2))).Returns(DataServiceMockData.businessExperimentDto1);
 
         _sut.MoveExperiment(DataServiceMockData.businessExperimentDto1).Id.Should().Be(DataServiceMockData.businessExperimentDto1.Id);
 
@@ -119,17 +119,17 @@ public class DataServiceTests
     [Fact]
     public void MoveExperimentShouldThrowFailedToMoveExperimentExceptionWithNoInfo()
     {
-        Mock.Get(_experimentRepository).Setup(p => p.Move(DataServiceMockData.businessExperimentDto3.Id, DataServiceMockData.businessExperimentDto3.ListId)).Returns(value: null);
+        Mock.Get(_experimentRepository).Setup(p => p.Update(DataServiceMockData.businessExperimentDto3.Id, DataServiceMockData.businessExperimentDto3.ListId)).Returns(value: null);
         Mock.Get(_experimentRepository).Setup(p => p.GetById(DataServiceMockData.businessExperimentDto3.Id)).Returns(DataServiceMockData.experiment1);
-        Mock.Get(_mapper).Setup(p => p.Map<BusinessExperimentDto?>(_experimentRepository.Move(0, 2))).Returns(value: null);
+        Mock.Get(_mapper).Setup(p => p.Map<BusinessExperimentDto?>(_experimentRepository.Update(0, 2))).Returns(value: null);
         _sut.Invoking(p => p.MoveExperiment(DataServiceMockData.businessExperimentDto3)).Should().Throw<FailedToMoveExperimentException>().WithMessage($"Could not move the experiment to the list with ID: {DataServiceMockData.businessExperimentDto3.ListId}");
     }
 
     [Fact]
     public void MoveExperimentShouldThrowFailedToMoveExperimentExceptionWithAdditionalInfo()
     {
-        Mock.Get(_experimentRepository).Setup(p => p.Move(DataServiceMockData.businessExperimentDto3.Id, DataServiceMockData.businessExperimentDto3.ListId)).Returns(value: null);
-        Mock.Get(_mapper).Setup(p => p.Map<BusinessExperimentDto?>(_experimentRepository.Move(0, 2))).Returns(value: null);
+        Mock.Get(_experimentRepository).Setup(p => p.Update(DataServiceMockData.businessExperimentDto3.Id, DataServiceMockData.businessExperimentDto3.ListId)).Returns(value: null);
+        Mock.Get(_mapper).Setup(p => p.Map<BusinessExperimentDto?>(_experimentRepository.Update(0, 2))).Returns(value: null);
         Mock.Get(_experimentRepository).Setup(p => p.GetById(DataServiceMockData.businessExperimentDto3.Id)).Returns(value: null);
         _sut.Invoking(p => p.MoveExperiment(DataServiceMockData.businessExperimentDto3)).Should().Throw<FailedToMoveExperimentException>().WithMessage($"Could not move the experiment to the list with ID: {DataServiceMockData.businessExperimentDto3.ListId}\nNo experiment with corresponding Id found in the database");
     }

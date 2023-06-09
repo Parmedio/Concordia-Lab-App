@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+
 using PersistentLayer.Configurations;
 using PersistentLayer.Models;
 using PersistentLayer.Repositories.Abstract;
@@ -125,12 +126,17 @@ public class ExperimentRepository : IExperimentRepository
         return current;
     }
 
-    public int GetLabelId (string trelloId)
+    public int? GetLabelId(string trelloId)
     {
         var experiment = _dbContext.Experiments.AsNoTracking()
             .Include(e => e.Label)
             .SingleOrDefault(e => e.TrelloId == trelloId);
         if (experiment != null) return experiment.LabelId;
         return 0;
+    }
+
+    public Comment GetLastCommentWithTrelloIdNull(Experiment experiment)
+    {
+        throw new NotImplementedException();
     }
 }

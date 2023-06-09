@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+
 using PersistentLayer.Configurations;
 using PersistentLayer.Models;
 using PersistentLayer.Repositories.Abstract;
@@ -10,9 +11,9 @@ namespace PersistentLayer.Repositories.Concrete
         private readonly ConcordiaDbContext _dbContext;
 
         public CommentRepository(ConcordiaDbContext dbContext)
-            =>_dbContext = dbContext;
+            => _dbContext = dbContext;
 
-        public int AddComment(Comment comment)
+        public int? AddComment(Comment comment)
         {
             var entity = _dbContext.Comments.Add(comment);
             _dbContext.SaveChanges();
