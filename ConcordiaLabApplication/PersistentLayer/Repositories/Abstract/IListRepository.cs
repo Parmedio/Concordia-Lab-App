@@ -6,7 +6,7 @@ public interface IListRepository
 {
     public IEnumerable<ListEntity> GetAll();
 
-    public ListEntity GetById(int id);
+    public ListEntity? GetById(int id);
 
     public IEnumerable<ListEntity> GetByScientistId(int scientistId);
 }

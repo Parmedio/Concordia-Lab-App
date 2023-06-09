@@ -38,13 +38,13 @@ public class ExperimentRepository : IExperimentRepository
 
         if (experiment.LabelId != 0)
         {
-            var label = _dbContext.Labels.AsNoTracking().FirstOrDefault(l => l.Id == experiment.LabelId);
+            var label = _dbContext.Labels.AsNoTracking().SingleOrDefault(l => l.Id == experiment.LabelId);
             entity.Entity.Label = label;
         }
 
         if (experiment.ListId != 0)
         {
-            var list = _dbContext.EntityLists.AsNoTracking().FirstOrDefault(l => l.Id == experiment.ListId);
+            var list = _dbContext.EntityLists.AsNoTracking().SingleOrDefault(l => l.Id == experiment.ListId);
             entity.Entity.List = list;
         }
         return entity.Entity;
@@ -52,10 +52,12 @@ public class ExperimentRepository : IExperimentRepository
 
     public IEnumerable<Experiment> GetAll()
     {
-        return _dbContext.Experiments.Include(e => e.Scientists)
+        return _dbContext.Experiments
+                      .Include(e => e.Scientists)
                       .Include(e => e.Comments)
                       .Include(e => e.Label)
-                      .Include(e => e.List);
+                      .Include(e => e.List)
+                      .AsNoTracking();
     }
 
     public Experiment? GetById(int experimentId)
@@ -80,7 +82,7 @@ public class ExperimentRepository : IExperimentRepository
 
     public int? GetLocalIdByTrelloId(string trelloId)
     {
-        var experiment = _dbContext.Experiments.AsNoTracking().SingleOrDefault(e => e.TrelloId.Equals(trelloId));
+        var experiment = _dbContext.Experiments.AsNoTracking().SingleOrDefault(e => e.TrelloId == trelloId);
         if (experiment == null) return null;
         return experiment.Id;
     }
@@ -104,23 +106,28 @@ public class ExperimentRepository : IExperimentRepository
             current.ListId = listIdDestination;
             _dbContext.SaveChanges();
 
-            var scientists = _dbContext.Scientists.AsNoTracking().Where(s => current.ScientistsIds.Contains(s.Id));
-            var comments = _dbContext.Comments.AsNoTracking().Where(c => current.CommentsIds.Contains(c.Id));
+            if (current.ScientistsIds != null)
+            {
+                var scientists = _dbContext.Scientists.AsNoTracking().Where(s => current.ScientistsIds.Contains(s.Id));
+                current.Scientists = scientists;
+            }
+            if (current.CommentsIds != null)
+            {
+                var comments = _dbContext.Comments.AsNoTracking().Where(c => current.CommentsIds.Contains(c.Id));
+                current.Comments = comments;
+            }        
             var label = _dbContext.Labels.AsNoTracking().FirstOrDefault(l => l.Id == current.LabelId);
-
-            current.Scientists = scientists;
-            current.Comments = comments;
             current.Label = label;
         }
         return current;
     }
 
-    public int GetLabelId (string trelloId)
+    public int? GetLabelId (string trelloId)
     {
         var experiment = _dbContext.Experiments.AsNoTracking()
             .Include(e => e.Label)
             .SingleOrDefault(e => e.TrelloId == trelloId);
         if (experiment != null) return experiment.LabelId;
-        return 0;
+        return null;
     }
 }
