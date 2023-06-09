@@ -49,19 +49,31 @@ namespace PersistentLayer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("CreatorName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("ExperimentId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ScientistId")
+                        .HasColumnType("int");
+
                     b.Property<string>("TrelloId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ExperimentId");
+
+                    b.HasIndex("ScientistId");
+
+                    b.HasIndex("TrelloId")
+                        .IsUnique()
+                        .HasFilter("[TrelloId] IS NOT NULL");
 
                     b.ToTable("Comments");
                 });
@@ -143,7 +155,7 @@ namespace PersistentLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Lists");
+                    b.ToTable("EntityLists");
                 });
 
             modelBuilder.Entity("PersistentLayer.Models.Scientist", b =>
@@ -168,7 +180,7 @@ namespace PersistentLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Scientist");
+                    b.ToTable("Scientists");
                 });
 
             modelBuilder.Entity("ExperimentScientist", b =>
@@ -194,7 +206,13 @@ namespace PersistentLayer.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("PersistentLayer.Models.Scientist", "Scientist")
+                        .WithMany()
+                        .HasForeignKey("ScientistId");
+
                     b.Navigation("Experiment");
+
+                    b.Navigation("Scientist");
                 });
 
             modelBuilder.Entity("PersistentLayer.Models.Experiment", b =>
