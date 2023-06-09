@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Moq;
 using PersistentLayer.Configurations;
@@ -9,31 +10,28 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PersistentLayerTest
 {
-    [Collection("DbContextCollection")]
     public class ExperimentRepositoryTests
     {
         private readonly ExperimentRepository _sut;
+        private readonly ConcordiaDbContext _dbContext;
 
         public ExperimentRepositoryTests()
         {
-            var dbContextOptions = new DbContextOptionsBuilder<ConcordiaDbContext>()
-                .UseSqlServer("Data Source=DESKTOP-476F63V\\SQLEXPRESS;Initial Catalog=ConcordiaLab;Integrated Security=true;TrustServerCertificate=True;")
-                .Options;
-
-            var _dbContext = new ConcordiaDbContext(dbContextOptions);
+            _dbContext = new TestDatabaseFixture().CreateContext();
             _sut = new ExperimentRepository(_dbContext);
         }
 
         [Fact]
         public void Add_Experiment_Should_Add_Experiment_To_Database()
         {
+            using var transaction = _dbContext.Database.BeginTransaction();
             var experiment = new Experiment
             {
-                TrelloId = "TrelloId",
-                Title = "Experiment 1",
+                TrelloId = "NewTrelloId",
+                Title = "New Experiment",
                 Description = "This is an experiment",
                 DeadLine = DateTime.Now.AddDays(7),
-                LabelId = 4,
+                LabelId = 2,
                 ListId = 1,
                 ScientistsIds = new List<int> { 1, 2, 3 }
             };
@@ -51,17 +49,19 @@ namespace PersistentLayerTest
             Assert.Equal(experiment.ScientistsIds, addedExperiment.Scientists.Select(s => s.Id));
             Assert.Equal(experiment.Label, addedExperiment.Label);
             Assert.Equal(experiment.List, addedExperiment.List);
+
+            _dbContext.ChangeTracker.Clear();
         }
 
         [Fact]
         public void Add_Experiments_Should_Add_Experiments_To_Database()
         {
-
+            using var transaction = _dbContext.Database.BeginTransaction();
             var experiments = new List<Experiment>
             {
                 new Experiment
                 {
-                    TrelloId = "TrelloId1",
+                    TrelloId = "TrelloId6",
                     Title = "Experiment 1",
                     Description = "This is experiment 1",
                     ListId = 1,
@@ -69,7 +69,7 @@ namespace PersistentLayerTest
                 },
                 new Experiment
                 {
-                    TrelloId = "TrelloId2",
+                    TrelloId = "TrelloId7",
                     Title = "Experiment 2",
                     Description = "This is experiment 2",
                     ListId = 2,
@@ -78,6 +78,7 @@ namespace PersistentLayerTest
             };
             var result = _sut.Add(experiments);
             Assert.Equal(2, result.Count());
+            transaction.Rollback();
         }
 
         [Fact]
@@ -87,8 +88,8 @@ namespace PersistentLayerTest
 
             Assert.NotNull(result);
             Assert.Equal(1, result.Id);
-            Assert.Equal("test calotte", result.Title);
-            Assert.Equal("description", result.Description);
+            Assert.Equal("Experiment 1", result.Title);
+            Assert.Equal("this is experiment 1", result.Description);
             Assert.NotNull(result.Scientists);
             Assert.NotNull(result.Comments);
             Assert.NotNull(result.Label);

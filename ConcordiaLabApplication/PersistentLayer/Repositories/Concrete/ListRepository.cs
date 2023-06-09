@@ -14,11 +14,13 @@ public class ListRepository : IListRepository
 
     public IEnumerable<ListEntity> GetAll()
     {
-        return _dbContext.EntityLists.AsNoTracking()
-            .Include(l => l.Experiments);     
+        return _dbContext.EntityLists
+            .AsNoTracking()
+            .Include(l => l.Experiments)
+            .ThenInclude(e => e.Scientists);
     }
 
-    public ListEntity GetById(int id)
+    public ListEntity? GetById(int id)
     {
         return _dbContext.EntityLists.AsNoTracking()
             .Include(l => l.Experiments)
