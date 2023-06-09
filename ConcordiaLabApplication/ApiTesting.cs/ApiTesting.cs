@@ -128,6 +128,32 @@ namespace ApiTesting.cs
             experiments.Should().HaveCount(1);
 
         }
+
+        [Fact]
+        public async Task AddComment_ShouldIncreaseTheNumberOfCommentsBy1()
+        {
+            using var client = new HttpClient()
+            {
+                BaseAddress = baseUrl
+            };
+            var cardID = "6482fba0e13f2eaf24ec081f";
+            var textToAdd = "Ciao Sono un commento";
+            var token = "ATTAd93cf67ec0072d821ff32e199156a675ed9301feea0f899df160829b3f14082dAB1E41AD";
+            Mock.Get(_factoryMock).Setup(_ => _.CreateClient("ApiConsumer")).Returns(client);
+            Mock.Get(uriFactoryMock).Setup(p => p.AddACommentOnACard(cardID, textToAdd, token)).Returns("cards/6482fba0e13f2eaf24ec081f/actions/comments?text=Ciao Sono un commento&key=9ba27d32be683843dd1ffb346ae07641&token=ATTAd93cf67ec0072d821ff32e199156a675ed9301feea0f899df160829b3f14082dAB1E41AD");
+            Mock.Get(uriFactoryMock).Setup(p => p.GetAllCommentsOnABoard()).Returns("boards/6482fa27402ed2e69e93493f/actions?key=9ba27d32be683843dd1ffb346ae07641&token=ATTAd93cf67ec0072d821ff32e199156a675ed9301feea0f899df160829b3f14082dAB1E41AD&filter=commentCard");
+
+            await _sender.Invoking(p => p.AddAComment(cardID, textToAdd, token)).Should().NotThrowAsync();
+            var result = await _receiver.GetAllComments();
+            result.Should().HaveCount(2);
+
+            var newId = result.Where(p => p.Id != "64833e3ba2cde375a521486a").Select(p => p.Id).FirstOrDefault();
+            await client.DeleteAsync($"actions/{newId}?key=9ba27d32be683843dd1ffb346ae07641&token=ATTAd93cf67ec0072d821ff32e199156a675ed9301feea0f899df160829b3f14082dAB1E41AD");
+
+            result = await _receiver.GetAllComments();
+            result.Should().HaveCount(1);
+
+        }
     }
 
 

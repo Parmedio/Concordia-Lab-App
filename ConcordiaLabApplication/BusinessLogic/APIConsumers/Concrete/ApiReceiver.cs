@@ -1,3 +1,7 @@
+using BusinessLogic.APIConsumers.Abstract;
+using BusinessLogic.APIConsumers.UriCreators;
+using BusinessLogic.DTOs.TrelloDtos;
+
 namespace BusinessLogic.APIConsumers.Concrete;
 
 public class ApiReceiver : IApiReceiver

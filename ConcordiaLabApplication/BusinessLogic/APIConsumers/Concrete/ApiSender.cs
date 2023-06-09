@@ -1,3 +1,5 @@
+using BusinessLogic.APIConsumers.UriCreators;
+
 namespace BusinessLogic.APIConsumers.Concrete;
 
 public class ApiSender : IApiSender
