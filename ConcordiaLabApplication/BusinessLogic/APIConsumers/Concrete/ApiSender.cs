@@ -5,7 +5,6 @@ namespace BusinessLogic.APIConsumers.Concrete;
 
 public class ApiSender : IApiSender
 {
-
     private readonly IHttpClientFactory _clientFactory;
     private readonly IUriCreatorFactory _uriCreatorFactory;
 
@@ -25,7 +24,7 @@ public class ApiSender : IApiSender
     public async Task<bool> UpdateAnExperiment(string cardId, string newListId)
     {
         var client = _clientFactory.CreateClient();
-        var response = await client.PostAsync(_uriCreatorFactory.UpdateAnExperiment(cardId, newListId), null);
+        var response = await client.PutAsync(_uriCreatorFactory.UpdateAnExperiment(cardId, newListId), null);
         return response.IsSuccessStatusCode;
     }
 }
