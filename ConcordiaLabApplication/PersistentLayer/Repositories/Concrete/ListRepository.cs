@@ -14,26 +14,24 @@ public class ListRepository : IListRepository
 
     public IEnumerable<ListEntity> GetAll()
     {
-        return _dbContext.EntityLists
-            .AsNoTracking()
+        return _dbContext.EntityLists.AsNoTracking()
             .Include(l => l.Experiments!)
                 .ThenInclude(e => e.Scientists!)
             .Include(l => l.Experiments!)
+                .ThenInclude(l => l.Comments)
+            .Include(l => l.Experiments!)
                 .ThenInclude(e => e.Label);
-    }
-
-    public ListEntity? GetById(int id)
-    {
-        return _dbContext.EntityLists.AsNoTracking()
-            .Include(l => l.Experiments)
-            .SingleOrDefault(l => l.Id == id);
     }
 
     public IEnumerable<ListEntity> GetByScientistId(int scientistId)
     {
         return _dbContext.EntityLists.AsNoTracking()
             .Include(l => l.Experiments!)
-            .ThenInclude(e => e.Scientists)
+                .ThenInclude(e => e.Scientists!)
+            .Include(l => l.Experiments!)
+                .ThenInclude(l => l.Comments)
+            .Include(l => l.Experiments!)
+                .ThenInclude(e => e.Label)
             .Where(l => l.Experiments!.Any(e => e.Scientists!.Select(s => s.Id).Contains(scientistId)));
     }
 }
