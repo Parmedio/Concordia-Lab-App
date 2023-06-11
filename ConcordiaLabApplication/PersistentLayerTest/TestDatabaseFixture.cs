@@ -29,13 +29,6 @@ namespace PersistentLayerTest
                             new Scientist { TrelloToken = "wwdwx2rycecee23", TrelloMemberId = "dcwd2323c", Name = "alessandro" }
                         };
 
-                        var lists = new List<ListEntity>
-                        {
-                            new ListEntity { TrelloId = "ce34442cw", Title = "to do" },
-                            new ListEntity { TrelloId = "efcrvrt23", Title = "in progress" },
-                            new ListEntity { TrelloId = "wede224ev", Title = "done" }
-                        };
-
                         var experiments = new List<Experiment>
                         {
                             new Experiment { TrelloId = "TrelloId1", Title = "Experiment 1", Description = "This is experiment 1", ListId = 1, LabelId = 3, Scientists = scientists },

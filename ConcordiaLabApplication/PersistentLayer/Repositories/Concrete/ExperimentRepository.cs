@@ -15,9 +15,9 @@ public class ExperimentRepository : IExperimentRepository
 
     public IEnumerable<Experiment> Add(IEnumerable<Experiment> experiments)
     {
-        _dbContext.AddRange(experiments);
-        _dbContext.SaveChanges();
-        return experiments;
+        var result = new List<Experiment>();
+        foreach (var experiment in experiments) result.Add(Add(experiment));
+        return result;
     }
 
     public Experiment Add(Experiment experiment)
