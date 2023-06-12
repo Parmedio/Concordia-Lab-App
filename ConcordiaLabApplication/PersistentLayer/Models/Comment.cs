@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace PersistentLayer.Models
+﻿namespace PersistentLayer.Models
 {
     public record Comment(int Id = default, string? TrelloId = default, string Body = "", DateTime Date = default, string CreatorName = "")
     {

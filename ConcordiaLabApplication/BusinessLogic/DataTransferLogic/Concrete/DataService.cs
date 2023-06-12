@@ -36,7 +36,7 @@ public class DataService : IDataService
         {
             throw new AddACommentFailedException($"Failed to add comment: \"{businessCommentDto.CommentText}\" by scientist with Id: {scientistId} ");
         }
-        return businessCommentDto;
+        return businessCommentDto; //con il mapper restituire l'oggetto nel formato che serve alla view
     }
 
     public IEnumerable<BusinessListDto> GetAllLists(int scientistId = -1)
@@ -70,5 +70,28 @@ public class DataService : IDataService
         return updatedExperiment!;
     }
 
+    public IEnumerable<BusinessListDto> GetAllLists()
+    {
+        throw new NotImplementedException();
+    }
 
+    public IEnumerable<BusinessExperimentDto> GetAllExperiments()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IEnumerable<BusinessExperimentDto> GetAllExperiments(int scientistId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IEnumerable<BusinessScientistDto> GetAllScientist()
+    {
+        throw new NotImplementedException();
+    }
+
+    public BusinessExperimentDto GetExperimentById(int experimentId)
+    {
+        throw new NotImplementedException();
+    }
 }

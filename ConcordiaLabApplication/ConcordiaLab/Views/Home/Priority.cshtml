@@ -1,4 +1,5 @@
-﻿@model ConcordiaLab.Controllers.Mock_Data.ViewModel.Priority
+﻿@using ConcordiaLab.ViewModels;
+@model IEnumerable<ViewMExperiment>
 
 @{
     ViewData["Title"] = "Priority Dashboard";
@@ -30,7 +31,7 @@
                 <p class="placeholderz"></p>
             </div>
         </div>
-        @foreach (var experiment in Model.Experiments)
+        @foreach (var experiment in Model)
         {
             <div class="d-flex justify-content-between custom-card">
                 <h5 class="mt-2 ms-3 experiment-title">@experiment.Title</h5>
@@ -39,7 +40,7 @@
                     if (experiment.Scientists != null)
                     {
                         var scientistsCount = experiment.Scientists.Count();
-                        var scientistsList = string.Join(", ", experiment.Scientists.Select(s => $"{s.Name[0]}. {s.Surname}"));
+                        var scientistsList = string.Join(", ", experiment.Scientists.Select(s => $"{s.UserName}"));
 
                         if (scientistsCount > 0)
                         {

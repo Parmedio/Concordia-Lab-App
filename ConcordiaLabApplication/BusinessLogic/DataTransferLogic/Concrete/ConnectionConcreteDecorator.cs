@@ -19,11 +19,6 @@ public class ConnectionConcreteDecorator : DataServiceDecorator
         return comment;
     }
 
-    public override IEnumerable<BusinessListDto> GetAllLists(int scientistId)
-    {
-        return base.GetAllLists(scientistId);
-    }
-
     public override BusinessExperimentDto MoveExperiment(BusinessExperimentDto businessExperimentDto)
     {
         var experiment = base.MoveExperiment(businessExperimentDto);

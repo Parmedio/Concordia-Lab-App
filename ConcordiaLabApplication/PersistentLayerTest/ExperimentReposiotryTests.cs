@@ -1,11 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Moq;
 using PersistentLayer.Configurations;
 using PersistentLayer.Models;
-using PersistentLayer.Repositories.Abstract;
 using PersistentLayer.Repositories.Concrete;
-using System.ComponentModel.DataAnnotations;
 
 namespace PersistentLayerTest
 {

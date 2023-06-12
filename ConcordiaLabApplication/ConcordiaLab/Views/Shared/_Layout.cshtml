@@ -1,4 +1,4 @@
-﻿@using ConcordiaLab.Controllers.Mock_Data.MockModels;
+﻿@using ConcordiaLab.ViewModels;
 
 @{
     var viewMode = ViewData["ViewMode"] as IEnumerable<string> ?? Enumerable.Empty<string>();
@@ -6,7 +6,7 @@
 
     var experimentId = ViewData["ExperimentId"] as int?;
 
-    var scientists = ViewData["Scientists"] as IEnumerable<MockScientist> ?? Enumerable.Empty<MockScientist>();
+    var scientists = ViewData["Scientists"] as IEnumerable<ViewMScientist> ?? Enumerable.Empty<ViewMScientist>();
     var selectedScientistId = ViewData["SelectedScientistId"] as int?;
 }
 
@@ -38,7 +38,7 @@
                                 <option value="0" selected="@(selectedScientistId == 0)">All Scientist</option>
                                 @foreach (var scientist in scientists)
                                 {
-                                    <option value="@scientist.Id" selected="@(scientist.Id == selectedScientistId)">@scientist.Name[0]. @scientist.Surname</option>
+                                    <option value="@scientist.Id" selected="@(scientist.Id == selectedScientistId)">@scientist.UserName</option>
                                 }
                             </select>
                         </form>

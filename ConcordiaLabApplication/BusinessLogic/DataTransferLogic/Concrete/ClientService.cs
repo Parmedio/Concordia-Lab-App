@@ -49,5 +49,28 @@ public class ClientService : IClientService
         }
     }
 
+    public IEnumerable<BusinessListDto> GetAllLists()
+    {
+        return _dataHandler.GetAllLists();
+    }
 
+    public IEnumerable<BusinessExperimentDto> GetAllExperiments()
+    {
+        return _dataHandler.GetAllExperiments();
+    }
+
+    public IEnumerable<BusinessExperimentDto> GetAllExperiments(int scientistId)
+    {
+        return _dataHandler.GetAllExperiments(scientistId);
+    }
+
+    public IEnumerable<BusinessScientistDto> GetAllScientist()
+    {
+        return _dataHandler.GetAllScientist();
+    }
+
+    public BusinessExperimentDto GetExperimentById(int experimentId)
+    {
+        return _dataHandler.GetExperimentById(experimentId);
+    }
 }

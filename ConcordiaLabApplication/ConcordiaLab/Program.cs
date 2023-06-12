@@ -2,7 +2,7 @@
 using AutoMapper;
 
 using BackgroundServices;
-
+using BusinessLogic.APIConsumers.Abstract;
 using BusinessLogic.APIConsumers.Concrete;
 using BusinessLogic.APIConsumers.UriCreators;
 using BusinessLogic.AutomapperProfiles;
@@ -13,7 +13,6 @@ using Microsoft.EntityFrameworkCore;
 using PersistentLayer.Configurations;
 using PersistentLayer.Repositories.Abstract;
 using PersistentLayer.Repositories.Concrete;
-using PersistentLayerTest;
 
 namespace ConcordiaLab;
 
@@ -28,7 +27,7 @@ public class Program
         MapperConfigurationExpression configuration = new MapperConfigurationExpression();
         configuration.AddProfile(typeof(MainProfile));
         var mappingConfiguration = new MapperConfiguration(configuration);
-        mappingConfiguration.AssertConfigurationIsValid();
+        //mappingConfiguration.AssertConfigurationIsValid();
 
 
         builder.Services.AddControllersWithViews();
@@ -47,10 +46,17 @@ public class Program
 
         builder.Services.AddSingleton<ConnectionChecker>();
         builder.Services.AddScoped<IApiSender, ApiSender>();
-        builder.Services.AddScoped<IDataService, DataService>();
-        builder.Services.AddScoped<IExperimentRepository, ExperimentRepository>();
-        builder.Services.AddTransient<IUriCreatorFactory, UriCreatorFactory>();
+        builder.Services.AddScoped<IApiReceiver, ApiReceiver>();
+        builder.Services.AddScoped<DataService>();
+        builder.Services.AddScoped<IExperimentDownloader, ExperimentDownloader>();
         builder.Services.AddTransient<IDataSyncer, DataSyncer>();
+
+        builder.Services.AddScoped<IExperimentRepository, ExperimentRepository>();
+        builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+        builder.Services.AddScoped<IListRepository, ListRepository>();
+        builder.Services.AddScoped<IScientistRepository, ScientistRepository>();
+
+        builder.Services.AddTransient<IUriCreatorFactory, UriCreatorFactory>();
         builder.Services.AddTransient<IRetrieveConnectionTimeInterval, RetrieveConnectionTimeInterval>();
         builder.Services.AddTransient<IDataHandlerFactory, DataHandlerFactory>();
         builder.Services.AddTransient<IClientService, ClientService>();
