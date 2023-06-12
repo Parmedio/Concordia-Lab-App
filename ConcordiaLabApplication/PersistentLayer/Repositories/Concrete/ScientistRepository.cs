@@ -1,4 +1,5 @@
 ﻿using PersistentLayer.Configurations;
+using PersistentLayer.Models;
 using PersistentLayer.Repositories.Abstract;
 
 namespace PersistentLayer.Repositories.Concrete
@@ -9,6 +10,9 @@ namespace PersistentLayer.Repositories.Concrete
 
         public ScientistRepository(ConcordiaDbContext dbContext)
             => _dbContext = dbContext;
+
+        public IEnumerable<Scientist> GetAll()
+            => _dbContext.Scientists;
 
         public int? GetLocalIdByTrelloId(string trelloId)
         {
