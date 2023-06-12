@@ -180,11 +180,12 @@ namespace PersistentLayerTest
             Assert.Null(result);
         }
 
-        [Fact(Skip = "method not used")]
-        public void Should_Return_Last_Comment_Where_TrelloId_Is_null()
+        [Fact]
+        public void Should_Return_Last_Comment_Where_TrelloId_Is_Null()
         {
-            var result = _sut.GetLastCommentWithTrelloIdNull(1);
-            Assert.NotNull(result);
+            var comment = _sut.GetLastCommentWithTrelloIdNull(3);
+            Assert.NotNull(comment);
+            Assert.True(comment.Id == 4);
         }
 
         [Fact]
