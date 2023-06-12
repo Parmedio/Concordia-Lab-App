@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentAssertions;
 using PersistentLayer.Configurations;
 using PersistentLayer.Repositories.Concrete;
 
@@ -7,50 +7,61 @@ namespace PersistentLayerTest
     public class ListReposiotoryTests
     {
         private readonly ListRepository _sut;
+        private readonly ConcordiaDbContext _dbContext;
 
         public ListReposiotoryTests()
         {
-            var dbContextOptions = new DbContextOptionsBuilder<ConcordiaDbContext>()
-                .UseSqlServer("Data Source=DESKTOP-476F63V\\SQLEXPRESS;Initial Catalog=ConcordiaLab;Integrated Security=true;TrustServerCertificate=True;")
-                .Options;
-
-            var _dbContext = new ConcordiaDbContext(dbContextOptions);
+            _dbContext = new TestDatabaseFixture().CreateContext();
             _sut = new ListRepository(_dbContext);
         }
 
         [Fact]
         public void Should_Return_All_Lists()
         {
-            var result = _sut.GetAll();
-            Assert.Equal(3, result.Count());
-        }
-
-        [Fact]
-        public void Should_Return_Lists_By_ListId()
-        {
-            var result = _sut.GetById(1);
-            Assert.Equal("to do", result.Title);
-            var result2 = _sut.GetById(2);
-            Assert.Equal("in progress", result2.Title);
-            var result3 = _sut.GetById(3);
-            Assert.Equal("done", result3.Title);
-        }
-
-        [Fact]
-        public void Shoul_Return_Lists_Of_A_Scientist_By_ScientisId()
-        {
-            var result = _sut.GetByScientistId(1); 
-            Assert.Equal(2, result.Count());
-            foreach (var list in result)
+            var lists = _sut.GetAll();
+            Assert.Equal(3, lists.Count());
+            
+            foreach ( var list in lists)
             {
-                var l = list;
-                Assert.NotNull(list.Experiments);
-                foreach (var experiment in list.Experiments)
+                foreach (var experiment in list.Experiments!)
                 {
-                    var e = experiment;
-                    Assert.NotNull(experiment.Scientists);
+                    experiment.Scientists!.ToList().ForEach(scientist =>
+                    {
+                        scientist.Should().NotBeNull();
+                    });
+
+                    experiment.Comments!.ToList().ForEach(comment =>
+                    {
+                        comment.Should().NotBeNull();
+                    });
+
+                    experiment.Label!.VerifyAllPropertiesNotNull().Should().BeTrue();
                 }
             }
         }
+
+        [Fact]
+        public void Should_Return_Lists_Of_A_Scientist_By_ScientisId()
+        {
+            var lists = _sut.GetByScientistId(1);
+
+            Assert.NotNull(lists);
+
+            Assert.Equal(3, lists.Count());
+            foreach (var list in lists)
+            {
+                foreach (var experiment in list.Experiments!)
+                {
+                    experiment.Scientists!.Select( s => s.Id).Contains(1).Should().BeTrue();
+
+                    experiment.Comments!.ToList().ForEach(comment =>
+                    {
+                        comment.Should().NotBeNull();
+                    });
+
+                    experiment.Label!.VerifyAllPropertiesNotNull().Should().BeTrue();
+                }
+            }
+        }     
     }
 }

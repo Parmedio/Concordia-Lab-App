@@ -12,4 +12,5 @@ public record BusinessExperimentDto
     public string TrelloListId { get; set; } = null!;
     public int ScientistId { get; set; } = 0!;
 
+    public BusinessCommentDto? lastComment { get; set; }
 }

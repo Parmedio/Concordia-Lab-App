@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using PersistentLayer.Configurations;
+﻿using PersistentLayer.Configurations;
 using PersistentLayer.Repositories.Concrete;
 
 namespace PersistentLayerTest
@@ -7,22 +6,26 @@ namespace PersistentLayerTest
     public class ScientistRepositoryTests
     {
         private readonly ScientistRepository _sut;
+        private readonly ConcordiaDbContext _dbContext;
 
         public ScientistRepositoryTests()
         {
-            var dbContextOptions = new DbContextOptionsBuilder<ConcordiaDbContext>()
-                .UseSqlServer("Data Source=DESKTOP-476F63V\\SQLEXPRESS;Initial Catalog=ConcordiaLab;Integrated Security=true;TrustServerCertificate=True;")
-                .Options;
-
-            var _dbContext = new ConcordiaDbContext(dbContextOptions);
+            _dbContext = new TestDatabaseFixture().CreateContext();
             _sut = new ScientistRepository(_dbContext);
         }
 
         [Fact]
         public void Should_Retrun_LocalId_By_TrelloId()
         {
-            var result = _sut.GetLocalIdByTrelloId("dferfre333");
-            Assert.Equal(1, result);
+            var scientistId = _sut.GetLocalIdByTrelloId("3434fv");
+            Assert.Equal(1, scientistId);
+        }
+
+        [Fact]
+        public void Should_Retrun_Null_By_TrelloId_Not_Existing()
+        {
+            var scientistId = _sut.GetLocalIdByTrelloId("trelloIdNotExisting");
+            Assert.Null(scientistId);
         }
     }
 }

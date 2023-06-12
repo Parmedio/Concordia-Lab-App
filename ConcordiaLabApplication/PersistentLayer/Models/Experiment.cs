@@ -11,12 +11,8 @@ public record Experiment(int Id = default, string TrelloId = null!, string Title
     public int ListId { get; set; }
 
     public virtual IEnumerable<Comment>? Comments { get; set; }
-    [NotMapped]
-    public IEnumerable<int>? CommentsIds { get; set; }
 
     public virtual IEnumerable<Scientist>? Scientists { get; set; }
     [NotMapped]
     public virtual IEnumerable<int>? ScientistsIds { get; set; }
-
-
 }

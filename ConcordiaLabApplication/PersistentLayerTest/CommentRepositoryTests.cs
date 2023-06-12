@@ -1,45 +1,70 @@
-﻿using Microsoft.EntityFrameworkCore;
-using PersistentLayer.Configurations;
+﻿using PersistentLayer.Configurations;
 using PersistentLayer.Models;
 using PersistentLayer.Repositories.Concrete;
+using Xunit;
 
 namespace PersistentLayerTest
 {
     public class CommentRepositoryTests
     {
         private readonly CommentRepository _sut;
+        private readonly ConcordiaDbContext _dbContext;
 
         public CommentRepositoryTests()
         {
-            var dbContextOptions = new DbContextOptionsBuilder<ConcordiaDbContext>()
-                .UseSqlServer("Data Source=DESKTOP-476F63V\\SQLEXPRESS;Initial Catalog=ConcordiaLab;Integrated Security=true;TrustServerCertificate=True;")
-                .Options;
-
-            var _dbContext = new ConcordiaDbContext(dbContextOptions);
-            _sut = new CommentRepository(_dbContext);
+            _dbContext = new TestDatabaseFixture().CreateContext();
+            _sut = new CommentRepository (_dbContext);
         }
 
         [Fact]
-        public void Should_Add_Comment_In_Db()
+        public void Add_Comment_Should_Return_CommentId_()
         {
-            var comment = new Comment
-            {
-                Body = "comment body",
-                Date = DateTime.Now,
-                ExperimentId = 1,
-                TrelloId = "refeferv",
-                CreatorName = "gabriele",
-                ScientistId = 1
-            };
-            var result = _sut.AddComment(comment);
-            Assert.NotEqual(0, result);
+            using var transaction = _dbContext.Database.BeginTransaction();
+
+            var comment = new Comment { TrelloId = "rfgerre444f", Body = "Test Comment", ExperimentId = 1, ScientistId = 2 };
+            var commentId = _sut.AddComment(comment);
+            Assert.NotEqual(0, commentId);
+
+            var commentAdded = _sut.GetCommentByTrelloId("rfgerre444f");
+            Assert.NotNull(commentAdded);
+            Assert.Equal (2, commentAdded.ScientistId);
+            Assert.Equal (1, commentAdded.ExperimentId);
+
+            transaction.Rollback();
         }
 
         [Fact]
-        public void Should_Return_Comment_By_TrelloId()
+        public void GetCommentByTrelloId_Of_Scientist_Should_Return_Comment()
         {
-            var result = _sut.GetCommentByTrelloId("refeferv");
-            Assert.NotNull(result);
+            var comment = _sut.GetCommentByTrelloId("TrelloIdComment1");
+            Assert.NotNull(comment);
+            Assert.Equal("This is the first comment.", comment.Body);
+            Assert.Equal("Gabriele", comment.CreatorName);
+            Assert.Equal(1, comment.ExperimentId);
+            Assert.Equal(1, comment.ScientistId);
+            Assert.NotNull(comment.Scientist);
+            Assert.Equal(1, comment.Scientist.Id);
+            Assert.Equal("gabriele", comment.Scientist.Name);
+            Assert.Equal("3434fv", comment.Scientist.TrelloMemberId); 
+            Assert.Equal("wfrf445eef344rf", comment.Scientist.TrelloToken);
+        }
+
+        [Fact]
+        public void GetCommentByTrelloId_Of_Researcher_Should_Return_Comment()
+        {
+            var comment = _sut.GetCommentByTrelloId("TrelloIdComment3");
+            Assert.NotNull(comment);
+            Assert.Equal("This is the third comment.", comment.Body);
+            Assert.Equal("Mike", comment.CreatorName);
+            Assert.Equal(3, comment.ExperimentId);
+            Assert.Null(comment.Scientist);
+        }
+
+        [Fact]
+        public void GetCommentByTrelloId_Not_Existing_Should_Return_Null()
+        {
+            var comment = _sut.GetCommentByTrelloId("NonExistingTrelloId");
+            Assert.Null(comment);
         }
     }
 }
