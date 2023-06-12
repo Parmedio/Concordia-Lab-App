@@ -67,12 +67,17 @@ public class ExperimentRepository : IExperimentRepository
 
     public Comment? GetLastCommentWithTrelloIdNull(int experimentId)
     {
-        return _dbContext.Experiments.AsNoTracking()
+        var experiment = _dbContext.Experiments
             .Include(e => e.Comments)
-            .Where(e => e.Id == experimentId && e.TrelloId == null)
-            .SelectMany(e => e.Comments)
-            .OrderByDescending(c => c.Date)
-            .FirstOrDefault();
+            .FirstOrDefault(e => e.Id == experimentId);
+
+        if (experiment != null)
+        {
+            return experiment.Comments!
+                .FirstOrDefault(c => c.TrelloId == null);
+        }
+
+        return null;
     }
 
     public int? GetLocalIdByTrelloId(string trelloId)
