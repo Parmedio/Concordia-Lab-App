@@ -6,9 +6,9 @@ namespace BusinessLogic.DataTransferLogic.Concrete;
 public class ClientService : IClientService
 {
     private static bool _connectionAvailable = false;
+    private readonly IDataHandlerFactory _dataHandlerFactory;
     private readonly IDataService _dataHandler;
     private readonly IDataSyncer _dataSyncer;
-    private readonly IDataHandlerFactory _dataHandlerFactory;
 
     public ClientService(IDataHandlerFactory dataHandlerFactory, IDataSyncer dataSyncer)
     {
@@ -49,5 +49,28 @@ public class ClientService : IClientService
         }
     }
 
+    public IEnumerable<BusinessListDto> GetAllLists()
+    {
+        return _dataHandler.GetAllLists();
+    }
 
+    public IEnumerable<BusinessExperimentDto> GetAllExperiments()
+    {
+        return _dataHandler.GetAllExperiments();
+    }
+
+    public IEnumerable<BusinessExperimentDto> GetAllExperiments(int scientistId)
+    {
+        return _dataHandler.GetAllExperiments(scientistId);
+    }
+
+    public IEnumerable<BusinessScientistDto> GetAllScientist()
+    {
+        return _dataHandler.GetAllScientist();
+    }
+
+    public BusinessExperimentDto GetExperimentById(int experimentId)
+    {
+        return _dataHandler.GetExperimentById(experimentId);
+    }
 }

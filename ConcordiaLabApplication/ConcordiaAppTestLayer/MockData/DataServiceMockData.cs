@@ -7,6 +7,7 @@ namespace ConcordiaAppTestLayer.MockData;
 public static class DataServiceMockData
 {
     public static List<ListEntity> allList;
+    public static List<Experiment> experiments;
     public static List<ListEntity> allListById;
     public static List<BusinessListDto> allbList;
     public static List<BusinessListDto> allbListById;
@@ -15,6 +16,13 @@ public static class DataServiceMockData
     public static BusinessExperimentDto businessExperimentDto3;
     public static Experiment experiment1;
     public static Experiment experiment2;
+    public static Scientist scientist1;
+    public static BusinessScientistDto bscientist1;
+    public static BusinessScientistDto bscientist2;
+
+    public static Scientist scientist2;
+    public static List<Scientist> scientists;
+    public static List<BusinessScientistDto> bscientists;
     public static ListEntity entityAll;
     public static ListEntity entityById;
     public static BusinessListDto businessListAll;
@@ -22,6 +30,35 @@ public static class DataServiceMockData
 
     static DataServiceMockData()
     {
+        scientist1 = new Scientist(1, "aaa", "bbb", "Giorgio Giovanni");
+        scientist2 = new Scientist(2, "ccc", "ddd", "Alessandro Giovanni");
+        scientists = new List<Scientist>()
+        {
+            scientist1,
+            scientist2
+        };
+
+        bscientist1 = new BusinessScientistDto()
+        {
+            Id = 1,
+            TrelloToken = "aaa",
+            Name = "Giorgio Giovanni"
+        };
+
+        bscientist2 = new BusinessScientistDto()
+        {
+            Id = 2,
+            TrelloToken = "ccc",
+            Name = "Alessandro Giovanni"
+        };
+
+        bscientists = new()
+        {
+            bscientist1,
+            bscientist2
+        };
+
+
         experiment1 = new Experiment(0, "bbb", "cacciaGrossa");
         experiment1.ScientistsIds = new List<int>() { 0 };
         experiment1.ListId = 2;
@@ -30,6 +67,11 @@ public static class DataServiceMockData
         experiment2.ListId = 1;
         entityAll = new ListEntity(0, "aaa", "ToDo");
         entityAll.Experiments = new List<Experiment>()
+        {
+            experiment1,
+            experiment2
+        };
+        experiments = new List<Experiment>()
         {
             experiment1,
             experiment2

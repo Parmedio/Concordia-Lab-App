@@ -2,20 +2,18 @@
 using AutoMapper;
 
 using BackgroundServices;
-
+using BusinessLogic.APIConsumers.Abstract;
 using BusinessLogic.APIConsumers.Concrete;
 using BusinessLogic.APIConsumers.UriCreators;
 using BusinessLogic.AutomapperProfiles;
+using ConcordiaLab.AutomapperViewProfile;
 using BusinessLogic.DataTransferLogic.Abstract;
 using BusinessLogic.DataTransferLogic.Concrete;
 using FluentAssertions.Common;
 using Microsoft.EntityFrameworkCore;
-
 using PersistentLayer.Configurations;
 using PersistentLayer.Repositories.Abstract;
 using PersistentLayer.Repositories.Concrete;
-using PersistentLayerTest;
-using System.Reflection;
 
 namespace ConcordiaLab;
 
@@ -27,10 +25,15 @@ public class Program
 
         var builder = WebApplication.CreateBuilder(args);
         // Add services to the container.
+
         MapperConfigurationExpression configuration = new MapperConfigurationExpression();
+       
         configuration.AddProfile(typeof(MainProfile));
+        configuration.AddProfile(typeof(ViewProfile));
+
         var mappingConfiguration = new MapperConfiguration(configuration);
-        //mappingConfiguration.AssertConfigurationIsValid();
+
+        mappingConfiguration.AssertConfigurationIsValid();
 
 
         builder.Services.AddControllersWithViews();
@@ -44,15 +47,23 @@ public class Program
         builder.Services.AddDbContext<ConcordiaDbContext>(options =>
               options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
         builder.Services.AddAutoMapper(cfg => cfg.AddProfile(configuration));
+
         builder.Services.AddHostedService(provider => provider.GetRequiredService<ConnectionChecker>());
         builder.Services.AddLogging();
 
         builder.Services.AddSingleton<ConnectionChecker>();
         builder.Services.AddScoped<IApiSender, ApiSender>();
-        builder.Services.AddScoped<IDataService, DataService>();
-        builder.Services.AddScoped<IExperimentRepository, ExperimentRepository>();
-        builder.Services.AddTransient<IUriCreatorFactory, UriCreatorFactory>();
+        builder.Services.AddScoped<IApiReceiver, ApiReceiver>();
+        builder.Services.AddScoped<DataService>();
+        builder.Services.AddScoped<IExperimentDownloader, ExperimentDownloader>();
         builder.Services.AddTransient<IDataSyncer, DataSyncer>();
+
+        builder.Services.AddScoped<IExperimentRepository, ExperimentRepository>();
+        builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+        builder.Services.AddScoped<IListRepository, ListRepository>();
+        builder.Services.AddScoped<IScientistRepository, ScientistRepository>();
+
+        builder.Services.AddTransient<IUriCreatorFactory, UriCreatorFactory>();
         builder.Services.AddTransient<IRetrieveConnectionTimeInterval, RetrieveConnectionTimeInterval>();
         builder.Services.AddTransient<IDataHandlerFactory, DataHandlerFactory>();
         builder.Services.AddTransient<IClientService, ClientService>();
@@ -76,7 +87,7 @@ public class Program
                 // Crea una definizione di Task di Windows
                 var taskDefinition = taskService.NewTask();
 
-                // Imposta le proprietà del Task di Windows
+                // Imposta le proprietï¿½ del Task di Windows
                 taskDefinition.RegistrationInfo.Description = "Connection Checker Task";
                 taskDefinition.Triggers.Add(new Microsoft.Win32.TaskScheduler.DailyTrigger
                 {

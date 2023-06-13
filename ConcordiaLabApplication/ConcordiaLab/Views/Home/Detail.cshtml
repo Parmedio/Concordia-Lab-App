@@ -1,9 +1,10 @@
-@model ConcordiaLab.Controllers.Mock_Data.ViewModel.ExperimentDetails
+@using ConcordiaLab.ViewModels;
+@model ViewMExperiment
 
 @{
     ViewData["Title"] = "Experiment Detail";
     Layout = "_Layout";
-    var experiment = Model.Experiment;
+    var experiment = Model;
     var selectedScientistId = ViewData["SelectedScientistId"] as int?;
     var selectedViewMode = ViewData["SelectedViewMode"] as string ?? string.Empty;
 }
@@ -19,7 +20,7 @@
             <b>Scientists:</b><br />
             @{
                 var scientistsCount = experiment.Scientists.Count();
-                var scientistsList = string.Join(", ", experiment.Scientists.Select(s => $"{s.Name[0]}. {s.Surname}"));
+                var scientistsList = string.Join(", ", experiment.Scientists.Select(s => $"{s.UserName}"));
 
                 if (scientistsCount > 0)
                 {

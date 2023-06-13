@@ -20,6 +20,7 @@ public class DataServiceTests
 
     private readonly ICommentRepository _commentRepository;
     private readonly IListRepository _listRepository;
+    private readonly IScientistRepository _scientistRepository;
     private readonly IExperimentRepository _experimentRepository;
     private readonly IMapper _mapper;
     private readonly DataService _sut;
@@ -29,9 +30,9 @@ public class DataServiceTests
         _commentRepository = Mock.Of<ICommentRepository>();
         _experimentRepository = Mock.Of<IExperimentRepository>();
         _listRepository = Mock.Of<IListRepository>();
+        _scientistRepository = Mock.Of<IScientistRepository>();
         _mapper = Mock.Of<IMapper>();
-        _sut = new DataService(_listRepository, _commentRepository, _experimentRepository, _mapper);
-
+        _sut = new DataService(_listRepository, _commentRepository, _experimentRepository, _mapper, _scientistRepository);
     }
 
     [Fact]
@@ -99,10 +100,64 @@ public class DataServiceTests
     [Fact]
     public void GetAllListShouldThrowException()
     {
+        Mock.Get(_listRepository).Setup(p => p.GetAll()).Returns(value: null);
+        Mock.Get(_mapper).Setup(p => p.Map<IEnumerable<BusinessListDto>?>(_listRepository.GetAll())).Returns(value: null);
+
+        _sut.Invoking(p => p.GetAllLists(2)).Should().Throw<AllListsEmptyException>().WithMessage("The database has no lists.");
+    }
+
+    [Fact]
+    public void GetAllListShouldThrowException_ById()
+    {
         Mock.Get(_listRepository).Setup(p => p.GetByScientistId(1)).Returns(value: null);
         Mock.Get(_mapper).Setup(p => p.Map<IEnumerable<BusinessListDto>?>(_listRepository.GetByScientistId(1))).Returns(value: null);
 
         _sut.Invoking(p => p.GetAllLists(2)).Should().Throw<AllListsEmptyException>().WithMessage("The database has no lists.");
+    }
+
+    [Fact]
+    public void GetAllExperiments_ShouldReturn2Experiments()
+    {
+        Mock.Get(_experimentRepository).Setup(p => p.GetAll()).Returns(DataServiceMockData.experiments);
+        Mock.Get(_mapper).Setup(p => p.Map<IEnumerable<BusinessExperimentDto>>(_experimentRepository.GetAll())).Returns(DataServiceMockData.businessListAll.Experiments!);
+
+        _sut.GetAllExperiments().Should().HaveCount(2);
+    }
+
+    public static IEnumerable<Object[]> MemberDataForGetAllExperiments =>
+        new List<Object[]>
+        {
+            new object[] { 0, 1, new List<BusinessExperimentDto> { DataServiceMockData.businessExperimentDto1 } , new List<Experiment> { DataServiceMockData.experiment1} },
+            new object[] { 1, 1, new List<BusinessExperimentDto> { DataServiceMockData.businessExperimentDto2 } , new List<Experiment> { DataServiceMockData.experiment2} }
+        };
+
+    [Theory]
+    [MemberData(nameof(MemberDataForGetAllExperiments))]
+    public void GetAllExperimentsByScientistId_ShouldReturnExperiments(int scientistId, int countOfResult, List<BusinessExperimentDto> ResultExperiment, List<Experiment> FilteredExperiment)
+    {
+        Mock.Get(_experimentRepository).Setup(p => p.GetAll()).Returns(DataServiceMockData.experiments);
+        Mock.Get(_mapper).Setup(p => p.Map<IEnumerable<BusinessExperimentDto>>(FilteredExperiment)).Returns(ResultExperiment);
+
+        _sut.GetAllExperiments(scientistId).Should().HaveCount(countOfResult);
+        _sut.GetAllExperiments(scientistId).Should().Equal(ResultExperiment);
+    }
+
+    [Fact]
+    public void GetAllExperimentsByScientistId_ShouldThrowForEmptyExperimentList()
+    {
+        Mock.Get(_experimentRepository).Setup(p => p.GetAll()).Returns(new List<Experiment>() { });
+        Mock.Get(_mapper).Setup(p => p.Map<IEnumerable<BusinessExperimentDto>>(new List<Experiment>() { })).Returns(new List<BusinessExperimentDto>() { });
+
+        _sut.Invoking(p => p.GetAllExperiments(3)).Should().Throw<ExperimentNotPresentInLocalDatabaseException>().WithMessage("No experiments have been found in the local database.");
+    }
+
+    [Fact]
+    public void GetAllExperimentsByScientistId_ShouldThrowForEmptyExperimentList2()
+    {
+        Mock.Get(_experimentRepository).Setup(p => p.GetAll()).Returns(DataServiceMockData.experiments);
+        Mock.Get(_mapper).Setup(p => p.Map<IEnumerable<BusinessExperimentDto>?>(null)).Returns(value: null);
+
+        _sut.Invoking(p => p.GetAllExperiments(3)).Should().Throw<ExperimentNotPresentInLocalDatabaseException>().WithMessage("No experiments have been found in the local database for scientist with ID: 3");
     }
 
     [Fact]
@@ -113,6 +168,34 @@ public class DataServiceTests
 
         _sut.MoveExperiment(DataServiceMockData.businessExperimentDto1).Id.Should().Be(DataServiceMockData.businessExperimentDto1.Id);
 
+
+    }
+
+    [Fact]
+    public void GetAllScientist_ShouldHave2Elements()
+    {
+        Mock.Get(_scientistRepository).Setup(p => p.GetAll()).Returns(DataServiceMockData.scientists);
+        Mock.Get(_mapper).Setup(p => p.Map<IEnumerable<BusinessScientistDto>>(DataServiceMockData.scientists)).Returns(DataServiceMockData.bscientists);
+
+        _sut.GetAllScientist().Should().Equal(DataServiceMockData.bscientists);
+        _sut.GetAllScientist().Should().HaveCount(2);
+    }
+
+    public static IEnumerable<Object[]> GetExperimentByIdMemberData =>
+        new List<Object[]>
+        {
+            new object [] {1, DataServiceMockData.experiment1, DataServiceMockData.businessExperimentDto1},
+            new object [] {2, DataServiceMockData.experiment2, DataServiceMockData.businessExperimentDto2}
+        };
+
+    [Theory]
+    [MemberData(nameof(GetExperimentByIdMemberData))]
+    public void GetExperimentById_ShouldReturnTheRightExperiment(int experimentId, Experiment returnedExperiment, BusinessExperimentDto convertedExperiment)
+    {
+        Mock.Get(_experimentRepository).Setup(p => p.GetById(experimentId)).Returns(returnedExperiment);
+        Mock.Get(_mapper).Setup(p => p.Map<BusinessExperimentDto>(returnedExperiment)).Returns(convertedExperiment);
+
+        _sut.GetExperimentById(experimentId).Should().Be(convertedExperiment);
 
     }
 

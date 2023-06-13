@@ -1,32 +1,24 @@
-﻿using ConcordiaLab.Controllers.Mock_Data;
-using ConcordiaLab.Controllers.Mock_Data.Mock_Gateway;
-using ConcordiaLab.Controllers.Mock_Data.MockModels;
-using ConcordiaLab.Controllers.Mock_Data.ViewModel;
+﻿using AutoMapper;
+using BusinessLogic.DataTransferLogic.Abstract;
+using ConcordiaLab.ViewModels;
 using ConcordiaLab.Models;
-
 using Microsoft.AspNetCore.Mvc;
-using PersistentLayer.Models;
-using System.Collections;
 using System.Diagnostics;
-using System.Runtime.ConstrainedExecution;
 
 namespace ConcordiaLab.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly MockGatewayList _mockGatewayList;
-        private readonly MockGatewayExperiment _mockGatewayExperiment;
-        private readonly MockGatewayScientist _mockGatewayScientist;
-        private readonly UserSetting _userSetting;
+        private readonly IMapper _mapper;
+        private readonly IClientService _clientService;
+        private static readonly List<string> _viewMode= new List<string>() { "status", "priority" };
 
-        public HomeController(ILogger<HomeController> logger, MockGatewayList mockGatewayList, MockGatewayExperiment mockGatewayExperiment, MockGatewayScientist mockGatewayScientist, UserSetting userSetting)
+        public HomeController(ILogger<HomeController> logger, IMapper mapper, IClientService clientService)
         {
             _logger = logger;
-            _mockGatewayList = mockGatewayList;
-            _mockGatewayExperiment = mockGatewayExperiment;
-            _mockGatewayScientist = mockGatewayScientist;
-            _userSetting = userSetting;
+            _mapper = mapper;
+            _clientService = clientService;
         }
 
         public IActionResult Index(int scientistId = 0)
@@ -34,9 +26,9 @@ namespace ConcordiaLab.Controllers
             _logger.LogInformation("Index was called");
 
             ViewData["SelectedScientistId"] = scientistId;
-            ViewData["Scientists"] = _mockGatewayScientist.GetAll();
+            ViewData["Scientists"] = _clientService.GetAllScientist();
 
-            ViewData["ViewMode"] = new List<string>() { "status", "priority" };
+            ViewData["ViewMode"] = _viewMode;
             ViewData["SelectedViewMode"] = "status";
 
             var dashboard = BuildIndex(scientistId);
@@ -48,12 +40,13 @@ namespace ConcordiaLab.Controllers
             _logger.LogInformation("Priority was called");
 
             ViewData["SelectedScientistId"] = scientistId;
-            ViewData["Scientists"] = _mockGatewayScientist.GetAll();
+            ViewData["Scientists"] = _clientService.GetAllScientist();
 
-            ViewData["ViewMode"] = new List<string>() { "status", "priority"};
+            ViewData["ViewMode"] = _viewMode;
             ViewData["SelectedViewMode"] = "priority";
 
             var priorityList = BuildPriority(scientistId);
+
             return View(priorityList);
         }
 
@@ -64,13 +57,13 @@ namespace ConcordiaLab.Controllers
             var detail = BuildDetailedExperiment(experimentId);
 
             ViewData["SelectedScientistId"] = scientistId;
-            ViewData["Scientists"] = _mockGatewayScientist.GetAll();
+            ViewData["Scientists"] = _clientService.GetAllScientist();
 
-            ViewData["ViewMode"] = new List<string>() { "status", "priority" };
+            ViewData["ViewMode"] = _viewMode;
             ViewData["SelectedViewMode"] = selectedViewMode;
 
             ViewData["ExperimentId"] = experimentId;
-            ViewData["ExperimentScientistIds"] = detail.Experiment.IntScientists;
+            ViewData["ExperimentScientistIds"] = detail.Scientists.Select(x => x.Id);
             
             return View(detail);
         }
@@ -86,52 +79,32 @@ namespace ConcordiaLab.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        private Dashboard BuildIndex(int scientistId)
+        private IEnumerable<ViewMList> BuildIndex(int scientistId)
         {
-            var experimentWithAssegnee = AssignScientistToExperiment(scientistId);
+            var unorderedExperiments = scientistId == 0 ?
+                _mapper.Map<IEnumerable<ViewMList>>(_clientService.GetAllLists()) :
+                _mapper.Map<IEnumerable<ViewMList>>(_clientService.GetAllLists(scientistId));
 
-            var lists = _mockGatewayList.GetAll()
-                .Select(list =>
-                {
-                    var listExperiments = list.IntExperiments?
-                        .SelectMany(id => experimentWithAssegnee.Where(experiment => id == experiment.Id));
-
-                    return new MockList(list.Id, list.Name, list.IntExperiments)
-                    {
-                        Experiments = listExperiments
-                    };
-                });
-
-            return new Dashboard(lists);
+            return (unorderedExperiments);
         }
 
-        private Priority BuildPriority(int scientistId)
+        private IEnumerable<ViewMExperiment> BuildPriority(int scientistId)
         {
-            var experimentWithAssegnee = AssignScientistToExperiment(scientistId);
-            
-            var sortedExperiments = OrderAccordingToPriority(experimentWithAssegnee);
+            var unorderedExperiments = scientistId == 0 ?
+                _mapper.Map<IEnumerable<ViewMExperiment>>(_clientService.GetAllExperiments()) :
+                _mapper.Map<IEnumerable<ViewMExperiment>>(_clientService.GetAllExperiments(scientistId));
 
-            return new Priority(sortedExperiments);
+            return OrderAccordingToPriority(unorderedExperiments);
         }
 
-        private ExperimentDetails BuildDetailedExperiment(int ExpId)
+        private ViewMExperiment BuildDetailedExperiment(int ExpId)
         {
-            var scientists = _mockGatewayScientist.GetAll();
+            var detailedExperiment = _mapper.Map<ViewMExperiment>(_clientService.GetExperimentById(ExpId)); //fare mappatura
 
-            var experiment = _mockGatewayExperiment.GetById(ExpId)!;
-
-            var expScientists = experiment.IntScientists?
-                .SelectMany(id => scientists.Where(scientist => id == scientist.Id));
-
-            var detailedExperiment = new MockExperiment(experiment.Id, experiment.Title, experiment.Description, experiment.DueDate, experiment.Priority, experiment.LastComment, experiment.IntScientists)
-            {
-                Scientists = expScientists
-            };
-
-            return new ExperimentDetails(detailedExperiment);
+            return detailedExperiment;
         }
 
-        private List<MockExperiment> OrderAccordingToPriority(IEnumerable<MockExperiment> listToOrder)
+        private List<ViewMExperiment> OrderAccordingToPriority(IEnumerable<ViewMExperiment> listToOrder)
         {
             var today = DateTime.Today;
             var dueDateThreshold = today.AddDays(5);
@@ -159,25 +132,6 @@ namespace ConcordiaLab.Controllers
                 .ToList();
 
             return sortedExperiments;
-        }
-       
-        private IEnumerable<MockExperiment> AssignScientistToExperiment(int scientistId)
-        {
-            var scientists = _mockGatewayScientist.GetAll();
-
-            var experiments = (scientistId == 0 ? _mockGatewayExperiment.GetAll() : _mockGatewayExperiment.GetAllFromScientistId(scientistId))
-                .Select(experiment =>
-                {
-                    var expScientists = experiment.IntScientists?
-                        .SelectMany(id => scientists.Where(scientist => id == scientist.Id));
-
-                    return new MockExperiment(experiment.Id, experiment.Title, experiment.Description, experiment.DueDate, experiment.Priority, experiment.LastComment, experiment.IntScientists)
-                    {
-                        Scientists = expScientists
-                    };
-                });
-
-            return experiments;
         }
     }
 }

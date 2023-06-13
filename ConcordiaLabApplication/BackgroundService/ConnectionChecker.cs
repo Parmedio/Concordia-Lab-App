@@ -44,8 +44,6 @@ public class ConnectionChecker : BackgroundService
 
                 if (connectionInfo.Item1)
                 {
-
-
                     if (!_connectionAchieved)
                     {
                         _logger.LogInformation("Connection Established!");

@@ -13,6 +13,7 @@ public record Experiment(int Id = default, string TrelloId = null!, string Title
     public virtual IEnumerable<Comment>? Comments { get; set; }
 
     public virtual IEnumerable<Scientist>? Scientists { get; set; }
+
     [NotMapped]
     public virtual IEnumerable<int>? ScientistsIds { get; set; }
 }
