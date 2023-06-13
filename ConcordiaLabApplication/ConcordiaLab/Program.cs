@@ -1,16 +1,21 @@
 
 using AutoMapper;
+using AutoMapper.EquivalencyExpression;
 
 using BackgroundServices;
+
 using BusinessLogic.APIConsumers.Abstract;
 using BusinessLogic.APIConsumers.Concrete;
 using BusinessLogic.APIConsumers.UriCreators;
 using BusinessLogic.AutomapperProfiles;
-using ConcordiaLab.AutomapperViewProfile;
 using BusinessLogic.DataTransferLogic.Abstract;
 using BusinessLogic.DataTransferLogic.Concrete;
-using FluentAssertions.Common;
+
+
+using ConcordiaLab.AutomapperViewProfile;
+
 using Microsoft.EntityFrameworkCore;
+
 using PersistentLayer.Configurations;
 using PersistentLayer.Repositories.Abstract;
 using PersistentLayer.Repositories.Concrete;
@@ -27,9 +32,10 @@ public class Program
         // Add services to the container.
 
         MapperConfigurationExpression configuration = new MapperConfigurationExpression();
-       
+
         configuration.AddProfile(typeof(MainProfile));
         configuration.AddProfile(typeof(ViewProfile));
+        configuration.AddCollectionMappers();
 
         var mappingConfiguration = new MapperConfiguration(configuration);
 
@@ -46,7 +52,8 @@ public class Program
 
         builder.Services.AddDbContext<ConcordiaDbContext>(options =>
               options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-        builder.Services.AddAutoMapper(cfg => cfg.AddProfile(configuration));
+        builder.Services.AddAutoMapper(cfg => cfg.AddProfile(typeof(MainProfile)));
+        builder.Services.AddAutoMapper(cfg => cfg.AddProfile(typeof(ViewProfile)));
 
         builder.Services.AddHostedService(provider => provider.GetRequiredService<ConnectionChecker>());
         builder.Services.AddLogging();
