@@ -83,8 +83,6 @@ public class DataService : IDataService
     {
         IEnumerable<BusinessExperimentDto> businessExperiments;
         businessExperiments = _mapper.Map<IEnumerable<BusinessExperimentDto>>(_experimentRepository.GetAll());
-        if (businessExperiments.IsNullOrEmpty())
-            throw new ExperimentNotPresentInLocalDatabaseException("No experiments have been found in the local database.");
         return businessExperiments!;
     }
 
@@ -92,13 +90,7 @@ public class DataService : IDataService
     {
         IEnumerable<BusinessExperimentDto>? businessExperiments;
         IEnumerable<Experiment> allExperiments = _experimentRepository.GetAll();
-        if (allExperiments.IsNullOrEmpty())
-            throw new ExperimentNotPresentInLocalDatabaseException($"No experiments have been found in the local database.");
-
         businessExperiments = _mapper.Map<IEnumerable<BusinessExperimentDto>?>(allExperiments.Where(p => !p.ScientistsIds.IsNullOrEmpty() && p.ScientistsIds!.Contains(scientistId)));
-        if (businessExperiments.IsNullOrEmpty())
-            throw new ExperimentNotPresentInLocalDatabaseException($"No experiments have been found in the local database for scientist with ID: {scientistId}");
-
         return businessExperiments!;
     }
 
