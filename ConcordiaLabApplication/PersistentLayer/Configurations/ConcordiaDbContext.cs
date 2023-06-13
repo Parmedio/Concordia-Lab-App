@@ -28,5 +28,13 @@ public class ConcordiaDbContext : DbContext
                    new ListEntity { Id = 2, TrelloId = "64760804e47275c707e05d39", Title = "in progress" },
                    new ListEntity { Id = 3, TrelloId = "64760804e47275c707e05d3a", Title = "completed" }
                    );
+
+        modelBuilder.Entity<Experiment>(entity =>
+        {
+            entity.HasOne(e => e.Label)
+                .WithMany()
+                .HasForeignKey(e => e.LabelId)
+                .IsRequired(false);
+        });
     }
 }

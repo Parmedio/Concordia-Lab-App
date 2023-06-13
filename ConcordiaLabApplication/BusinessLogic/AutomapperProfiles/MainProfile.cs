@@ -68,7 +68,5 @@ public class MainProfile : Profile
             .ForMember(dest => dest.Comments, opt => opt.Ignore())
             .ForMember(dest => dest.Scientists, opt => opt.Ignore())
             .ForMember(dest => dest.ScientistsIds, opt => opt.Ignore());
-
     }
-
 }

@@ -10,7 +10,7 @@ namespace ConcordiaLab
         {
             var provider = app.Services.CreateScope();
             var context = provider.ServiceProvider.GetRequiredService<ConcordiaDbContext>();
-            //await context.Database.MigrateAsync();
+            await context.Database.MigrateAsync();
         }
     }
 }

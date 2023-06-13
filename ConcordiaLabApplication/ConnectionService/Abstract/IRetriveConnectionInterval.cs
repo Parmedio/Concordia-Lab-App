@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace ConnectionService.Abstract
 {
-    internal interface IRetriveConnectionInterval
+    public interface IRetriveConnectionInterval
     {
+        public interface IRetrieveConnectionTimeInterval
+        {
+            (bool, TimeSpan) IsTimeInInterval(DateTime currentDate);
+        }
     }
 }

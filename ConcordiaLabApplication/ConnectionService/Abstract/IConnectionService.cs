@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Hosting;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +11,7 @@ namespace ConnectionService.Abstract
         public Task CheckConnectionAndCallApi();
     }
 
-    public class ConnectionService : BackgroundService, IConnectionService
+    public class ConnectionService : IConnectionService
     {
         private readonly IWebApiCaller _webApiCaller;
 
