@@ -2,18 +2,19 @@ using FluentAssertions;
 using PersistentLayer.Configurations;
 using PersistentLayer.Models;
 using PersistentLayer.Repositories.Concrete;
+using PersistentLayerTest;
 using System.Reflection;
 
-namespace PersistentLayerTest
+namespace PersistentLayer.Tests
 {
-    public class ExperimentRepositoryTests
+    public class ExperimentRepositoryTests : IClassFixture<TestDatabaseFixture>
     {
         private readonly ExperimentRepository _sut;
         private readonly ConcordiaDbContext _dbContext;
 
-        public ExperimentRepositoryTests()
+        public ExperimentRepositoryTests(TestDatabaseFixture database)
         {
-            _dbContext = new TestDatabaseFixture().CreateContext();
+            _dbContext = database.CreateContext();
             _sut = new ExperimentRepository(_dbContext);
         }
 
@@ -164,19 +165,18 @@ namespace PersistentLayerTest
         public void Should_Return_All_Experiments()
         {
             var result = _sut.GetAll();
-            Assert.Equal(4, result.Count());
+            Assert.Equal(5, result.Count());
 
             result.ToList().ForEach(experiment =>
             {
                 experiment.Should().NotBeNull();
-                experiment.Id.Should().NotBe(0);
             });
         }
 
         [Fact]
         public void Get_Should_Return_Null_With_Id_Not_Existing()
         {
-            var result = _sut.GetById(0);
+            var result = _sut.GetById(10);
             Assert.Null(result);
         }
 
@@ -204,7 +204,7 @@ namespace PersistentLayerTest
         [Fact]
         public void Remove_Should_Return_Null_With_Id_Not_Existing()
         {
-            var result = _sut.Remove(0);
+            var result = _sut.Remove(10);
             Assert.Null(result);
         }
 

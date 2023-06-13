@@ -1,18 +1,18 @@
 ﻿using PersistentLayer.Configurations;
 using PersistentLayer.Models;
 using PersistentLayer.Repositories.Concrete;
-using Xunit;
+using PersistentLayerTest;
 
-namespace PersistentLayerTest
+namespace PersistentLayer.Tests
 {
-    public class CommentRepositoryTests
+    public class CommentRepositoryTests : IClassFixture<TestDatabaseFixture>
     {
         private readonly CommentRepository _sut;
         private readonly ConcordiaDbContext _dbContext;
 
-        public CommentRepositoryTests()
+        public CommentRepositoryTests(TestDatabaseFixture database)
         {
-            _dbContext = new TestDatabaseFixture().CreateContext();
+            _dbContext = database.CreateContext();
             _sut = new CommentRepository (_dbContext);
         }
 

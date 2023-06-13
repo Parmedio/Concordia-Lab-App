@@ -1,16 +1,17 @@
 ﻿using PersistentLayer.Configurations;
 using PersistentLayer.Repositories.Concrete;
+using PersistentLayerTest;
 
-namespace PersistentLayerTest
+namespace PersistentLayer.Tests
 {
-    public class ScientistRepositoryTests
+    public class ScientistRepositoryTests : IClassFixture<TestDatabaseFixture>
     {
         private readonly ScientistRepository _sut;
         private readonly ConcordiaDbContext _dbContext;
 
-        public ScientistRepositoryTests()
+        public ScientistRepositoryTests(TestDatabaseFixture database)
         {
-            _dbContext = new TestDatabaseFixture().CreateContext();
+            _dbContext = database.CreateContext();
             _sut = new ScientistRepository(_dbContext);
         }
 

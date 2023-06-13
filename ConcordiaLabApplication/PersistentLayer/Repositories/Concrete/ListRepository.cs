@@ -20,7 +20,7 @@ public class ListRepository : IListRepository
             .Include(l => l.Experiments!)
                 .ThenInclude(l => l.Comments)
             .Include(l => l.Experiments!)
-                .ThenInclude(e => e.Label);
+                .ThenInclude(e => e.Label).AsEnumerable();
     }
 
     public IEnumerable<ListEntity> GetByScientistId(int scientistId)
@@ -32,6 +32,6 @@ public class ListRepository : IListRepository
                 .ThenInclude(l => l.Comments)
             .Include(l => l.Experiments!)
                 .ThenInclude(e => e.Label)
-            .Where(l => l.Experiments!.Any(e => e.Scientists!.Select(s => s.Id).Contains(scientistId)));
+            .Where(l => l.Experiments!.Any(e => e.Scientists!.Select(s => s.Id).Contains(scientistId))).AsEnumerable();
     }
 }

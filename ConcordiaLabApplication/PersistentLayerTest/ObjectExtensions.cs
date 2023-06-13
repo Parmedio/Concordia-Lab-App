@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using System.Reflection;
 
-namespace PersistentLayerTest
+namespace PersistentLayer.Tests
 {
     public static class ObjectExtensions
     {

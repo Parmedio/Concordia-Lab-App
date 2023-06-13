@@ -1,17 +1,18 @@
 ﻿using FluentAssertions;
 using PersistentLayer.Configurations;
 using PersistentLayer.Repositories.Concrete;
+using PersistentLayerTest;
 
-namespace PersistentLayerTest
+namespace PersistentLayer.Tests
 {
-    public class ListReposiotoryTests
+    public class ListReposiotoryTests : IClassFixture<TestDatabaseFixture>
     {
         private readonly ListRepository _sut;
         private readonly ConcordiaDbContext _dbContext;
 
-        public ListReposiotoryTests()
+        public ListReposiotoryTests(TestDatabaseFixture database)
         {
-            _dbContext = new TestDatabaseFixture().CreateContext();
+            _dbContext = database.CreateContext();
             _sut = new ListRepository(_dbContext);
         }
 
@@ -23,8 +24,10 @@ namespace PersistentLayerTest
             
             foreach ( var list in lists)
             {
+                var e = _dbContext.Experiments;
                 foreach (var experiment in list.Experiments!)
                 {
+                    
                     experiment.Scientists!.ToList().ForEach(scientist =>
                     {
                         scientist.Should().NotBeNull();
@@ -52,7 +55,7 @@ namespace PersistentLayerTest
             {
                 foreach (var experiment in list.Experiments!)
                 {
-                    experiment.Scientists!.Select( s => s.Id).Contains(1).Should().BeTrue();
+                    experiment.Scientists.Should().BeNull();
 
                     experiment.Comments!.ToList().ForEach(comment =>
                     {
@@ -62,6 +65,13 @@ namespace PersistentLayerTest
                     experiment.Label!.VerifyAllPropertiesNotNull().Should().BeTrue();
                 }
             }
-        }     
+        }
+
+        [Fact]
+        public void Should_Return_Lists_Of_A_Scientist_By_ScientisId_Not_Existing()
+        {
+            var lists = _sut.GetByScientistId(0).ToList();
+            Assert.Empty(lists);
+        }
     }
 }

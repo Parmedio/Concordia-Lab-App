@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcordiaAppTestLayer", "Co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackgroundServices", "BackgroundService\BackgroundServices.csproj", "{D857DE11-8239-4DA8-A55A-8B5FB7F6A6A0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersistentLayerTest", "PersistentLayerTest\PersistentLayerTest.csproj", "{FF12A514-03A1-4DD0-AC38-3F3EEDD9E527}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersistentLayer.Tests", "PersistentLayerTest\PersistentLayer.Tests.csproj", "{FF12A514-03A1-4DD0-AC38-3F3EEDD9E527}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataSyncServices", "DataSyncServices", "{9AB15B60-8328-45A7-A150-90C429AD7C54}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

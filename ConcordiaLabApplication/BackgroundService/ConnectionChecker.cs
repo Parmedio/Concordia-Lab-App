@@ -1,12 +1,10 @@
 ﻿using BusinessLogic.DataTransferLogic.Abstract;
-
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace BackgroundServices;
-
 public class ConnectionChecker : BackgroundService
 {
     private readonly ILogger _logger;
@@ -55,7 +53,7 @@ public class ConnectionChecker : BackgroundService
                     }
 
                     connectionState = await dataService.UpdateConnectionStateAsync(true) ? "Online" : "Offline";
-                    Task sync = dataService.SyncDataAsyncs();
+                    Task sync = dataService.SyncDataAsyncs(); // fa la sincronizzazione 
                     _logger.LogInformation($"Executed new cycle. current connection state is {connectionState}");
                     await sync;
                 }

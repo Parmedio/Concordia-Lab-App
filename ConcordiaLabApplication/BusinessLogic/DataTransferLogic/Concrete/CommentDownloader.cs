@@ -12,6 +12,9 @@ using PersistentLayer.Repositories.Abstract;
 
 namespace BusinessLogic.DataTransferLogic.Concrete;
 
+/// <summary>
+/// riceve e salva i nuovi commenti in locale
+/// </summary>
 public class CommentDownloader : ICommentDownloader
 {
     private readonly IApiReceiver _receiver;

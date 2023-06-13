@@ -15,9 +15,16 @@ namespace PersistentLayer.Repositories.Concrete
 
         public int? AddComment(Comment comment)
         {
-            var entity = _dbContext.Comments.Add(comment);
-            _dbContext.SaveChanges();
-            return entity.Entity.Id;
+            try
+            {
+                var entity = _dbContext.Comments.Add(comment);
+                _dbContext.SaveChanges();
+                return entity.Entity.Id;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public Comment? GetCommentByTrelloId(string trelloId)
