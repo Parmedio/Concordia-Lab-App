@@ -9,6 +9,7 @@ public record TrelloExperimentDto
     public List<string>? IdMembers { get; set; }
     public DateTime? Due { get; set; }
     public List<string>? IdLabels { get; set; }
+
     [JsonProperty(PropertyName = "idList")]
     public string TrelloListId { get; set; } = null!;
     public string? Desc { get; set; }

@@ -5,8 +5,8 @@
         public virtual Experiment Experiment { get; set; } = null!;
         public virtual Scientist? Scientist { get; set; } = null!;
 
-        public int? ScientistId { get; set; }
         public int ExperimentId { get; set; } = 0!;
+        public int? ScientistId { get; set; }
     }
 
 }
