@@ -52,7 +52,7 @@ public class ExperimentDownloader : IExperimentDownloader
             if (_experimentRepository.GetLocalIdByTrelloId(experiment.Id!) is null)
             {
 
-                var experimentToAdd = _mapper.Map<Experiment>(experiment);
+                var experimentToAdd = _mapper.Map<TrelloExperimentDto, Experiment>(experiment);
                 experimentToAdd.ListId = 1;
                 var scientistIdList = experiment.IdMembers?.Select(p => _scientistRepository.GetLocalIdByTrelloId(p) ?? -1).ToList();
 

@@ -104,7 +104,7 @@ public class DataSyncerMockData2
             Due = DateTime.Parse("2022-4-11T12:00:00.000Z"),
             IdLabels = new List<string>() { "easy" },
             TrelloListId = "todo",
-            Desc = "simpleDescription"
+            desc = "simpleDescription"
         };
 
         TrelloExperiment2 = new TrelloExperimentDto()
@@ -115,7 +115,7 @@ public class DataSyncerMockData2
             Due = DateTime.Parse("2022-4-11T12:00:00.000Z"),
             IdLabels = new List<string>() { "medium" },
             TrelloListId = "todo",
-            Desc = null
+            desc = null
         };
 
         TrelloExperiment4New = new TrelloExperimentDto()
@@ -126,7 +126,7 @@ public class DataSyncerMockData2
             Due = null,
             IdLabels = new List<string>() { "hard" },
             TrelloListId = "todo",
-            Desc = null
+            desc = null
         };
 
         TrelloExperiment5New = new TrelloExperimentDto()
@@ -137,7 +137,7 @@ public class DataSyncerMockData2
             Due = DateTime.Parse("2022-4-11T12:00:00.000Z"),
             IdLabels = null,
             TrelloListId = "todo",
-            Desc = "nuovoEsperimento"
+            desc = "nuovoEsperimento"
         };
 
         MappedExperiment4New = new Experiment(
