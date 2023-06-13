@@ -12,9 +12,6 @@ using PersistentLayer.Repositories.Abstract;
 
 namespace BusinessLogic.DataTransferLogic.Concrete;
 
-/// <summary>
-/// riceve e salva in nuovi esperimenti in locale
-/// </summary>
 public class ExperimentDownloader : IExperimentDownloader
 {
     private readonly IApiReceiver _receiver;

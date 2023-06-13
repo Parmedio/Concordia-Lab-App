@@ -75,46 +75,6 @@ public class Program
         builder.Services.AddLogging(configure => configure.AddConsole())
                 .AddTransient<ConnectionChecker>();
 
-        // Costruisci il provider di servizi
-        using (var serviceProvider = builder.Services.BuildServiceProvider())
-        {
-            // Ottieni l'istanza del ConnectionChecker dal provider di servizi
-            var connectionChecker = serviceProvider.GetRequiredService<ConnectionChecker>();
-
-            // Configura il Task di Windows
-            using (var taskService = new Microsoft.Win32.TaskScheduler.TaskService())
-            {
-                // Crea una definizione di Task di Windows
-                var taskDefinition = taskService.NewTask();
-
-                // Imposta le propriet� del Task di Windows
-                taskDefinition.RegistrationInfo.Description = "Connection Checker Task";
-                taskDefinition.Triggers.Add(new Microsoft.Win32.TaskScheduler.DailyTrigger
-                {
-                    StartBoundary = DateTime.Now.AddMinutes(1),  // Specifica l'orario di avvio del Task di Windows
-                    DaysInterval = 1  // Specifica l'intervallo di giorni tra l'esecuzione del Task di Windows
-                });
-                taskDefinition.Actions.Add(new Microsoft.Win32.TaskScheduler.ExecAction
-                {
-                    Path = Assembly.GetEntryAssembly().Location  // Specifica il percorso dell'eseguibile per avviare il Task di Windows
-                });
-
-                // Registra il Task di Windows
-                taskService.RootFolder.RegisterTaskDefinition("ConnectionCheckerTask", taskDefinition);
-
-                // Avvia il ConnectionChecker
-                connectionChecker.Start();
-
-                Console.WriteLine("Connection Checker Task avviato. Premi un tasto per terminare.");
-                Console.ReadKey();
-
-                // Ferma il ConnectionChecker
-                connectionChecker.Stop();
-
-                // Elimina il Task di Windows
-                taskService.RootFolder.DeleteTask("ConnectionCheckerTask");
-            }
-        }
 
         var app = builder.Build();
 

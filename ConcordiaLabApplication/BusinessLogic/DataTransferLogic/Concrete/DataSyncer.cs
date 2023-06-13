@@ -6,9 +6,6 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace BusinessLogic.DataTransferLogic.Concrete;
 
-/// <summary>
-/// sincronizza il db con la web api ( download and upload)
-/// </summary>
 public class DataSyncer : IDataSyncer
 {
 
