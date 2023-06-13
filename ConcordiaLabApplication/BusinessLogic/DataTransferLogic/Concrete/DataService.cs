@@ -67,10 +67,11 @@ public class DataService : IDataService
 
     public IEnumerable<BusinessListDto> GetAllLists()
     {
-        IEnumerable<BusinessListDto>? businessLists;
-        businessLists = _mapper.Map<IEnumerable<BusinessListDto>?>(_listRepository.GetAll());
+        IEnumerable<BusinessListDto> businessLists;
+        var debug = _listRepository.GetAll();
+        businessLists = _mapper.Map<IEnumerable<BusinessListDto>>(_listRepository.GetAll());
 
-        if (businessLists.IsNullOrEmpty())
+        if (!businessLists.Any())
         {
             throw new AllListsEmptyException("The database has no lists.");
         }
