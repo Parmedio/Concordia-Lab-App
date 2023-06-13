@@ -68,8 +68,8 @@ public class DataService : IDataService
     public IEnumerable<BusinessListDto> GetAllLists()
     {
         IEnumerable<BusinessListDto> businessLists;
-        var debug = _listRepository.GetAll();
-        businessLists = _mapper.Map<IEnumerable<BusinessListDto>>(_listRepository.GetAll());
+        var allLists = _listRepository.GetAll().AsEnumerable<ListEntity>();
+        businessLists = _mapper.Map<IEnumerable<ListEntity>, IEnumerable<BusinessListDto>>(allLists);
 
         if (!businessLists.Any())
         {

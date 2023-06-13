@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+
 using PersistentLayer.Configurations;
 using PersistentLayer.Models;
 using PersistentLayer.Repositories.Abstract;
@@ -14,13 +15,14 @@ public class ListRepository : IListRepository
 
     public IEnumerable<ListEntity> GetAll()
     {
-        return _dbContext.EntityLists.AsNoTracking()
+        var allLists = _dbContext.EntityLists
             .Include(l => l.Experiments!)
                 .ThenInclude(e => e.Scientists!)
             .Include(l => l.Experiments!)
                 .ThenInclude(l => l.Comments)
             .Include(l => l.Experiments!)
-                .ThenInclude(e => e.Label);
+                .ThenInclude(e => e.Label).AsEnumerable();
+        return allLists;
     }
 
     public IEnumerable<ListEntity> GetByScientistId(int scientistId)
