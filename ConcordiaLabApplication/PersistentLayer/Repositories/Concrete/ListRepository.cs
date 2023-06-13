@@ -13,7 +13,7 @@ public class ListRepository : IListRepository
     public ListRepository(ConcordiaDbContext dbContext)
         => _dbContext = dbContext;
 
-    public IEnumerable<ListEntity> GetAll()
+    public IEnumerable<Column> GetAll()
     {
         var allLists = _dbContext.EntityLists
             .Include(l => l.Experiments!)
@@ -25,7 +25,7 @@ public class ListRepository : IListRepository
         return allLists;
     }
 
-    public IEnumerable<ListEntity> GetByScientistId(int scientistId)
+    public IEnumerable<Column> GetByScientistId(int scientistId)
     {
         return _dbContext.EntityLists.AsNoTracking()
             .Include(l => l.Experiments!)

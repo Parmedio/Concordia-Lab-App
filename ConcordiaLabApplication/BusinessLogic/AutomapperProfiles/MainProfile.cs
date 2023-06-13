@@ -11,7 +11,7 @@ public class MainProfile : Profile
 {
     public MainProfile()
     { //LINQ su mavigation property
-        CreateMap<ListEntity, BusinessListDto>()
+        CreateMap<Column, BusinessListDto>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Title));
 

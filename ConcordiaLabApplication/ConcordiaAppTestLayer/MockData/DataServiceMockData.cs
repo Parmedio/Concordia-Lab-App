@@ -6,9 +6,9 @@ namespace ConcordiaAppTestLayer.MockData;
 
 public static class DataServiceMockData
 {
-    public static List<ListEntity> allList;
+    public static List<Column> allList;
     public static List<Experiment> experiments;
-    public static List<ListEntity> allListById;
+    public static List<Column> allListById;
     public static List<BusinessListDto> allbList;
     public static List<BusinessListDto> allbListById;
     public static BusinessExperimentDto businessExperimentDto1;
@@ -23,8 +23,8 @@ public static class DataServiceMockData
     public static Scientist scientist2;
     public static List<Scientist> scientists;
     public static List<BusinessScientistDto> bscientists;
-    public static ListEntity entityAll;
-    public static ListEntity entityById;
+    public static Column entityAll;
+    public static Column entityById;
     public static BusinessListDto businessListAll;
     public static BusinessListDto businessListById;
 
@@ -65,7 +65,7 @@ public static class DataServiceMockData
         experiment2 = new Experiment(1, "ccc", "cacciaPiccola");
         experiment2.ScientistsIds = new List<int>() { 1 };
         experiment2.ListId = 1;
-        entityAll = new ListEntity(0, "aaa", "ToDo");
+        entityAll = new Column(0, "aaa", "ToDo");
         entityAll.Experiments = new List<Experiment>()
         {
             experiment1,
@@ -76,7 +76,7 @@ public static class DataServiceMockData
             experiment1,
             experiment2
         };
-        entityById = new ListEntity(0, "aaa", "ToDo");
+        entityById = new Column(0, "aaa", "ToDo");
         entityById.Experiments = new List<Experiment>()
         {
             experiment1
@@ -126,12 +126,12 @@ public static class DataServiceMockData
             }
         };
 
-        allList = new List<ListEntity>()
+        allList = new List<Column>()
         {
             entityAll
         };
 
-        allListById = new List<ListEntity>()
+        allListById = new List<Column>()
         {
             entityById
         };
