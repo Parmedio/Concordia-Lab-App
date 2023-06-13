@@ -25,7 +25,7 @@ public class Uploader : IUploader
         await SyncTrelloWithAllUpdates(experiments);
     }
 
-    private async Task SyncTrelloWithAllUpdates(IEnumerable<Experiment> experiments) 
+    private async Task SyncTrelloWithAllUpdates(IEnumerable<Experiment> experiments)
     {
         foreach (var experiment in experiments)
         {
@@ -36,10 +36,10 @@ public class Uploader : IUploader
             if (!experiment.Comments.IsNullOrEmpty())
             {
                 commentToAdd = _experimentRepository.GetLastCommentWithTrelloIdNull(experiment.Id);
-                //commentToAdd = experiment.Comments!.Where(p => p.TrelloId is null && p.Date == experiment.Comments!.Max(g => g.Date)).FirstOrDefault();
+
                 if (!await _sender.AddAComment(experiment.TrelloId, commentToAdd!.Body, commentToAdd.Scientist!.TrelloToken))
                     throw new UploadFailedException($"The process failed while uploading the experiment: {experiment.Title}. Error while trying to upload its latest comment: {commentToAdd.Body}");
-            } 
+            }
 
         }
     }
