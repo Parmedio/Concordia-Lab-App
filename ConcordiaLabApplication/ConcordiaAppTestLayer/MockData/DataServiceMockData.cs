@@ -88,7 +88,7 @@ public static class DataServiceMockData
             TrelloCardId = "bbb",
             Title = "cacciaGrossa",
             ListId = 2,
-            ScientistId = 0
+
         };
 
         businessExperimentDto2 = new BusinessExperimentDto()
@@ -96,14 +96,14 @@ public static class DataServiceMockData
             Id = 1,
             TrelloCardId = "bbb",
             Title = "cacciaPiccola",
-            ScientistId = 1
+
         };
         businessExperimentDto3 = new BusinessExperimentDto()
         {
             Id = 1,
             TrelloCardId = "bbb",
             Title = "cacciaPiccola",
-            ScientistId = 1,
+
             ListId = 8
         };
 

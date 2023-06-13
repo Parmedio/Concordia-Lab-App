@@ -51,7 +51,12 @@ public class Program
 
         builder.Services.AddDbContext<ConcordiaDbContext>(options =>
               options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-        builder.Services.AddAutoMapper(cfg => cfg.AddProfile(typeof(MainProfile)));
+        builder.Services.AddAutoMapper(cfg =>
+        {
+            cfg.AddMaps(typeof(MainProfile));
+            cfg.AddMaps(typeof(ViewProfile));
+            cfg.AllowNullDestinationValues = true;
+        });
         builder.Services.AddAutoMapper(cfg => cfg.AddProfile(typeof(ViewProfile)));
 
         builder.Services.AddHostedService(provider => provider.GetRequiredService<ConnectionChecker>());
