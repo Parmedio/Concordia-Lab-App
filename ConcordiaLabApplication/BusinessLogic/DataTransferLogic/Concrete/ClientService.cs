@@ -31,7 +31,7 @@ public class ClientService : IClientService
         return _dataHandler.AddComment(businessCommentDto, scientistId);
     }
 
-    public IEnumerable<BusinessListDto> GetAllLists(int scientistId)
+    public IEnumerable<BusinessColumnDto> GetAllLists(int scientistId)
     {
         return _dataHandler.GetAllLists(scientistId);
     }
@@ -49,7 +49,7 @@ public class ClientService : IClientService
         }
     }
 
-    public IEnumerable<BusinessListDto> GetAllLists()
+    public IEnumerable<BusinessColumnDto> GetAllLists()
     {
         return _dataHandler.GetAllLists();
     }

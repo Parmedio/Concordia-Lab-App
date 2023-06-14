@@ -79,7 +79,7 @@ public class DataServiceTests
     public void GetAllListShouldGiveAllLists()
     {
         Mock.Get(_listRepository).Setup(p => p.GetAll()).Returns(DataServiceMockData.allList);
-        Mock.Get(_mapper).Setup(p => p.Map<IEnumerable<BusinessListDto>?>(DataServiceMockData.allList)).Returns(DataServiceMockData.allbList);
+        Mock.Get(_mapper).Setup(p => p.Map<IEnumerable<BusinessColumnDto>?>(DataServiceMockData.allList)).Returns(DataServiceMockData.allbList);
 
         _sut.GetAllLists().Should().Equal(DataServiceMockData.allbList, (p, g) => p.Id == g.Id);
         _sut.GetAllLists().Should().HaveCount(c => c == 1);
@@ -90,7 +90,7 @@ public class DataServiceTests
     public void GetAllListShouldGiveAllListsByScientistId()
     {
         Mock.Get(_listRepository).Setup(p => p.GetByScientistId(0)).Returns(DataServiceMockData.allListById);
-        Mock.Get(_mapper).Setup(p => p.Map<IEnumerable<BusinessListDto>?>(_listRepository.GetByScientistId(0))).Returns(DataServiceMockData.allbListById);
+        Mock.Get(_mapper).Setup(p => p.Map<IEnumerable<BusinessColumnDto>?>(_listRepository.GetByScientistId(0))).Returns(DataServiceMockData.allbListById);
 
         _sut.GetAllLists(0).Should().Equal(DataServiceMockData.allbListById, (p, g) => p.Id == g.Id);
         _sut.GetAllLists(0).Should().HaveCount(c => c == 1);
@@ -101,7 +101,7 @@ public class DataServiceTests
     public void GetAllListShouldThrowException()
     {
         Mock.Get(_listRepository).Setup(p => p.GetAll()).Returns(value: null);
-        Mock.Get(_mapper).Setup(p => p.Map<IEnumerable<BusinessListDto>?>(_listRepository.GetAll())).Returns(value: null);
+        Mock.Get(_mapper).Setup(p => p.Map<IEnumerable<BusinessColumnDto>?>(_listRepository.GetAll())).Returns(value: null);
 
         _sut.Invoking(p => p.GetAllLists(2)).Should().Throw<AllListsEmptyException>().WithMessage("The database has no lists.");
     }
@@ -110,7 +110,7 @@ public class DataServiceTests
     public void GetAllListShouldThrowException_ById()
     {
         Mock.Get(_listRepository).Setup(p => p.GetByScientistId(1)).Returns(value: null);
-        Mock.Get(_mapper).Setup(p => p.Map<IEnumerable<BusinessListDto>?>(_listRepository.GetByScientistId(1))).Returns(value: null);
+        Mock.Get(_mapper).Setup(p => p.Map<IEnumerable<BusinessColumnDto>?>(_listRepository.GetByScientistId(1))).Returns(value: null);
 
         _sut.Invoking(p => p.GetAllLists(2)).Should().Throw<AllListsEmptyException>().WithMessage("The database has no lists.");
     }

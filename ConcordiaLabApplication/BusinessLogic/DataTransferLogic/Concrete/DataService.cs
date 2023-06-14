@@ -41,10 +41,10 @@ public class DataService : IDataService
         return businessCommentDto; //con il mapper restituire l'oggetto nel formato che serve alla view
     }
 
-    public IEnumerable<BusinessListDto> GetAllLists(int scientistId)
+    public IEnumerable<BusinessColumnDto> GetAllLists(int scientistId)
     {
-        IEnumerable<BusinessListDto>? businessLists;
-        businessLists = _mapper.Map<IEnumerable<BusinessListDto>?>(_listRepository.GetByScientistId(scientistId));
+        IEnumerable<BusinessColumnDto>? businessLists;
+        businessLists = _mapper.Map<IEnumerable<BusinessColumnDto>?>(_listRepository.GetByScientistId(scientistId));
 
         if (businessLists.IsNullOrEmpty())
         {
@@ -65,11 +65,11 @@ public class DataService : IDataService
         return updatedExperiment!;
     }
 
-    public IEnumerable<BusinessListDto> GetAllLists()
+    public IEnumerable<BusinessColumnDto> GetAllLists()
     {
-        IEnumerable<BusinessListDto> businessLists;
-        var allLists = _listRepository.GetAll().AsEnumerable<ListEntity>();
-        businessLists = _mapper.Map<IEnumerable<ListEntity>, IEnumerable<BusinessListDto>>(allLists);
+        IEnumerable<BusinessColumnDto> businessLists;
+        var allLists = _listRepository.GetAll().AsEnumerable<Column>();
+        businessLists = _mapper.Map<IEnumerable<Column>, IEnumerable<BusinessColumnDto>>(allLists);
 
         if (!businessLists.Any())
         {
@@ -83,8 +83,6 @@ public class DataService : IDataService
     {
         IEnumerable<BusinessExperimentDto> businessExperiments;
         businessExperiments = _mapper.Map<IEnumerable<BusinessExperimentDto>>(_experimentRepository.GetAll());
-        if (businessExperiments.IsNullOrEmpty())
-            throw new ExperimentNotPresentInLocalDatabaseException("No experiments have been found in the local database.");
         return businessExperiments!;
     }
 
@@ -92,13 +90,7 @@ public class DataService : IDataService
     {
         IEnumerable<BusinessExperimentDto>? businessExperiments;
         IEnumerable<Experiment> allExperiments = _experimentRepository.GetAll();
-        if (allExperiments.IsNullOrEmpty())
-            throw new ExperimentNotPresentInLocalDatabaseException($"No experiments have been found in the local database.");
-
         businessExperiments = _mapper.Map<IEnumerable<BusinessExperimentDto>?>(allExperiments.Where(p => !p.ScientistsIds.IsNullOrEmpty() && p.ScientistsIds!.Contains(scientistId)));
-        if (businessExperiments.IsNullOrEmpty())
-            throw new ExperimentNotPresentInLocalDatabaseException($"No experiments have been found in the local database for scientist with ID: {scientistId}");
-
         return businessExperiments!;
     }
 

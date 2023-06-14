@@ -17,7 +17,7 @@ namespace ConcordiaLab.AutomapperViewProfile
                 .ForMember(dest => dest.AuthorComment, opt => opt.MapFrom(src => src.lastComment.CreatorName))
                 .ForMember(dest => dest.BelongToList, opt => opt.MapFrom(src => src.ListName));
 
-            CreateMap<BusinessListDto, ViewMList>();
+            CreateMap<BusinessColumnDto, ViewMList>();
         }
     }
 }

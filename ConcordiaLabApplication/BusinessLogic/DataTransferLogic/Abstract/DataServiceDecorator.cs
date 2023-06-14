@@ -27,12 +27,12 @@ public abstract class DataServiceDecorator : IDataService
         return _component.GetAllExperiments(scientistId);
     }
 
-    public IEnumerable<BusinessListDto> GetAllLists()
+    public IEnumerable<BusinessColumnDto> GetAllLists()
     {
         return _component.GetAllLists();
     }
 
-    public virtual IEnumerable<BusinessListDto> GetAllLists(int scientistId)
+    public virtual IEnumerable<BusinessColumnDto> GetAllLists(int scientistId)
     {
         return _component.GetAllLists(scientistId);
     }

@@ -7,7 +7,7 @@ public record Experiment(int Id = default, string TrelloId = null!, string Title
     public virtual Label? Label { get; set; }
     public int? LabelId { get; set; }
 
-    public virtual ListEntity? List { get; set; }
+    public virtual Column? List { get; set; }
     public int ListId { get; set; }
 
     public virtual IEnumerable<Comment>? Comments { get; set; }

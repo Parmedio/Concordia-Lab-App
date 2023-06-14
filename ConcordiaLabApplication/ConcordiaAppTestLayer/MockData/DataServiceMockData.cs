@@ -6,11 +6,11 @@ namespace ConcordiaAppTestLayer.MockData;
 
 public static class DataServiceMockData
 {
-    public static List<ListEntity> allList;
+    public static List<Column> allList;
     public static List<Experiment> experiments;
-    public static List<ListEntity> allListById;
-    public static List<BusinessListDto> allbList;
-    public static List<BusinessListDto> allbListById;
+    public static List<Column> allListById;
+    public static List<BusinessColumnDto> allbList;
+    public static List<BusinessColumnDto> allbListById;
     public static BusinessExperimentDto businessExperimentDto1;
     public static BusinessExperimentDto businessExperimentDto2;
     public static BusinessExperimentDto businessExperimentDto3;
@@ -23,10 +23,10 @@ public static class DataServiceMockData
     public static Scientist scientist2;
     public static List<Scientist> scientists;
     public static List<BusinessScientistDto> bscientists;
-    public static ListEntity entityAll;
-    public static ListEntity entityById;
-    public static BusinessListDto businessListAll;
-    public static BusinessListDto businessListById;
+    public static Column entityAll;
+    public static Column entityById;
+    public static BusinessColumnDto businessListAll;
+    public static BusinessColumnDto businessListById;
 
     static DataServiceMockData()
     {
@@ -65,7 +65,7 @@ public static class DataServiceMockData
         experiment2 = new Experiment(1, "ccc", "cacciaPiccola");
         experiment2.ScientistsIds = new List<int>() { 1 };
         experiment2.ListId = 1;
-        entityAll = new ListEntity(0, "aaa", "ToDo");
+        entityAll = new Column(0, "aaa", "ToDo");
         entityAll.Experiments = new List<Experiment>()
         {
             experiment1,
@@ -76,7 +76,7 @@ public static class DataServiceMockData
             experiment1,
             experiment2
         };
-        entityById = new ListEntity(0, "aaa", "ToDo");
+        entityById = new Column(0, "aaa", "ToDo");
         entityById.Experiments = new List<Experiment>()
         {
             experiment1
@@ -104,7 +104,7 @@ public static class DataServiceMockData
             ListId = 8
         };
 
-        businessListAll = new BusinessListDto()
+        businessListAll = new BusinessColumnDto()
         {
             Id = 0,
             Experiments = new List<BusinessExperimentDto>()
@@ -114,7 +114,7 @@ public static class DataServiceMockData
             }
         };
 
-        businessListById = new BusinessListDto()
+        businessListById = new BusinessColumnDto()
         {
             Id = 0,
             Experiments = new List<BusinessExperimentDto>()
@@ -123,22 +123,22 @@ public static class DataServiceMockData
             }
         };
 
-        allList = new List<ListEntity>()
+        allList = new List<Column>()
         {
             entityAll
         };
 
-        allListById = new List<ListEntity>()
+        allListById = new List<Column>()
         {
             entityById
         };
 
-        allbList = new List<BusinessListDto>()
+        allbList = new List<BusinessColumnDto>()
         {
             businessListAll
         };
 
-        allbListById = new List<BusinessListDto>()
+        allbListById = new List<BusinessColumnDto>()
         {
             businessListById
         };
