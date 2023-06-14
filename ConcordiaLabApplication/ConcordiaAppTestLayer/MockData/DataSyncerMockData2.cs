@@ -53,7 +53,7 @@ public class DataSyncerMockData2
             )
         {
             LabelId = 1,
-            ListId = 1,
+            ColumnId = 1,
             ScientistsIds = new List<int>() { 1 }
         };
 
@@ -67,7 +67,7 @@ public class DataSyncerMockData2
         {
             Comments = new List<Comment>() { LocalComment1OnCard1 },
             LabelId = 1,
-            ListId = 1,
+            ColumnId = 1,
             ScientistsIds = new List<int>() { 1 }
         };
 
@@ -80,7 +80,7 @@ public class DataSyncerMockData2
             )
         {
             LabelId = 2,
-            ListId = 1,
+            ColumnId = 1,
             ScientistsIds = new List<int>() { 2 }
         };
 
@@ -93,7 +93,7 @@ public class DataSyncerMockData2
             )
         {
             LabelId = 3,
-            ListId = 2,
+            ColumnId = 2,
         };
 
         TrelloExperiment1 = new TrelloExperimentDto()
@@ -103,7 +103,7 @@ public class DataSyncerMockData2
             IdMembers = new List<string>() { "alessandro" },
             Due = DateTime.Parse("2022-4-11T12:00:00.000Z"),
             IdLabels = new List<string>() { "easy" },
-            TrelloListId = "todo",
+            TrelloColumnId = "todo",
             Desc = "simpleDescription"
         };
 
@@ -114,7 +114,7 @@ public class DataSyncerMockData2
             IdMembers = new List<string>() { "marco" },
             Due = DateTime.Parse("2022-4-11T12:00:00.000Z"),
             IdLabels = new List<string>() { "medium" },
-            TrelloListId = "todo",
+            TrelloColumnId = "todo",
             Desc = null
         };
 
@@ -125,7 +125,7 @@ public class DataSyncerMockData2
             IdMembers = new List<string>() { "alessandro", "marco" },
             Due = null,
             IdLabels = new List<string>() { "hard" },
-            TrelloListId = "todo",
+            TrelloColumnId = "todo",
             Desc = null
         };
 
@@ -136,7 +136,7 @@ public class DataSyncerMockData2
             IdMembers = null,
             Due = DateTime.Parse("2022-4-11T12:00:00.000Z"),
             IdLabels = null,
-            TrelloListId = "todo",
+            TrelloColumnId = "todo",
             Desc = "nuovoEsperimento"
         };
 
@@ -162,7 +162,7 @@ public class DataSyncerMockData2
             )
         {
             LabelId = 3,
-            ListId = 1,
+            ColumnId = 1,
             ScientistsIds = new List<int>() { 1, 2 }
         };
 
@@ -175,7 +175,7 @@ public class DataSyncerMockData2
             )
         {
             LabelId = 3,
-            ListId = 1,
+            ColumnId = 1,
             ScientistsIds = new List<int>() { 1, 2 }
         };
 
@@ -199,7 +199,7 @@ public class DataSyncerMockData2
             )
         {
 
-            ListId = 1,
+            ColumnId = 1,
 
         };
 
@@ -212,7 +212,7 @@ public class DataSyncerMockData2
             )
         {
 
-            ListId = 1,
+            ColumnId = 1,
 
         };
 

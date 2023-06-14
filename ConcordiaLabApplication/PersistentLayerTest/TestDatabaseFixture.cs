@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+
 using PersistentLayer.Configurations;
 using PersistentLayer.Models;
 
@@ -42,10 +43,10 @@ namespace PersistentLayerTest
 
                         var experiments = new List<Experiment>
                         {
-                            new Experiment { TrelloId = "TrelloId1", Title = "Experiment 1", Description = "This is experiment 1", ListId = 1, LabelId = 3, Scientists = scientists },
-                            new Experiment { TrelloId = "TrelloId2", Title = "Experiment 2", Description = "This is experiment 2", ListId = 2, LabelId = 1, Scientists = scientists },
-                            new Experiment { TrelloId = "TrelloId3", Title = "Experiment 3", Description = "This is experiment 3", ListId = 3, LabelId = 2, Scientists = scientists},
-                            new Experiment { TrelloId = "TrelloId4", Title = "Experiment 4", Description = "This is experiment 4", ListId = 2, LabelId = 3, Scientists = scientists }
+                            new Experiment { TrelloId = "TrelloId1", Title = "Experiment 1", Description = "This is experiment 1", ColumnId = 1, LabelId = 3, Scientists = scientists },
+                            new Experiment { TrelloId = "TrelloId2", Title = "Experiment 2", Description = "This is experiment 2", ColumnId = 2, LabelId = 1, Scientists = scientists },
+                            new Experiment { TrelloId = "TrelloId3", Title = "Experiment 3", Description = "This is experiment 3", ColumnId = 3, LabelId = 2, Scientists = scientists},
+                            new Experiment { TrelloId = "TrelloId4", Title = "Experiment 4", Description = "This is experiment 4", ColumnId = 2, LabelId = 3, Scientists = scientists }
                         };
                         context.Experiments.AddRange(experiments);
                         context.SaveChanges();

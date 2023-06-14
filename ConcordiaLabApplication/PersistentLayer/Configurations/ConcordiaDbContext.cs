@@ -8,7 +8,7 @@ public class ConcordiaDbContext : DbContext
 {
     public DbSet<Scientist> Scientists { get; set; } = null!;
     public DbSet<Experiment> Experiments { get; set; } = null!;
-    public DbSet<Column> EntityLists { get; set; } = null!;
+    public DbSet<Column> Columns { get; set; } = null!;
     public DbSet<Label> Labels { get; set; } = null!;
     public DbSet<Comment> Comments { get; set; } = null!;
 

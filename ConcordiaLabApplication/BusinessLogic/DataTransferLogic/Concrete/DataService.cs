@@ -14,13 +14,13 @@ namespace BusinessLogic.DataTransferLogic.Concrete;
 public class DataService : IDataService
 {
 
-    private readonly IListRepository _listRepository;
+    private readonly IColumnRepository _listRepository;
     private readonly ICommentRepository _commentRepository;
     private readonly IExperimentRepository _experimentRepository;
     private readonly IScientistRepository _scientistRepository;
     private readonly IMapper _mapper;
 
-    public DataService(IListRepository listRepository, ICommentRepository commentRepository, IExperimentRepository experimentRepository, IMapper mapper, IScientistRepository scientistRepository)
+    public DataService(IColumnRepository listRepository, ICommentRepository commentRepository, IExperimentRepository experimentRepository, IMapper mapper, IScientistRepository scientistRepository)
     {
         _listRepository = listRepository;
         _commentRepository = commentRepository;
@@ -56,11 +56,11 @@ public class DataService : IDataService
 
     public BusinessExperimentDto MoveExperiment(BusinessExperimentDto businessExperimentDto)
     {
-        BusinessExperimentDto? updatedExperiment = _mapper.Map<BusinessExperimentDto?>(_experimentRepository.Update(businessExperimentDto.Id, businessExperimentDto.ListId));
+        BusinessExperimentDto? updatedExperiment = _mapper.Map<BusinessExperimentDto?>(_experimentRepository.Update(businessExperimentDto.Id, businessExperimentDto.ColumnId));
         if (updatedExperiment is null)
         {
             string additionalInfo = _experimentRepository.GetById(businessExperimentDto.Id) is null ? "\nNo experiment with corresponding Id found in the database" : string.Empty;
-            throw new FailedToMoveExperimentException($"Could not move the experiment to the list with ID: {businessExperimentDto.ListId}{additionalInfo}");
+            throw new FailedToMoveExperimentException($"Could not move the experiment to the list with ID: {businessExperimentDto.ColumnId}{additionalInfo}");
         }
         return updatedExperiment!;
     }

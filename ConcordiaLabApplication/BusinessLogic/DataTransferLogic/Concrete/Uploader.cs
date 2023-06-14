@@ -29,7 +29,7 @@ public class Uploader : IUploader
     {
         foreach (var experiment in experiments)
         {
-            if (!await _sender.UpdateAnExperiment(experiment.TrelloId, experiment.List!.TrelloId))
+            if (!await _sender.UpdateAnExperiment(experiment.TrelloId, experiment.Column!.TrelloId))
                 throw new UploadFailedException($"The process failed while uploading experiments. Failed at experiment: {experiment.Title}");
 
             Comment? commentToAdd = null;

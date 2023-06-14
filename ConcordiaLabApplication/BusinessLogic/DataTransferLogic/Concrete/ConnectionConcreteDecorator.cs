@@ -22,7 +22,7 @@ public class ConnectionConcreteDecorator : DataServiceDecorator
     public override BusinessExperimentDto MoveExperiment(BusinessExperimentDto businessExperimentDto)
     {
         var experiment = base.MoveExperiment(businessExperimentDto);
-        _sender.UpdateAnExperiment(experiment.TrelloCardId, experiment.TrelloListId);
+        _sender.UpdateAnExperiment(experiment.TrelloCardId, experiment.TrelloColumnId);
         return experiment;
     }
 }

@@ -10,7 +10,7 @@ public interface IExperimentRepository
 
     public Experiment? Remove(int experimentId);
 
-    public Experiment? Update (int experimentId, int listIdDestination);
+    public Experiment? Update(int experimentId, int ColumnIdDestination);
 
     public IEnumerable<Experiment> GetAll();
 
@@ -19,7 +19,7 @@ public interface IExperimentRepository
     public int? GetLocalIdByTrelloId(string trelloId);
 
     public Comment? GetLastCommentWithTrelloIdNull(int experimentId);
-  
+
     public int? GetLocalIdLabelByTrelloIdLabel(string trelloIdLabel);
 
 }

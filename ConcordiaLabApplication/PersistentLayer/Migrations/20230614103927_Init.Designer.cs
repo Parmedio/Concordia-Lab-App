@@ -12,7 +12,7 @@ using PersistentLayer.Configurations;
 namespace PersistentLayer.Migrations
 {
     [DbContext(typeof(ConcordiaDbContext))]
-    [Migration("20230613164617_Init")]
+    [Migration("20230614103927_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -58,7 +58,7 @@ namespace PersistentLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EntityLists");
+                    b.ToTable("Columns");
 
                     b.HasData(
                         new
@@ -130,6 +130,9 @@ namespace PersistentLayer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("ColumnId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("DeadLine")
                         .HasColumnType("datetime2");
 
@@ -137,9 +140,6 @@ namespace PersistentLayer.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("LabelId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ListId")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -152,9 +152,9 @@ namespace PersistentLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LabelId");
+                    b.HasIndex("ColumnId");
 
-                    b.HasIndex("ListId");
+                    b.HasIndex("LabelId");
 
                     b.ToTable("Experiments");
                 });
@@ -300,19 +300,19 @@ namespace PersistentLayer.Migrations
 
             modelBuilder.Entity("PersistentLayer.Models.Experiment", b =>
                 {
+                    b.HasOne("PersistentLayer.Models.Column", "Column")
+                        .WithMany("Experiments")
+                        .HasForeignKey("ColumnId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("PersistentLayer.Models.Label", "Label")
                         .WithMany()
                         .HasForeignKey("LabelId");
 
-                    b.HasOne("PersistentLayer.Models.Column", "List")
-                        .WithMany("Experiments")
-                        .HasForeignKey("ListId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Column");
 
                     b.Navigation("Label");
-
-                    b.Navigation("List");
                 });
 
             modelBuilder.Entity("PersistentLayer.Models.Column", b =>

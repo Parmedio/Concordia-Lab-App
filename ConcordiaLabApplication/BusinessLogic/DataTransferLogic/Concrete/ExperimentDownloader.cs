@@ -53,7 +53,7 @@ public class ExperimentDownloader : IExperimentDownloader
             {
 
                 var experimentToAdd = _mapper.Map<TrelloExperimentDto, Experiment>(experiment);
-                experimentToAdd.ListId = 1;
+                experimentToAdd.ColumnId = 1;
                 var scientistIdList = experiment.IdMembers?.Select(p => _scientistRepository.GetLocalIdByTrelloId(p) ?? -1).ToList();
 
                 if (!scientistIdList.IsNullOrEmpty())
@@ -61,6 +61,7 @@ public class ExperimentDownloader : IExperimentDownloader
                     if (scientistIdList!.Any(p => p == -1))
                         throw new ScientistIdNotPresentOnDatabaseException("One of the assignee is not saved on the database, check Trello MemberId");
                     experimentToAdd.ScientistsIds = scientistIdList;
+                    experimentToAdd.Scientists = scientistIdList!.Select(p => _scientistRepository.GetById(p)!).Where(p => p is not null).ToList() ?? new List<Scientist>();
                 }
 
                 if (!experiment.IdLabels.IsNullOrEmpty())

@@ -14,7 +14,7 @@ namespace PersistentLayer.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "EntityLists",
+                name: "Columns",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -24,7 +24,7 @@ namespace PersistentLayer.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EntityLists", x => x.Id);
+                    table.PrimaryKey("PK_Columns", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -67,15 +67,15 @@ namespace PersistentLayer.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DeadLine = table.Column<DateTime>(type: "datetime2", nullable: true),
                     LabelId = table.Column<int>(type: "int", nullable: true),
-                    ListId = table.Column<int>(type: "int", nullable: false)
+                    ColumnId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Experiments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Experiments_EntityLists_ListId",
-                        column: x => x.ListId,
-                        principalTable: "EntityLists",
+                        name: "FK_Experiments_Columns_ColumnId",
+                        column: x => x.ColumnId,
+                        principalTable: "Columns",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -139,7 +139,7 @@ namespace PersistentLayer.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "EntityLists",
+                table: "Columns",
                 columns: new[] { "Id", "Title", "TrelloId" },
                 values: new object[,]
                 {
@@ -189,14 +189,14 @@ namespace PersistentLayer.Migrations
                 filter: "[TrelloId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Experiments_ColumnId",
+                table: "Experiments",
+                column: "ColumnId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Experiments_LabelId",
                 table: "Experiments",
                 column: "LabelId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Experiments_ListId",
-                table: "Experiments",
-                column: "ListId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ExperimentScientist_ScientistsId",
@@ -220,7 +220,7 @@ namespace PersistentLayer.Migrations
                 name: "Scientists");
 
             migrationBuilder.DropTable(
-                name: "EntityLists");
+                name: "Columns");
 
             migrationBuilder.DropTable(
                 name: "Labels");
