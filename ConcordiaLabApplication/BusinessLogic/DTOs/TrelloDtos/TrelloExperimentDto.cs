@@ -11,6 +11,6 @@ public record TrelloExperimentDto
     public List<string>? IdLabels { get; set; }
 
     [JsonProperty(PropertyName = "idList")]
-    public string TrelloListId { get; set; } = null!;
+    public string TrelloColumnId { get; set; } = null!;
     public string? Desc { get; set; }
 }

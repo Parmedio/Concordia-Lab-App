@@ -1,8 +1,8 @@
 using FluentAssertions;
+
 using PersistentLayer.Configurations;
 using PersistentLayer.Models;
 using PersistentLayer.Repositories.Concrete;
-using System.Reflection;
 
 namespace PersistentLayerTest
 {
@@ -28,7 +28,7 @@ namespace PersistentLayerTest
                 Description = "This is an experiment",
                 DeadLine = DateTime.Now.AddDays(7),
                 LabelId = 2,
-                ListId = 1,
+                ColumnId = 1,
                 ScientistsIds = new List<int> { 1, 2, 3 }
             };
 
@@ -36,7 +36,7 @@ namespace PersistentLayerTest
 
             Assert.Equal(experiment, addedExperiment);
             Assert.Equal(experiment.Label, addedExperiment.Label);
-            Assert.Equal(experiment.List, addedExperiment.List);
+            Assert.Equal(experiment.Column, addedExperiment.Column);
 
             Assert.NotNull(addedExperiment.Scientists);
             foreach (var scientist in addedExperiment.Scientists) Assert.NotNull(scientist);
@@ -54,14 +54,14 @@ namespace PersistentLayerTest
                 Title = "New Experiment",
                 Description = "This is an experiment",
                 LabelId = 2,
-                ListId = 1
+                ColumnId = 1
             };
 
             var addedExperiment = _sut.Add(experiment);
 
             Assert.Equal(experiment, addedExperiment);
             Assert.Equal(experiment.Label, addedExperiment.Label);
-            Assert.Equal(experiment.List, addedExperiment.List);
+            Assert.Equal(experiment.Column, addedExperiment.Column);
 
             Assert.Null(addedExperiment.Scientists);
 
@@ -82,7 +82,7 @@ namespace PersistentLayerTest
                     Title = "Experiment 1",
                     Description = "This is experiment 1",
                     ScientistsIds = new List<int> {1, 2},
-                    ListId = 1,
+                    ColumnId = 1,
                     LabelId = 2
                 },
                 new Experiment
@@ -91,7 +91,7 @@ namespace PersistentLayerTest
                     Title = "Experiment 2",
                     Description = "This is experiment 2",
                     ScientistsIds = new List<int> {3, 2},
-                    ListId = 2,
+                    ColumnId = 2,
                     LabelId = 3,
                 }
             };
@@ -108,7 +108,7 @@ namespace PersistentLayerTest
 
             result.ForEach(experiment =>
             {
-                experiment.List.Should().BeEquivalentTo(experiments.First(e => e.Id == experiment.Id).List);
+                experiment.Column.Should().BeEquivalentTo(experiments.First(e => e.Id == experiment.Id).Column);
             });
 
             result.ForEach(experiment =>
@@ -124,7 +124,7 @@ namespace PersistentLayerTest
         {
             var result = _sut.GetById(1);
 
-            Assert.NotNull(result); 
+            Assert.NotNull(result);
 
             Assert.Equal(1, result.Id);
             Assert.Equal("Experiment 1", result.Title);
@@ -147,10 +147,10 @@ namespace PersistentLayerTest
             Assert.Equal("high priority", result.Label.Title);
             Assert.Equal("TrelloLabelId3", result.Label.TrelloId);
 
-            Assert.NotNull(result.List);
-            Assert.Equal(1, result.List.Id);
-            Assert.Equal("64760804e47275c707e05d38", result.List.TrelloId);
-            Assert.Equal("to do", result.List.Title);
+            Assert.NotNull(result.Column);
+            Assert.Equal(1, result.Column.Id);
+            Assert.Equal("64760804e47275c707e05d38", result.Column.TrelloId);
+            Assert.Equal("to do", result.Column.Title);
         }
 
         [Fact]
@@ -195,7 +195,7 @@ namespace PersistentLayerTest
 
             var removedExperiment = _sut.Remove(3);
             Assert.NotNull(removedExperiment);
-            var retrievedExperiment = _dbContext.Experiments.FirstOrDefault( e => e.Id == removedExperiment.Id );
+            var retrievedExperiment = _dbContext.Experiments.FirstOrDefault(e => e.Id == removedExperiment.Id);
             Assert.Null(retrievedExperiment);
 
             transaction.Rollback();
@@ -219,7 +219,7 @@ namespace PersistentLayerTest
 
             Assert.Equal(1, updatedExperiment.Id);
 
-            Assert.Equal(2, updatedExperiment.ListId);
+            Assert.Equal(2, updatedExperiment.ColumnId);
 
             Assert.NotNull(updatedExperiment.Scientists);
             Assert.True(updatedExperiment.Scientists.VerifyAllPropertiesNotNull());

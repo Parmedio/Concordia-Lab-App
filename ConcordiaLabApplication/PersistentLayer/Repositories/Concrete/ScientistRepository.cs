@@ -14,6 +14,10 @@ namespace PersistentLayer.Repositories.Concrete
         public IEnumerable<Scientist> GetAll()
             => _dbContext.Scientists;
 
+        public Scientist? GetById(int id)
+            => _dbContext.Scientists.
+            SingleOrDefault(s => s.Id == id);
+
         public int? GetLocalIdByTrelloId(string trelloId)
         {
             var scientist = _dbContext.Scientists.SingleOrDefault(s => s.TrelloMemberId == trelloId);

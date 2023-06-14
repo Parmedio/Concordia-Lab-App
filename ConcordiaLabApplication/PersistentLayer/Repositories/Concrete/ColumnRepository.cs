@@ -6,28 +6,28 @@ using PersistentLayer.Repositories.Abstract;
 
 namespace PersistentLayer.Repositories.Concrete;
 
-public class ListRepository : IListRepository
+public class ColumnRepository : IColumnRepository
 {
     private readonly ConcordiaDbContext _dbContext;
 
-    public ListRepository(ConcordiaDbContext dbContext)
+    public ColumnRepository(ConcordiaDbContext dbContext)
         => _dbContext = dbContext;
 
     public IEnumerable<Column> GetAll()
     {
-        var allLists = _dbContext.EntityLists
+        var allColumns = _dbContext.Columns
             .Include(l => l.Experiments!)
                 .ThenInclude(e => e.Scientists!)
             .Include(l => l.Experiments!)
                 .ThenInclude(l => l.Comments)
             .Include(l => l.Experiments!)
                 .ThenInclude(e => e.Label).AsEnumerable();
-        return allLists;
+        return allColumns;
     }
 
     public IEnumerable<Column> GetByScientistId(int scientistId)
     {
-        return _dbContext.EntityLists.AsNoTracking()
+        return _dbContext.Columns.AsNoTracking()
             .Include(l => l.Experiments!)
                 .ThenInclude(e => e.Scientists!)
             .Include(l => l.Experiments!)

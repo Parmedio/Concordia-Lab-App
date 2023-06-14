@@ -2,7 +2,7 @@
 
 namespace PersistentLayer.Repositories.Abstract;
 
-public interface IListRepository
+public interface IColumnRepository
 {
 
     public IEnumerable<Column> GetAll();

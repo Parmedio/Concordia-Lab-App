@@ -61,10 +61,10 @@ public static class DataServiceMockData
 
         experiment1 = new Experiment(0, "bbb", "cacciaGrossa");
         experiment1.ScientistsIds = new List<int>() { 0 };
-        experiment1.ListId = 2;
+        experiment1.ColumnId = 2;
         experiment2 = new Experiment(1, "ccc", "cacciaPiccola");
         experiment2.ScientistsIds = new List<int>() { 1 };
-        experiment2.ListId = 1;
+        experiment2.ColumnId = 1;
         entityAll = new Column(0, "aaa", "ToDo");
         entityAll.Experiments = new List<Experiment>()
         {
@@ -87,7 +87,7 @@ public static class DataServiceMockData
             Id = 0,
             TrelloCardId = "bbb",
             Title = "cacciaGrossa",
-            ListId = 2,
+            ColumnId = 2,
 
         };
 
@@ -104,7 +104,7 @@ public static class DataServiceMockData
             TrelloCardId = "bbb",
             Title = "cacciaPiccola",
 
-            ListId = 8
+            ColumnId = 8
         };
 
         businessListAll = new BusinessColumnDto()

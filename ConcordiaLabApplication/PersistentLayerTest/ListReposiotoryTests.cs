@@ -6,13 +6,13 @@ namespace PersistentLayerTest
 {
     public class ListReposiotoryTests
     {
-        private readonly ListRepository _sut;
+        private readonly ColumnRepository _sut;
         private readonly ConcordiaDbContext _dbContext;
 
         public ListReposiotoryTests()
         {
             _dbContext = new TestDatabaseFixture().CreateContext();
-            _sut = new ListRepository(_dbContext);
+            _sut = new ColumnRepository(_dbContext);
         }
 
         [Fact]

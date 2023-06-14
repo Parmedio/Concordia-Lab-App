@@ -69,7 +69,7 @@ public class Program
 
         builder.Services.AddScoped<IExperimentRepository, ExperimentRepository>();
         builder.Services.AddScoped<ICommentRepository, CommentRepository>();
-        builder.Services.AddScoped<IListRepository, ListRepository>();
+        builder.Services.AddScoped<IColumnRepository, ColumnRepository>();
         builder.Services.AddScoped<IScientistRepository, ScientistRepository>();
 
         builder.Services.AddTransient<IUriCreatorFactory, UriCreatorFactory>();

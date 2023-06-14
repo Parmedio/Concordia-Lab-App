@@ -19,7 +19,7 @@ public class DataServiceTests
 {
 
     private readonly ICommentRepository _commentRepository;
-    private readonly IListRepository _listRepository;
+    private readonly IColumnRepository _listRepository;
     private readonly IScientistRepository _scientistRepository;
     private readonly IExperimentRepository _experimentRepository;
     private readonly IMapper _mapper;
@@ -29,7 +29,7 @@ public class DataServiceTests
     {
         _commentRepository = Mock.Of<ICommentRepository>();
         _experimentRepository = Mock.Of<IExperimentRepository>();
-        _listRepository = Mock.Of<IListRepository>();
+        _listRepository = Mock.Of<IColumnRepository>();
         _scientistRepository = Mock.Of<IScientistRepository>();
         _mapper = Mock.Of<IMapper>();
         _sut = new DataService(_listRepository, _commentRepository, _experimentRepository, _mapper, _scientistRepository);
@@ -202,18 +202,18 @@ public class DataServiceTests
     [Fact]
     public void MoveExperimentShouldThrowFailedToMoveExperimentExceptionWithNoInfo()
     {
-        Mock.Get(_experimentRepository).Setup(p => p.Update(DataServiceMockData.businessExperimentDto3.Id, DataServiceMockData.businessExperimentDto3.ListId)).Returns(value: null);
+        Mock.Get(_experimentRepository).Setup(p => p.Update(DataServiceMockData.businessExperimentDto3.Id, DataServiceMockData.businessExperimentDto3.ColumnId)).Returns(value: null);
         Mock.Get(_experimentRepository).Setup(p => p.GetById(DataServiceMockData.businessExperimentDto3.Id)).Returns(DataServiceMockData.experiment1);
         Mock.Get(_mapper).Setup(p => p.Map<BusinessExperimentDto?>(_experimentRepository.Update(0, 2))).Returns(value: null);
-        _sut.Invoking(p => p.MoveExperiment(DataServiceMockData.businessExperimentDto3)).Should().Throw<FailedToMoveExperimentException>().WithMessage($"Could not move the experiment to the list with ID: {DataServiceMockData.businessExperimentDto3.ListId}");
+        _sut.Invoking(p => p.MoveExperiment(DataServiceMockData.businessExperimentDto3)).Should().Throw<FailedToMoveExperimentException>().WithMessage($"Could not move the experiment to the list with ID: {DataServiceMockData.businessExperimentDto3.ColumnId}");
     }
 
     [Fact]
     public void MoveExperimentShouldThrowFailedToMoveExperimentExceptionWithAdditionalInfo()
     {
-        Mock.Get(_experimentRepository).Setup(p => p.Update(DataServiceMockData.businessExperimentDto3.Id, DataServiceMockData.businessExperimentDto3.ListId)).Returns(value: null);
+        Mock.Get(_experimentRepository).Setup(p => p.Update(DataServiceMockData.businessExperimentDto3.Id, DataServiceMockData.businessExperimentDto3.ColumnId)).Returns(value: null);
         Mock.Get(_mapper).Setup(p => p.Map<BusinessExperimentDto?>(_experimentRepository.Update(0, 2))).Returns(value: null);
         Mock.Get(_experimentRepository).Setup(p => p.GetById(DataServiceMockData.businessExperimentDto3.Id)).Returns(value: null);
-        _sut.Invoking(p => p.MoveExperiment(DataServiceMockData.businessExperimentDto3)).Should().Throw<FailedToMoveExperimentException>().WithMessage($"Could not move the experiment to the list with ID: {DataServiceMockData.businessExperimentDto3.ListId}\nNo experiment with corresponding Id found in the database");
+        _sut.Invoking(p => p.MoveExperiment(DataServiceMockData.businessExperimentDto3)).Should().Throw<FailedToMoveExperimentException>().WithMessage($"Could not move the experiment to the list with ID: {DataServiceMockData.businessExperimentDto3.ColumnId}\nNo experiment with corresponding Id found in the database");
     }
 }

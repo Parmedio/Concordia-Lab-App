@@ -43,7 +43,7 @@ public class DataSyncer : IDataSyncer
         }
         catch (Exception ex)
         {
-            _logger.LogWarning($"Un unexpected Exception was caught while downloading experiments: {ex.Message}");
+            _logger.LogWarning($"Un unexpected Exception was caught while downloading experiments: {ex.Message}\n{ex.InnerException?.Message ?? ""}");
         }
 
         try

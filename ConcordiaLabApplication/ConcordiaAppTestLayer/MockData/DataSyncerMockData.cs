@@ -88,7 +88,7 @@ public static class DataSyncerMockData
             )
         {
             LabelId = 3,
-            ListId = 1,
+            ColumnId = 1,
             ScientistsIds = new List<int>() { 2 }
         };
 
@@ -100,7 +100,7 @@ public static class DataSyncerMockData
                 null
             )
         {
-            ListId = 1,
+            ColumnId = 1,
             ScientistsIds = new List<int>() { 1 }
         };
 
@@ -113,7 +113,7 @@ public static class DataSyncerMockData
             )
         {
             LabelId = 1,
-            ListId = 1,
+            ColumnId = 1,
             ScientistsIds = new List<int>() { 1, 2 }
         };
 
@@ -126,7 +126,7 @@ public static class DataSyncerMockData
             )
         {
             LabelId = 3,
-            ListId = 1,
+            ColumnId = 1,
 
         };
         experiment5 = new Experiment(
@@ -138,7 +138,7 @@ public static class DataSyncerMockData
             )
         {
             LabelId = 3,
-            ListId = 2,
+            ColumnId = 2,
             ScientistsIds = new List<int>() { 1, 2 }
         };
 
@@ -194,7 +194,7 @@ public static class DataSyncerMockData
             )
         {
             LabelId = 3,
-            ListId = 1,
+            ColumnId = 1,
         };
 
 

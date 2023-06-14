@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+
 using BusinessLogic.DTOs.BusinessDTO;
+
 using ConcordiaLab.ViewModels;
 
 namespace ConcordiaLab.AutomapperViewProfile
@@ -15,7 +17,8 @@ namespace ConcordiaLab.AutomapperViewProfile
                 .ForMember(dest => dest.DueDate, opt => opt.MapFrom(src => src.Date))
                 .ForMember(dest => dest.LastComment, opt => opt.MapFrom(src => src.lastComment.CommentText))
                 .ForMember(dest => dest.AuthorComment, opt => opt.MapFrom(src => src.lastComment.CreatorName))
-                .ForMember(dest => dest.BelongToList, opt => opt.MapFrom(src => src.ListName));
+                .ForMember(dest => dest.BelongToList, opt => opt.MapFrom(src => src.ColumnName))
+                .ForMember(dest => dest.Scientists, opt => opt.MapFrom(src => src.Scientists));
 
             CreateMap<BusinessColumnDto, ViewMList>();
         }

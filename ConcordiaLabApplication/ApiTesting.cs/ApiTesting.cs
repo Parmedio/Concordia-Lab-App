@@ -43,7 +43,7 @@ namespace ApiTesting.cs
 
             experiments.Should().HaveCount(1);
             experiments!.FirstOrDefault()!.Name.Should().Be("EsperimentoDiProva");
-            experiments!.FirstOrDefault()!.TrelloListId.Should().Be("6482fa302b3165154f5b6e99");
+            experiments!.FirstOrDefault()!.TrelloColumnId.Should().Be("6482fa302b3165154f5b6e99");
             experiments!.FirstOrDefault()!.Id.Should().Be("6482fba0e13f2eaf24ec081f");
             experiments!.FirstOrDefault()!.Desc.Should().Be("ShortDesc");
             experiments!.FirstOrDefault()!.Due.Should().Be(new DateTime(2023, 6, 10, 13, 0, 0, DateTimeKind.Utc));
