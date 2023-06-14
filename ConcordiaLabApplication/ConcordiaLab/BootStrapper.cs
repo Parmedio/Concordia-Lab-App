@@ -2,15 +2,14 @@
 
 using PersistentLayer.Configurations;
 
-namespace ConcordiaLab
+namespace ConcordiaLab;
+
+public static class BootStrapper
 {
-    public static class BootStrapper
+    public static async Task MigrateAsync(this WebApplication app)
     {
-        public static async Task MigrateAsync(this WebApplication app)
-        {
-            var provider = app.Services.CreateScope();
-            var context = provider.ServiceProvider.GetRequiredService<ConcordiaDbContext>();
-            await context.Database.MigrateAsync();
-        }
+        var provider = app.Services.CreateScope();
+        var context = provider.ServiceProvider.GetRequiredService<ConcordiaDbContext>();
+        await context.Database.MigrateAsync();
     }
 }

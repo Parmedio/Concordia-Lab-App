@@ -54,14 +54,15 @@ public class ExperimentDownloader : IExperimentDownloader
 
                 var experimentToAdd = _mapper.Map<TrelloExperimentDto, Experiment>(experiment);
                 experimentToAdd.ColumnId = 1;
-                var scientistIdList = experiment.IdMembers?.Select(p => _scientistRepository.GetLocalIdByTrelloId(p) ?? -1).ToList();
+                var scientistIdList = experiment.IdMembers?.Select(p => new { id = _scientistRepository.GetLocalIdByTrelloId(p) ?? -1, trelloId = p }).ToList();
 
                 if (!scientistIdList.IsNullOrEmpty())
                 {
-                    if (scientistIdList!.Any(p => p == -1))
-                        throw new ScientistIdNotPresentOnDatabaseException("One of the assignee is not saved on the database, check Trello MemberId");
-                    experimentToAdd.ScientistsIds = scientistIdList;
-                    experimentToAdd.Scientists = scientistIdList!.Select(p => _scientistRepository.GetById(p)!).Where(p => p is not null).ToList() ?? new List<Scientist>();
+                    if (scientistIdList!.Any(p => p.id == -1))
+                        throw new ScientistIdNotPresentOnDatabaseException($"One or more of the assignees are not saved on the database, check Trello MemberId\n" +
+                            $"Trello members Id: {string.Join(",", scientistIdList!.Where(g => g.id == -1).Select(p => $"{p.trelloId}"))}");
+                    experimentToAdd.ScientistsIds = scientistIdList!.Select(p => p.id);
+                    experimentToAdd.Scientists = scientistIdList!.Select(p => _scientistRepository.GetById(p.id)!) ?? new List<Scientist>();
                 }
 
                 if (!experiment.IdLabels.IsNullOrEmpty())

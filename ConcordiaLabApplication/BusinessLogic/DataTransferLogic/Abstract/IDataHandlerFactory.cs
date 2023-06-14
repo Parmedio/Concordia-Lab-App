@@ -1,7 +1,6 @@
-﻿namespace BusinessLogic.DataTransferLogic.Abstract
+﻿namespace BusinessLogic.DataTransferLogic.Abstract;
+
+public interface IDataHandlerFactory
 {
-    public interface IDataHandlerFactory
-    {
-        IDataService DataServiceFactoryMethod(bool connectionAvailable);
-    }
+    IDataService DataServiceFactoryMethod(bool connectionAvailable);
 }

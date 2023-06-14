@@ -6,7 +6,7 @@ public record TrelloCommentDto
     public string IdMemberCreator { get; set; } = null!;
     public DataInTrelloCommentDto Data { get; set; } = null!;
     public MemberCreatorInTrelloDto MemberCreator { get; set; } = null!;
-    public DateTime? Date { get; set; }
+    public DateTime Date { get; set; }
 }
 
 public record DataInTrelloCommentDto

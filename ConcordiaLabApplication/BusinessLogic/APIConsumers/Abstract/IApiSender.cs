@@ -1,5 +1,3 @@
-
-
 public interface IApiSender
 {
     public Task<bool> AddAComment(string cardId, string commentText, string authToken);

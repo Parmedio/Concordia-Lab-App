@@ -79,11 +79,11 @@ namespace ConcordiaLab.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        private IEnumerable<ViewMList> BuildIndex(int scientistId)
+        private IEnumerable<ViewMColumn> BuildIndex(int scientistId)
         {
             var unorderedExperiments = scientistId == 0 ?
-                _mapper.Map<IEnumerable<ViewMList>>(_clientService.GetAllLists()) :
-                _mapper.Map<IEnumerable<ViewMList>>(_clientService.GetAllLists(scientistId));
+                _mapper.Map<IEnumerable<ViewMColumn>>(_clientService.GetAllLists()) :
+                _mapper.Map<IEnumerable<ViewMColumn>>(_clientService.GetAllLists(scientistId));
 
             return (unorderedExperiments);
         }
