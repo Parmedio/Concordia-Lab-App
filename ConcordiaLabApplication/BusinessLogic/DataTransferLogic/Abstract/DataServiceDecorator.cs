@@ -1,5 +1,4 @@
 ﻿using BusinessLogic.DTOs.BusinessDTO;
-using PersistentLayer.Models;
 
 namespace BusinessLogic.DataTransferLogic.Abstract;
 
