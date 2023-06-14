@@ -9,8 +9,8 @@ public static class DataServiceMockData
     public static List<Column> allList;
     public static List<Experiment> experiments;
     public static List<Column> allListById;
-    public static List<BusinessListDto> allbList;
-    public static List<BusinessListDto> allbListById;
+    public static List<BusinessColumnDto> allbList;
+    public static List<BusinessColumnDto> allbListById;
     public static BusinessExperimentDto businessExperimentDto1;
     public static BusinessExperimentDto businessExperimentDto2;
     public static BusinessExperimentDto businessExperimentDto3;
@@ -25,8 +25,8 @@ public static class DataServiceMockData
     public static List<BusinessScientistDto> bscientists;
     public static Column entityAll;
     public static Column entityById;
-    public static BusinessListDto businessListAll;
-    public static BusinessListDto businessListById;
+    public static BusinessColumnDto businessListAll;
+    public static BusinessColumnDto businessListById;
 
     static DataServiceMockData()
     {
@@ -107,7 +107,7 @@ public static class DataServiceMockData
             ListId = 8
         };
 
-        businessListAll = new BusinessListDto()
+        businessListAll = new BusinessColumnDto()
         {
             Id = 0,
             Experiments = new List<BusinessExperimentDto>()
@@ -117,7 +117,7 @@ public static class DataServiceMockData
             }
         };
 
-        businessListById = new BusinessListDto()
+        businessListById = new BusinessColumnDto()
         {
             Id = 0,
             Experiments = new List<BusinessExperimentDto>()
@@ -136,12 +136,12 @@ public static class DataServiceMockData
             entityById
         };
 
-        allbList = new List<BusinessListDto>()
+        allbList = new List<BusinessColumnDto>()
         {
             businessListAll
         };
 
-        allbListById = new List<BusinessListDto>()
+        allbListById = new List<BusinessColumnDto>()
         {
             businessListById
         };

@@ -37,6 +37,47 @@ namespace PersistentLayer.Migrations
                     b.ToTable("ExperimentScientist");
                 });
 
+            modelBuilder.Entity("PersistentLayer.Models.Column", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TrelloId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EntityLists");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Title = "to do",
+                            TrelloId = "64760804e47275c707e05d38"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Title = "in progress",
+                            TrelloId = "64760804e47275c707e05d39"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Title = "completed",
+                            TrelloId = "64760804e47275c707e05d3a"
+                        });
+                });
+
             modelBuilder.Entity("PersistentLayer.Models.Comment", b =>
                 {
                     b.Property<int>("Id")
@@ -90,10 +131,9 @@ namespace PersistentLayer.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("LabelId")
+                    b.Property<int?>("LabelId")
                         .HasColumnType("int");
 
                     b.Property<int>("ListId")
@@ -135,46 +175,43 @@ namespace PersistentLayer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Labels");
-                });
-
-            modelBuilder.Entity("PersistentLayer.Models.ListEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TrelloId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("EntityLists");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            Title = "to do",
-                            TrelloId = "64760804e47275c707e05d38"
+                            Title = "Medium",
+                            TrelloId = "647609751afdaf2b05536cd9"
                         },
                         new
                         {
                             Id = 2,
-                            Title = "in progress",
-                            TrelloId = "64760804e47275c707e05d39"
+                            Title = "Low",
+                            TrelloId = "647609751afdaf2b05536cd7"
                         },
                         new
                         {
                             Id = 3,
-                            Title = "completed",
-                            TrelloId = "64760804e47275c707e05d3a"
+                            Title = "High",
+                            TrelloId = "647609751afdaf2b05536cdf"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Title = "Medium",
+                            TrelloId = "647608041afdaf2b0545a16c"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Title = "High",
+                            TrelloId = "647608041afdaf2b0545a16b"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Title = "Low",
+                            TrelloId = "647608041afdaf2b0545a160"
                         });
                 });
 
@@ -201,6 +238,29 @@ namespace PersistentLayer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Scientists");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Alessandro Ferluga",
+                            TrelloMemberId = "5bf9f901921c336b20b29d25",
+                            TrelloToken = "ATTA5c0a0bf47c1be3f495ebb81c42316684ff55e1134be71c0eba2cbecdd0614558CDCC81F8"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Marco de Piave",
+                            TrelloMemberId = "639c692ed850f6055714fd55",
+                            TrelloToken = "ATTAd93cf67ec0072d821ff32e199156a675ed9301feea0f899df160829b3f14082dAB1E41AD"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Gabriele Ceccutti",
+                            TrelloMemberId = "6474f28f0d4924c1eaff2824",
+                            TrelloToken = "ATTA408bebeedb9948e62a1e38c11691049bc07e9329984c3897908a0127279faa4956E9CC86"
+                        });
                 });
 
             modelBuilder.Entity("ExperimentScientist", b =>
@@ -239,11 +299,9 @@ namespace PersistentLayer.Migrations
                 {
                     b.HasOne("PersistentLayer.Models.Label", "Label")
                         .WithMany()
-                        .HasForeignKey("LabelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("LabelId");
 
-                    b.HasOne("PersistentLayer.Models.ListEntity", "List")
+                    b.HasOne("PersistentLayer.Models.Column", "List")
                         .WithMany("Experiments")
                         .HasForeignKey("ListId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -254,14 +312,14 @@ namespace PersistentLayer.Migrations
                     b.Navigation("List");
                 });
 
+            modelBuilder.Entity("PersistentLayer.Models.Column", b =>
+                {
+                    b.Navigation("Experiments");
+                });
+
             modelBuilder.Entity("PersistentLayer.Models.Experiment", b =>
                 {
                     b.Navigation("Comments");
-                });
-
-            modelBuilder.Entity("PersistentLayer.Models.ListEntity", b =>
-                {
-                    b.Navigation("Experiments");
                 });
 #pragma warning restore 612, 618
         }

@@ -41,10 +41,10 @@ public class DataService : IDataService
         return businessCommentDto; //con il mapper restituire l'oggetto nel formato che serve alla view
     }
 
-    public IEnumerable<BusinessListDto> GetAllLists(int scientistId)
+    public IEnumerable<BusinessColumnDto> GetAllLists(int scientistId)
     {
-        IEnumerable<BusinessListDto>? businessLists;
-        businessLists = _mapper.Map<IEnumerable<BusinessListDto>?>(_listRepository.GetByScientistId(scientistId));
+        IEnumerable<BusinessColumnDto>? businessLists;
+        businessLists = _mapper.Map<IEnumerable<BusinessColumnDto>?>(_listRepository.GetByScientistId(scientistId));
 
         if (businessLists.IsNullOrEmpty())
         {
@@ -65,11 +65,11 @@ public class DataService : IDataService
         return updatedExperiment!;
     }
 
-    public IEnumerable<BusinessListDto> GetAllLists()
+    public IEnumerable<BusinessColumnDto> GetAllLists()
     {
-        IEnumerable<BusinessListDto> businessLists;
+        IEnumerable<BusinessColumnDto> businessLists;
         var allLists = _listRepository.GetAll().AsEnumerable<Column>();
-        businessLists = _mapper.Map<IEnumerable<Column>, IEnumerable<BusinessListDto>>(allLists);
+        businessLists = _mapper.Map<IEnumerable<Column>, IEnumerable<BusinessColumnDto>>(allLists);
 
         if (!businessLists.Any())
         {

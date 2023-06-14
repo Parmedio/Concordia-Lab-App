@@ -11,9 +11,10 @@ public class MainProfile : Profile
 {
     public MainProfile()
     { //LINQ su mavigation property
-        CreateMap<Column, BusinessListDto>()
+        CreateMap<Column, BusinessColumnDto>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Title));
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Title))
+            .ForMember(dest => dest.Experiments, opt => opt.MapFrom(src => src.Experiments));
 
 
 
@@ -59,7 +60,7 @@ public class MainProfile : Profile
             .ForCtorParam("Id", opt => opt.MapFrom(src => 0))
             .ForCtorParam("TrelloId", opt => opt.MapFrom(src => src.Id))
             .ForCtorParam("Title", opt => opt.MapFrom(src => src.Name))
-            .ForCtorParam("Description", opt => opt.MapFrom(src => src.desc))
+            .ForCtorParam("Description", opt => opt.MapFrom(src => src.Desc))
             .ForCtorParam("DeadLine", opt => opt.MapFrom(src => src.Due))
             .ForMember("LabelId", opt => opt.Ignore())
             .ForMember("ListId", opt => opt.Ignore())
