@@ -12,5 +12,5 @@ public record TrelloExperimentDto
 
     [JsonProperty(PropertyName = "idList")]
     public string TrelloListId { get; set; } = null!;
-    public string? desc { get; set; }
+    public string? Desc { get; set; }
 }

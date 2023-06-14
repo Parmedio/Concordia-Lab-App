@@ -59,7 +59,7 @@ public class MainProfile : Profile
             .ForCtorParam("Id", opt => opt.MapFrom(src => 0))
             .ForCtorParam("TrelloId", opt => opt.MapFrom(src => src.Id))
             .ForCtorParam("Title", opt => opt.MapFrom(src => src.Name))
-            .ForCtorParam("Description", opt => opt.MapFrom(src => src.desc))
+            .ForCtorParam("Description", opt => opt.MapFrom(src => src.Desc))
             .ForCtorParam("DeadLine", opt => opt.MapFrom(src => src.Due))
             .ForMember("LabelId", opt => opt.Ignore())
             .ForMember("ListId", opt => opt.Ignore())
