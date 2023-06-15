@@ -25,23 +25,16 @@ public class Program
 {
     public static async Task Main(string[] args)
     {
-
-
         var builder = WebApplication.CreateBuilder(args);
-        // Add services to the container.
 
         MapperConfigurationExpression configuration = new MapperConfigurationExpression();
-
-        configuration.AddProfile(typeof(MainProfile));
-        configuration.AddProfile(typeof(ViewProfile));
+        configuration.AddProfiles(new List<Profile>() { new MainProfile(), new ViewProfile() });
         configuration.AddCollectionMappers();
-
         var mappingConfiguration = new MapperConfiguration(configuration);
-
         mappingConfiguration.AssertConfigurationIsValid();
 
-
         builder.Services.AddControllersWithViews();
+
         builder.Services.AddHttpClient("ApiConsumer", client =>
         {
 
@@ -51,6 +44,7 @@ public class Program
 
         builder.Services.AddDbContext<ConcordiaDbContext>(options =>
               options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
         builder.Services.AddAutoMapper(cfg =>
         {
             cfg.AddMaps(typeof(MainProfile), typeof(ViewProfile));
@@ -58,20 +52,21 @@ public class Program
         });
 
         builder.Services.AddHostedService(provider => provider.GetRequiredService<ConnectionChecker>());
+
         builder.Services.AddLogging();
 
         builder.Services.AddSingleton<ConnectionChecker>();
+
         builder.Services.AddScoped<IApiSender, ApiSender>();
         builder.Services.AddScoped<IApiReceiver, ApiReceiver>();
         builder.Services.AddScoped<DataService>();
         builder.Services.AddScoped<IExperimentDownloader, ExperimentDownloader>();
-        builder.Services.AddTransient<IDataSyncer, DataSyncer>();
-
         builder.Services.AddScoped<IExperimentRepository, ExperimentRepository>();
         builder.Services.AddScoped<ICommentRepository, CommentRepository>();
         builder.Services.AddScoped<IColumnRepository, ColumnRepository>();
         builder.Services.AddScoped<IScientistRepository, ScientistRepository>();
 
+        builder.Services.AddTransient<IDataSyncer, DataSyncer>();
         builder.Services.AddTransient<IUriCreatorFactory, UriCreatorFactory>();
         builder.Services.AddTransient<IRetrieveConnectionTimeInterval, RetrieveConnectionTimeInterval>();
         builder.Services.AddTransient<IDataHandlerFactory, DataHandlerFactory>();
@@ -80,9 +75,7 @@ public class Program
         builder.Services.AddTransient<IExperimentDownloader, ExperimentDownloader>();
         builder.Services.AddTransient<IUploader, Uploader>();
 
-
         var app = builder.Build();
-
         await app.MigrateAsync();
 
         // Configure the HTTP request pipeline.
@@ -95,15 +88,11 @@ public class Program
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
-
         app.UseRouting();
-
         app.UseAuthorization();
-
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
-
         app.Run();
     }
 }

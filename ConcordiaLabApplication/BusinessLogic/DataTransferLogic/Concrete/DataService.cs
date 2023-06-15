@@ -38,20 +38,20 @@ public class DataService : IDataService
         {
             throw new AddACommentFailedException($"Failed to add comment: \"{businessCommentDto.CommentText}\" by scientist with Id: {scientistId} ");
         }
-        return businessCommentDto; //con il mapper restituire l'oggetto nel formato che serve alla view
+        return businessCommentDto;
     }
 
-    public IEnumerable<BusinessColumnDto> GetAllLists(int scientistId)
+    public IEnumerable<BusinessColumnDto> GetallColumns(int scientistId)
     {
         IEnumerable<BusinessColumnDto>? businessLists;
         businessLists = _mapper.Map<IEnumerable<BusinessColumnDto>?>(_columnRepository.GetByScientistId(scientistId));
 
-        if (businessLists.IsNullOrEmpty())
+        if (businessColumns.IsNullOrEmpty())
         {
-            throw new AllListsEmptyException("The database has no lists.");
+            throw new allColumnsEmptyException("The database has no lists.");
         }
 
-        return businessLists!;
+        return businessColumns!;
     }
 
     public BusinessExperimentDto MoveExperiment(BusinessExperimentDto businessExperimentDto)
@@ -65,18 +65,18 @@ public class DataService : IDataService
         return updatedExperiment!;
     }
 
-    public IEnumerable<BusinessColumnDto> GetAllLists()
+    public IEnumerable<BusinessColumnDto> GetallColumns()
     {
         IEnumerable<BusinessColumnDto> businessLists;
         var allLists = _columnRepository.GetAll().AsEnumerable<Column>();
         businessLists = _mapper.Map<IEnumerable<Column>, IEnumerable<BusinessColumnDto>>(allLists);
 
-        if (!businessLists.Any())
+        if (!businessColumns.Any())
         {
-            throw new AllListsEmptyException("The database has no lists.");
+            throw new allColumnsEmptyException("The database has no lists.");
         }
 
-        return businessLists!;
+        return businessColumns!;
     }
 
     public IEnumerable<BusinessExperimentDto> GetAllExperiments()
@@ -88,7 +88,7 @@ public class DataService : IDataService
 
     public IEnumerable<BusinessExperimentDto> GetAllExperiments(int scientistId)
     {
-        IEnumerable<BusinessExperimentDto>? businessExperiments;
+        IEnumerable<BusinessExperimentDto> businessExperiments;
         IEnumerable<Experiment> allExperiments = _experimentRepository.GetAll();
         businessExperiments = _mapper.Map<IEnumerable<BusinessExperimentDto>?>(allExperiments
             .Where(p => p.Scientists != null && p.Scientists.Any(s => s.Id == scientistId)));

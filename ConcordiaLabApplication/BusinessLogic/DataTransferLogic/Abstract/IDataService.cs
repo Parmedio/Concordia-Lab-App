@@ -4,8 +4,8 @@ namespace BusinessLogic.DataTransferLogic.Abstract;
 
 public interface IDataService
 {
-    public IEnumerable<BusinessColumnDto> GetAllLists();
-    public IEnumerable<BusinessColumnDto> GetAllLists(int scientistId);
+    public IEnumerable<BusinessColumnDto> GetallColumns();
+    public IEnumerable<BusinessColumnDto> GetallColumns(int scientistId);
     public IEnumerable<BusinessColumnDto> GetAllSimple();
     public IEnumerable<BusinessExperimentDto> GetAllExperiments();
     public IEnumerable<BusinessExperimentDto> GetAllExperiments(int scientistId);

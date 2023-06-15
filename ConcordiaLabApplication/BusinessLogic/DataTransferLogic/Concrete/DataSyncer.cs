@@ -54,7 +54,7 @@ public class DataSyncer : IDataSyncer
             if (!task2.IsNullOrEmpty())
                 _logger.LogInformation($"Added {task2!.Count()} new experiments. ");
             else
-                _logger.LogInformation("No experiment were added");
+                _logger.LogInformation("No comments were added");
         }
         catch (ExperimentNotPresentInLocalDatabaseException ex)
         {

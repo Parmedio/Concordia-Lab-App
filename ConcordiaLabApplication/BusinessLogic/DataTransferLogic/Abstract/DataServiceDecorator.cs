@@ -1,5 +1,4 @@
 ﻿using BusinessLogic.DTOs.BusinessDTO;
-using PersistentLayer.Models;
 
 namespace BusinessLogic.DataTransferLogic.Abstract;
 
@@ -27,14 +26,14 @@ public abstract class DataServiceDecorator : IDataService
         return _component.GetAllExperiments(scientistId);
     }
 
-    public IEnumerable<BusinessColumnDto> GetAllLists()
+    public IEnumerable<BusinessColumnDto> GetallColumns()
     {
-        return _component.GetAllLists();
+        return _component.GetallColumns();
     }
 
-    public virtual IEnumerable<BusinessColumnDto> GetAllLists(int scientistId)
+    public virtual IEnumerable<BusinessColumnDto> GetallColumns(int scientistId)
     {
-        return _component.GetAllLists(scientistId);
+        return _component.GetallColumns(scientistId);
     }
 
     public IEnumerable<BusinessScientistDto> GetAllScientist()

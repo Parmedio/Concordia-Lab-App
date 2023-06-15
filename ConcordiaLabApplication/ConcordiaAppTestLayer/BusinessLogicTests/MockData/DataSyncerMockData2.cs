@@ -2,7 +2,7 @@
 
 using PersistentLayer.Models;
 
-namespace ConcordiaAppTestLayer.MockData;
+namespace ConcordiaAppTestLayer.BusinessLogicTests.MockData;
 
 public class DataSyncerMockData2
 {

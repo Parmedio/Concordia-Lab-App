@@ -1,7 +1,6 @@
-﻿namespace BusinessLogic.DataTransferLogic.Abstract
+﻿namespace BusinessLogic.DataTransferLogic.Abstract;
+
+public interface IDataSyncer
 {
-    public interface IDataSyncer
-    {
-        public Task SynchronizeAsync();
-    }
+    public Task SynchronizeAsync();
 }

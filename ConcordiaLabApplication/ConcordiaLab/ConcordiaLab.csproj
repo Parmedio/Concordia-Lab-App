@@ -21,7 +21,6 @@
   <ItemGroup>
     <ProjectReference Include="..\BackgroundService\BackgroundServices.csproj" />
     <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj" />
-    <ProjectReference Include="..\PersistentLayerTest\PersistentLayerTest.csproj" />
     <ProjectReference Include="..\PersistentLayer\PersistentLayer.csproj" />
   </ItemGroup>
 

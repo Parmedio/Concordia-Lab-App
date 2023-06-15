@@ -10,61 +10,54 @@ namespace BusinessLogic.AutomapperProfiles;
 public class MainProfile : Profile
 {
     public MainProfile()
-    { //LINQ su mavigation property
+    {
         CreateMap<Column, BusinessColumnDto>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Title))
             .ForMember(dest => dest.Experiments, opt => opt.MapFrom(src => src.Experiments));
 
         CreateMap<Scientist, BusinessScientistDto>()
-            .ForMember("Id", opt => opt.MapFrom(src => src.Id))
-            .ForMember("TrelloToken", opt => opt.MapFrom(src => src.TrelloToken))
-            .ForMember("Name", opt => opt.MapFrom(src => src.Name));
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.TrelloToken, opt => opt.MapFrom(src => src.TrelloToken))
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name));
 
         CreateMap<Experiment, BusinessExperimentDto>()
-            .ForMember("Id", opt => opt.MapFrom(src => src.Id))
-            .ForMember("Title", opt => opt.MapFrom(src => src.Title))
-            .ForMember("Description", opt => opt.MapFrom(src => src.Description))
-            .ForMember("Date", opt => opt.MapFrom(src => src.DeadLine))
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
+            .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
+            .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.DeadLine))
             .ForMember(dest => dest.ColumnId, opt => opt.MapFrom(src => src.ColumnId))
             .ForMember(dest => dest.ColumnName, opt => opt.MapFrom(src => src.Column.Title))
             .ForMember(dest => dest.Priority, opt => opt.MapFrom(src => src.Label.Title))
-            .ForMember("TrelloCardId", opt => opt.MapFrom(src => src.TrelloId))
-            .ForMember("TrelloColumnId", opt => opt.MapFrom(src => src.ColumnId))
-            .ForMember("lastComment", opt => opt.MapFrom(src => src.Comments.AsEnumerable()
+            .ForMember(dest => dest.TrelloCardId, opt => opt.MapFrom(src => src.TrelloId))
+            .ForMember(dest => dest.TrelloColumnId, opt => opt.MapFrom(src => src.ColumnId))
+            .ForMember(dest => dest.LastComment, opt => opt.MapFrom(src => src.Comments.AsEnumerable()
             .OrderByDescending(comment => comment.Date)
             .FirstOrDefault()));
 
         CreateMap<Comment, BusinessCommentDto>()
-            .ForMember("Id", opt => opt.MapFrom(src => src.Id))
-            .ForMember("CardID", opt => opt.MapFrom(src => src.ExperimentId))
-            .ForMember("TrelloCardId", opt => opt.MapFrom(src => src.Experiment.TrelloId))
-            .ForMember("CommentText", opt => opt.MapFrom(src => src.Body))
-            .ForMember("CreatorName", opt => opt.MapFrom(src => src.CreatorName));
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.CardID, opt => opt.MapFrom(src => src.ExperimentId))
+            .ForMember(dest => dest.TrelloCardId, opt => opt.MapFrom(src => src.Experiment.TrelloId))
+            .ForMember(dest => dest.CommentText, opt => opt.MapFrom(src => src.Body))
+            .ForMember(dest => dest.CreatorName, opt => opt.MapFrom(src => src.CreatorName));
 
         CreateMap<TrelloCommentDto, Comment>()
-            .ForCtorParam("Id", opt => opt.MapFrom(src => 0))
-            .ForCtorParam("TrelloId", opt => opt.MapFrom(src => src.Id))
-            .ForCtorParam("Body", opt => opt.MapFrom(src => src.Data.Text))
-            .ForCtorParam("Date", opt => opt.MapFrom(src => src.Date))
-            .ForCtorParam("CreatorName", opt => opt.MapFrom(src => src.MemberCreator.Username))
-            .ForMember("ExperimentId", opt => opt.Ignore())
-            .ForMember(dest => dest.Experiment, opt => opt.Ignore())
-            .ForMember(dest => dest.Scientist, opt => opt.Ignore())
-            .ForMember(dest => dest.ScientistId, opt => opt.Ignore());
+            .ConvertUsing(src => new Comment(
+                    0,
+                    src.Id,
+                    src.Data.Text,
+                    src.Date,
+                    src.MemberCreator.Username
+                ));
 
         CreateMap<TrelloExperimentDto, Experiment>()
-            .ForCtorParam("Id", opt => opt.MapFrom(src => 0))
-            .ForCtorParam("TrelloId", opt => opt.MapFrom(src => src.Id))
-            .ForCtorParam("Title", opt => opt.MapFrom(src => src.Name))
-            .ForCtorParam("Description", opt => opt.MapFrom(src => src.Desc))
-            .ForCtorParam("DeadLine", opt => opt.MapFrom(src => src.Due))
-            .ForMember(dest => dest.LabelId, opt => opt.Ignore())
-            .ForMember(dest => dest.ColumnId, opt => opt.Ignore())
-            .ForMember(dest => dest.Label, opt => opt.Ignore())
-            .ForMember(dest => dest.Column, opt => opt.Ignore())
-            .ForMember(dest => dest.Comments, opt => opt.Ignore())
-            .ForMember(dest => dest.Scientists, opt => opt.Ignore())
-            .ForMember(dest => dest.ScientistsIds, opt => opt.Ignore());
+            .ConvertUsing(src => new Experiment(
+                    0,
+                    src.Id,
+                    src.Name,
+                    src.Desc,
+                    src.Due
+                ));
     }
 }

@@ -16,5 +16,5 @@ public record BusinessExperimentDto
 
     public IEnumerable<BusinessScientistDto>? Scientists { get; set; }
 
-    public BusinessCommentDto? lastComment { get; set; }
+    public BusinessCommentDto? LastComment { get; set; }
 }

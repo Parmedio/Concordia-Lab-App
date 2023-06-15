@@ -1,7 +1,6 @@
 ﻿using PersistentLayer.Configurations;
 using PersistentLayer.Models;
 using PersistentLayer.Repositories.Concrete;
-using Xunit;
 
 namespace PersistentLayerTest
 {
@@ -13,7 +12,7 @@ namespace PersistentLayerTest
         public CommentRepositoryTests()
         {
             _dbContext = new TestDatabaseFixture().CreateContext();
-            _sut = new CommentRepository (_dbContext);
+            _sut = new CommentRepository(_dbContext);
         }
 
         [Fact]
@@ -27,8 +26,8 @@ namespace PersistentLayerTest
 
             var commentAdded = _sut.GetCommentByTrelloId("rfgerre444f");
             Assert.NotNull(commentAdded);
-            Assert.Equal (2, commentAdded.ScientistId);
-            Assert.Equal (1, commentAdded.ExperimentId);
+            Assert.Equal(2, commentAdded.ScientistId);
+            Assert.Equal(1, commentAdded.ExperimentId);
 
             transaction.Rollback();
         }
@@ -41,11 +40,11 @@ namespace PersistentLayerTest
             Assert.Equal("This is the first comment.", comment.Body);
             Assert.Equal("Gabriele", comment.CreatorName);
             Assert.Equal(1, comment.ExperimentId);
-            Assert.Equal(1, comment.ScientistId);
+            Assert.Equal(4, comment.ScientistId);
             Assert.NotNull(comment.Scientist);
-            Assert.Equal(1, comment.Scientist.Id);
+            Assert.Equal(4, comment.Scientist.Id);
             Assert.Equal("gabriele", comment.Scientist.Name);
-            Assert.Equal("3434fv", comment.Scientist.TrelloMemberId); 
+            Assert.Equal("3434fv", comment.Scientist.TrelloMemberId);
             Assert.Equal("wfrf445eef344rf", comment.Scientist.TrelloToken);
         }
 

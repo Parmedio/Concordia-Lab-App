@@ -24,19 +24,6 @@ public class ExperimentRepository : IExperimentRepository
     {
         var entity = _dbContext.Experiments.Add(experiment);
         _dbContext.SaveChanges();
-
-        //if (experiment.LabelId != 0)
-        //{
-        //    var label = _dbContext.Labels.AsNoTracking().SingleOrDefault(l => l.Id == experiment.LabelId);
-        //    entity.Entity.Label = label;
-        //}
-
-        //if (experiment.ColumnId != 0)
-        //{
-        //    var Columns = _dbContext.Columns.AsNoTracking().SingleOrDefault(l => l.Id == experiment.ColumnId);
-        //    entity.Entity.Column = Columns;
-        //}
-
         return entity.Entity;
     }
 

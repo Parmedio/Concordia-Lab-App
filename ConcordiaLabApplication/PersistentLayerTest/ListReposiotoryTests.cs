@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+
 using PersistentLayer.Configurations;
 using PersistentLayer.Repositories.Concrete;
 
@@ -20,8 +21,8 @@ namespace PersistentLayerTest
         {
             var lists = _sut.GetAll();
             Assert.Equal(3, lists.Count());
-            
-            foreach ( var list in lists)
+
+            foreach (var list in lists)
             {
                 foreach (var experiment in list.Experiments!)
                 {
@@ -52,7 +53,7 @@ namespace PersistentLayerTest
             {
                 foreach (var experiment in list.Experiments!)
                 {
-                    experiment.Scientists!.Select( s => s.Id).Contains(1).Should().BeTrue();
+                    experiment.Scientists!.Select(s => s.Id).Contains(4).Should().BeTrue();
 
                     experiment.Comments!.ToList().ForEach(comment =>
                     {
@@ -62,6 +63,6 @@ namespace PersistentLayerTest
                     experiment.Label!.VerifyAllPropertiesNotNull().Should().BeTrue();
                 }
             }
-        }     
+        }
     }
 }

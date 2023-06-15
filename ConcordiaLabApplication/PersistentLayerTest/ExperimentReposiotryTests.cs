@@ -29,7 +29,13 @@ namespace PersistentLayerTest
                 DeadLine = DateTime.Now.AddDays(7),
                 LabelId = 2,
                 ColumnId = 1,
-                ScientistsIds = new List<int> { 1, 2, 3 }
+                ScientistsIds = new List<int> { 4, 5, 6 },
+                Scientists = new List<Scientist>
+                        {
+                            new Scientist { TrelloToken = "wfrf445eef344rf", TrelloMemberId = "3434fv", Name = "gabriele" },
+                            new Scientist { TrelloToken = "wedecerfedef", TrelloMemberId = "324332d", Name = "marco" },
+                            new Scientist { TrelloToken = "wwdwx2rycecee23", TrelloMemberId = "dcwd2323c", Name = "alessandro" }
+                        }
             };
 
             var addedExperiment = _sut.Add(experiment);
@@ -81,7 +87,12 @@ namespace PersistentLayerTest
                     TrelloId = "TrelloId6",
                     Title = "Experiment 1",
                     Description = "This is experiment 1",
-                    ScientistsIds = new List<int> {1, 2},
+                    ScientistsIds = new List<int> {4, 5},
+                    Scientists = new List<Scientist>
+                        {
+                            new Scientist { TrelloToken = "wfrf445eef344rf", TrelloMemberId = "3434fv", Name = "gabriele" },
+                            new Scientist { TrelloToken = "wedecerfedef", TrelloMemberId = "324332d", Name = "marco" }
+                        },
                     ColumnId = 1,
                     LabelId = 2
                 },
@@ -90,7 +101,12 @@ namespace PersistentLayerTest
                     TrelloId = "TrelloId7",
                     Title = "Experiment 2",
                     Description = "This is experiment 2",
-                    ScientistsIds = new List<int> {3, 2},
+                    ScientistsIds = new List<int> {4, 5},
+                    Scientists = new List<Scientist>
+                        {
+                            new Scientist { TrelloToken = "wfrf445eef344rf", TrelloMemberId = "3434fv", Name = "gabriele" },
+                            new Scientist { TrelloToken = "wedecerfedef", TrelloMemberId = "324332d", Name = "marco" }
+                        },
                     ColumnId = 2,
                     LabelId = 3,
                 }
@@ -143,7 +159,7 @@ namespace PersistentLayerTest
             });
 
             Assert.NotNull(result.Label);
-            Assert.Equal(3, result.Label.Id);
+            Assert.Equal(9, result.Label.Id);
             Assert.Equal("high priority", result.Label.Title);
             Assert.Equal("TrelloLabelId3", result.Label.TrelloId);
 
@@ -237,7 +253,7 @@ namespace PersistentLayerTest
         public void Should_Return_LabelId_By_ExperimentTrelloId()
         {
             var result = _sut.GetLocalIdLabelByTrelloIdLabel("TrelloLabelId2");
-            Assert.Equal(result, 2);
+            Assert.Equal(8, result);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using BusinessLogic.DataTransferLogic.Abstract;
+﻿using BusinessLogic.APIConsumers.Abstract;
+using BusinessLogic.DataTransferLogic.Abstract;
 using BusinessLogic.DTOs.BusinessDTO;
 
 namespace BusinessLogic.DataTransferLogic.Concrete;

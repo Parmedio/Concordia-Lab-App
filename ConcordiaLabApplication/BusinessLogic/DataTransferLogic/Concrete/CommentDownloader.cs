@@ -52,13 +52,13 @@ public class CommentDownloader : ICommentDownloader
                 Comment commentToAdd = _mapper.Map<Comment>(comment);
                 commentToAdd.ScientistId = _scientistRepository.GetLocalIdByTrelloId(comment.IdMemberCreator);
                 commentToAdd.ExperimentId = _experimentRepository.GetLocalIdByTrelloId(comment.Data.Card.Id) ??
-                    throw new ExperimentNotPresentInLocalDatabaseException("The Experiment is not saved in the local database. Try Again.");
+                    throw new ExperimentNotPresentInLocalDatabaseException($"The Experiment with associated Trello ID: {comment.Data.Card.Id} is not saved in the local database. Try Again.");
 
                 int? newId = _commentRepository.AddComment(commentToAdd);
                 if (newId is not null)
                     addedCommentIds.Add(newId ?? -1);
                 else
-                    throw new AddACommentFailedException("Failed To Add comment to Database during the Download Operation from Trello");
+                    throw new AddACommentFailedException($"Failed To Add comment with text: {commentToAdd.Body} and Id: {commentToAdd.TrelloId} to the Database during the Download Operation from Trello");
             }
         }
         return addedCommentIds;
