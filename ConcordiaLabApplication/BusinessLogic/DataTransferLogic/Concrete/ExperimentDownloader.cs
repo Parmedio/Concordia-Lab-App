@@ -62,7 +62,7 @@ public class ExperimentDownloader : IExperimentDownloader
                         throw new ScientistIdNotPresentOnDatabaseException($"One or more of the assignees are not saved on the database, check Trello MemberId\n" +
                             $"Trello members Id: {string.Join(", ", scientistIdList!.Where(g => g.id == -1).Select(p => $"{p.trelloId}"))}");
                     experimentToAdd.ScientistsIds = scientistIdList!.Select(p => p.id);
-                    experimentToAdd.Scientists = scientistIdList!.Select(p => _scientistRepository.GetById(p.id)!) ?? new List<Scientist>();
+                    experimentToAdd.Scientists = scientistIdList!.Select(p => _scientistRepository.GetById(p.id)!).ToList() ?? new List<Scientist>();
                 }
 
                 if (!experiment.IdLabels.IsNullOrEmpty())
@@ -73,8 +73,8 @@ public class ExperimentDownloader : IExperimentDownloader
                 }
 
                 var addedExperiment = _experimentRepository.Add(experimentToAdd);
-
                 addedExperiments.Add(addedExperiment);
+
                 count++;
             }
         }
