@@ -41,10 +41,10 @@ public class DataService : IDataService
         return businessCommentDto;
     }
 
-    public IEnumerable<BusinessColumnDto> GetallColumns(int scientistId)
+    public IEnumerable<BusinessColumnDto> GetAllColumns(int scientistId)
     {
-        IEnumerable<BusinessColumnDto>? businessLists;
-        businessLists = _mapper.Map<IEnumerable<BusinessColumnDto>?>(_columnRepository.GetByScientistId(scientistId));
+        IEnumerable<BusinessColumnDto>? businessColumns;
+        businessColumns = _mapper.Map<IEnumerable<BusinessColumnDto>?>(_columnRepository.GetByScientistId(scientistId));
 
         if (businessColumns.IsNullOrEmpty())
         {
@@ -65,11 +65,11 @@ public class DataService : IDataService
         return updatedExperiment!;
     }
 
-    public IEnumerable<BusinessColumnDto> GetallColumns()
+    public IEnumerable<BusinessColumnDto> GetAllColumns()
     {
-        IEnumerable<BusinessColumnDto> businessLists;
-        var allLists = _columnRepository.GetAll().AsEnumerable<Column>();
-        businessLists = _mapper.Map<IEnumerable<Column>, IEnumerable<BusinessColumnDto>>(allLists);
+        IEnumerable<BusinessColumnDto> businessColumns;
+        var allColumns = _columnRepository.GetAll().AsEnumerable<Column>();
+        businessColumns = _mapper.Map<IEnumerable<Column>, IEnumerable<BusinessColumnDto>>(allColumns);
 
         if (!businessColumns.Any())
         {
@@ -91,7 +91,7 @@ public class DataService : IDataService
         IEnumerable<BusinessExperimentDto> businessExperiments;
         IEnumerable<Experiment> allExperiments = _experimentRepository.GetAll();
         businessExperiments = _mapper.Map<IEnumerable<BusinessExperimentDto>?>(allExperiments
-            .Where(p => p.Scientists != null && p.Scientists.Any(s => s.Id == scientistId)));
+            .Where(p => p.Scientists != null && p.Scientists.Any(s => s.Id == scientistId))) ?? new List<BusinessExperimentDto>();
         return businessExperiments!;
     }
 

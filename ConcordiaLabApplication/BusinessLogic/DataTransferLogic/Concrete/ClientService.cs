@@ -31,9 +31,9 @@ public class ClientService : IClientService
         return _dataHandler.AddComment(businessCommentDto, scientistId);
     }
 
-    public IEnumerable<BusinessColumnDto> GetallColumns(int scientistId)
+    public IEnumerable<BusinessColumnDto> GetAllColumns(int scientistId)
     {
-        return _dataHandler.GetallColumns(scientistId);
+        return _dataHandler.GetAllColumns(scientistId);
     }
 
     public BusinessExperimentDto MoveExperiment(BusinessExperimentDto businessExperimentDto)
@@ -49,9 +49,9 @@ public class ClientService : IClientService
         }
     }
 
-    public IEnumerable<BusinessColumnDto> GetallColumns()
+    public IEnumerable<BusinessColumnDto> GetAllColumns()
     {
-        return _dataHandler.GetallColumns();
+        return _dataHandler.GetAllColumns();
     }
 
     public IEnumerable<BusinessExperimentDto> GetAllExperiments()

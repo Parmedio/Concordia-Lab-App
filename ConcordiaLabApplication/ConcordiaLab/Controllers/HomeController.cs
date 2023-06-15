@@ -95,8 +95,8 @@ namespace ConcordiaLab.Controllers
         private IEnumerable<ViewMColumn> BuildIndex(int scientistId)
         {
             var unorderedExperiments = scientistId == 0 ?
-                _mapper.Map<IEnumerable<ViewMColumn>>(_clientService.GetallColumns()) :
-                _mapper.Map<IEnumerable<ViewMColumn>>(_clientService.GetallColumns(scientistId));
+                _mapper.Map<IEnumerable<ViewMColumn>>(_clientService.GetAllColumns()) :
+                _mapper.Map<IEnumerable<ViewMColumn>>(_clientService.GetAllColumns(scientistId));
 
             return (unorderedExperiments);
         }

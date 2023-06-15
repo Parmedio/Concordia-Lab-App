@@ -57,7 +57,7 @@
                     <select @canChangeProgress id="status-dropdown" class="form-select" name="scientistId" onchange="document.getElementById('status-form').submit()">
                         @foreach (var status in progressStatuses!)
                         {
-                            <option value="@status.Id" selected="@(status.Name == experiment.BelongToList)">@status.Name</option>
+                            <option value="@status.Id" selected="@(status.Name == experiment.BelongToColumn)">@status.Name</option>
                         }
                     </select>
 

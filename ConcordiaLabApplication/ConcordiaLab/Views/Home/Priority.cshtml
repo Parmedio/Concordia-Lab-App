@@ -50,7 +50,7 @@
                 }
                 </h6>
                 <div class="segment">
-                    <p class="progressz"><b>@experiment.BelongToList</b></p>
+                    <p class="progressz"><b>@experiment.BelongToColumn</b></p>
                     <p class="priority"><b>@experiment.Priority</b></p>
                     <p class="due-date">@(experiment.DueDate != null ? experiment.DueDate?.ToString("dd ") + experiment.DueDate?.ToString("MMM").Substring(0, 3).ToUpper() : "no date")</p>
                     <a class="btn btn-outline-secondary flex-shrink-1" asp-action="Detail" asp-route-experimentId="@experiment.Id" asp-route-scientistId="@selectedScientistId" asp-route-selectedViewMode="@selectedViewMode">details</a>

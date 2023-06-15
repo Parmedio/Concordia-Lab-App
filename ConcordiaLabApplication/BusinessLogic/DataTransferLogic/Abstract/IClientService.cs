@@ -5,8 +5,8 @@ namespace BusinessLogic.DataTransferLogic.Abstract
     public interface IClientService
     {
         public BusinessCommentDto AddComment(BusinessCommentDto businessCommentDto, int scientistId);
-        public IEnumerable<BusinessColumnDto> GetAllLists();
-        public IEnumerable<BusinessColumnDto> GetAllLists(int scientistId);
+        public IEnumerable<BusinessColumnDto> GetAllColumns();
+        public IEnumerable<BusinessColumnDto> GetAllColumns(int scientistId);
         public IEnumerable<BusinessColumnDto> GetAllSimple();
         public IEnumerable<BusinessExperimentDto> GetAllExperiments();
         public IEnumerable<BusinessExperimentDto> GetAllExperiments(int scientistId);

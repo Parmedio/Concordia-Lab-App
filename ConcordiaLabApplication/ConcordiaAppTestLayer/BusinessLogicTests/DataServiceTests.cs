@@ -74,43 +74,43 @@ public class DataServiceTests
     }
 
     [Fact]
-    public void GetallColumnshouldGiveallColumns()
+    public void GetAllColumnshouldGiveallColumns()
     {
         Mock.Get(_columnRepository).Setup(p => p.GetAll()).Returns(DataServiceMockData.allList);
         Mock.Get(_mapper).Setup(p => p.Map<IEnumerable<Column>, IEnumerable<BusinessColumnDto>>(It.IsAny<IEnumerable<Column>>())).Returns(DataServiceMockData.allbList);
 
-        _sut.GetallColumns().Should().Equal(DataServiceMockData.allbList, (p, g) => p.Id == g.Id);
-        _sut.GetallColumns().Should().HaveCount(1);
-        _sut.GetallColumns().FirstOrDefault()!.Experiments.Should().HaveCount(p => p == 2);
+        _sut.GetAllColumns().Should().Equal(DataServiceMockData.allbList, (p, g) => p.Id == g.Id);
+        _sut.GetAllColumns().Should().HaveCount(1);
+        _sut.GetAllColumns().FirstOrDefault()!.Experiments.Should().HaveCount(p => p == 2);
     }
 
     [Fact]
-    public void GetallColumnshouldGiveallColumnsByScientistId()
+    public void GetAllColumnshouldGiveallColumnsByScientistId()
     {
         Mock.Get(_columnRepository).Setup(p => p.GetByScientistId(0)).Returns(DataServiceMockData.allListById);
         Mock.Get(_mapper).Setup(p => p.Map<IEnumerable<BusinessColumnDto>?>(_columnRepository.GetByScientistId(0))).Returns(DataServiceMockData.allbListById);
 
-        _sut.GetallColumns(0).Should().Equal(DataServiceMockData.allbListById, (p, g) => p.Id == g.Id);
-        _sut.GetallColumns(0).Should().HaveCount(c => c == 1);
-        _sut.GetallColumns(0).FirstOrDefault()!.Experiments.Should().HaveCount(p => p == 1);
+        _sut.GetAllColumns(0).Should().Equal(DataServiceMockData.allbListById, (p, g) => p.Id == g.Id);
+        _sut.GetAllColumns(0).Should().HaveCount(c => c == 1);
+        _sut.GetAllColumns(0).FirstOrDefault()!.Experiments.Should().HaveCount(p => p == 1);
     }
 
     [Fact]
-    public void GetallColumnshouldThrowException()
+    public void GetAllColumnshouldThrowException()
     {
         Mock.Get(_columnRepository).Setup(p => p.GetAll()).Returns(value: null);
         Mock.Get(_mapper).Setup(p => p.Map<IEnumerable<BusinessColumnDto>?>(_columnRepository.GetAll())).Returns(value: null);
 
-        _sut.Invoking(p => p.GetallColumns(2)).Should().Throw<allColumnsEmptyException>().WithMessage("The database has no lists.");
+        _sut.Invoking(p => p.GetAllColumns(2)).Should().Throw<allColumnsEmptyException>().WithMessage("The database has no lists.");
     }
 
     [Fact]
-    public void GetallColumnshouldThrowException_ById()
+    public void GetAllColumnshouldThrowException_ById()
     {
         Mock.Get(_columnRepository).Setup(p => p.GetByScientistId(1)).Returns(value: null);
         Mock.Get(_mapper).Setup(p => p.Map<IEnumerable<BusinessColumnDto>?>(_columnRepository.GetByScientistId(1))).Returns(value: null);
 
-        _sut.Invoking(p => p.GetallColumns(2)).Should().Throw<allColumnsEmptyException>().WithMessage("The database has no lists.");
+        _sut.Invoking(p => p.GetAllColumns(2)).Should().Throw<allColumnsEmptyException>().WithMessage("The database has no lists.");
     }
 
     [Fact]
