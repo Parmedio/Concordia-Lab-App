@@ -6,11 +6,11 @@ namespace ConcordiaAppTestLayer.BusinessLogicTests.MockData;
 
 public static class DataServiceMockData
 {
-    public static List<Column> allList;
+    public static List<Column> allColumns;
     public static List<Experiment> experiments;
-    public static List<Column> allListById;
-    public static List<BusinessColumnDto> allbList;
-    public static List<BusinessColumnDto> allbListById;
+    public static List<Column> allColumnsById;
+    public static List<BusinessColumnDto> allbColumn;
+    public static List<BusinessColumnDto> allbColumnById;
     public static BusinessExperimentDto businessExperimentDto1;
     public static BusinessExperimentDto businessExperimentDto2;
     public static BusinessExperimentDto businessExperimentDto3;
@@ -25,8 +25,8 @@ public static class DataServiceMockData
     public static List<BusinessScientistDto> bscientists;
     public static Column entityAll;
     public static Column entityById;
-    public static BusinessColumnDto businessListAll;
-    public static BusinessColumnDto businessListById;
+    public static BusinessColumnDto businessColumnAll;
+    public static BusinessColumnDto businessColumnById;
 
     static DataServiceMockData()
     {
@@ -60,10 +60,13 @@ public static class DataServiceMockData
 
 
         experiment1 = new Experiment(0, "bbb", "cacciaGrossa");
-        experiment1.ScientistsIds = new List<int>() { 0 };
+        experiment1.ScientistsIds = new List<int>() { 1 };
+        experiment1.Scientists = new List<Scientist>() { scientist1 };
+
         experiment1.ColumnId = 2;
         experiment2 = new Experiment(1, "ccc", "cacciaPiccola");
-        experiment2.ScientistsIds = new List<int>() { 1 };
+        experiment2.ScientistsIds = new List<int>() { 2 };
+        experiment2.Scientists = new List<Scientist>() { scientist2 };
         experiment2.ColumnId = 1;
         entityAll = new Column(0, "aaa", "ToDo");
         entityAll.Experiments = new List<Experiment>()
@@ -108,7 +111,7 @@ public static class DataServiceMockData
             ColumnId = 8
         };
 
-        businessListAll = new BusinessColumnDto()
+        businessColumnAll = new BusinessColumnDto()
         {
             Id = 0,
             Experiments = new List<BusinessExperimentDto>()
@@ -118,7 +121,7 @@ public static class DataServiceMockData
             }
         };
 
-        businessListById = new BusinessColumnDto()
+        businessColumnById = new BusinessColumnDto()
         {
             Id = 0,
             Experiments = new List<BusinessExperimentDto>()
@@ -127,24 +130,24 @@ public static class DataServiceMockData
             }
         };
 
-        allList = new List<Column>()
+        allColumns = new List<Column>()
         {
             entityAll
         };
 
-        allListById = new List<Column>()
+        allColumnsById = new List<Column>()
         {
             entityById
         };
 
-        allbList = new List<BusinessColumnDto>()
+        allbColumn = new List<BusinessColumnDto>()
         {
-            businessListAll
+            businessColumnAll
         };
 
-        allbListById = new List<BusinessColumnDto>()
+        allbColumnById = new List<BusinessColumnDto>()
         {
-            businessListById
+            businessColumnById
         };
     }
 }

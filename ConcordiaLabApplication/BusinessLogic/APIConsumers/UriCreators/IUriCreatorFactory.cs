@@ -2,9 +2,9 @@
 {
     public interface IUriCreatorFactory
     {
-        string GetAllCardsOnToDoList();
+        string GetAllCardsOnToDoColumn();
         string GetAllCommentsOnABoard();
         string AddACommentOnACard(string cardId, string text, string authToken);
-        string UpdateAnExperiment(string cardId, string listId);
+        string UpdateAnExperiment(string cardId, string ColumnId);
     }
 }

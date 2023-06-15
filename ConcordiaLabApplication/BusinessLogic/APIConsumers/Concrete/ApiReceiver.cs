@@ -15,10 +15,10 @@ public class ApiReceiver : IApiReceiver
         _uriCreator = uriCreatorFactory;
     }
 
-    public async Task<IEnumerable<TrelloExperimentDto>?> GetAllExperimentsInToDoList()
+    public async Task<IEnumerable<TrelloExperimentDto>?> GetAllExperimentsInToDoColumn()
     {
         var client = _httpClientFactory.CreateClient("ApiConsumer");
-        var response = await client.GetFromJsonAsync<IEnumerable<TrelloExperimentDto>?>(_uriCreator.GetAllCardsOnToDoList());
+        var response = await client.GetFromJsonAsync<IEnumerable<TrelloExperimentDto>?>(_uriCreator.GetAllCardsOnToDoColumn());
         return response;
     }
 
