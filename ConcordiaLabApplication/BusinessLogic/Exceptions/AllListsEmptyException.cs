@@ -1,16 +1,16 @@
 ﻿namespace BusinessLogic.Exceptions;
 
-public class AllListsEmptyException : Exception
+public class allColumnsEmptyException : Exception
 {
-    public AllListsEmptyException()
+    public allColumnsEmptyException()
     {
     }
 
-    public AllListsEmptyException(string? message) : base(message)
+    public allColumnsEmptyException(string? message) : base(message)
     {
     }
 
-    public AllListsEmptyException(string? message, Exception? innerException) : base(message, innerException)
+    public allColumnsEmptyException(string? message, Exception? innerException) : base(message, innerException)
     {
     }
 

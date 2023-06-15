@@ -2,7 +2,7 @@
 using BusinessLogic.DataTransferLogic.Concrete;
 using BusinessLogic.Exceptions;
 
-using ConcordiaAppTestLayer.MockData;
+using ConcordiaAppTestLayer.BusinessLogicTests.MockData;
 
 using FluentAssertions;
 
@@ -11,7 +11,7 @@ using Moq;
 using PersistentLayer.Models;
 using PersistentLayer.Repositories.Abstract;
 
-namespace ConcordiaAppTestLayer;
+namespace ConcordiaAppTestLayer.BusinessLogicTests;
 
 public class UploaderTests
 {

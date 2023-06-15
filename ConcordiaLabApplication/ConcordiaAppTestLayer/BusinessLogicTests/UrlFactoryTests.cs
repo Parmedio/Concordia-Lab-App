@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 
 using Moq;
 
-namespace ConcordiaAppTestLayer
+namespace ConcordiaAppTestLayer.BusinessLogicTests
 {
     public class UrlFactoryTests
     {

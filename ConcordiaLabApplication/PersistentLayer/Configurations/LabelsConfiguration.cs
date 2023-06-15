@@ -9,6 +9,10 @@ public class LabelsConfiguration : IEntityTypeConfiguration<Label>
 {
     public void Configure(EntityTypeBuilder<Label> entity)
     {
+        entity
+            .HasIndex(p => p.TrelloId)
+            .IsUnique(true);
+
         entity.HasData(
                 new Label(Id: 1, TrelloId: "647609751afdaf2b05536cd9", Title: "Medium"),
                 new Label(Id: 2, TrelloId: "647609751afdaf2b05536cd7", Title: "Low"),

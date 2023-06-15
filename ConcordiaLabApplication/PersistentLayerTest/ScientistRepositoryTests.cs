@@ -18,7 +18,7 @@ namespace PersistentLayerTest
         public void Should_Retrun_LocalId_By_TrelloId()
         {
             var scientistId = _sut.GetLocalIdByTrelloId("3434fv");
-            Assert.Equal(1, scientistId);
+            Assert.Equal(4, scientistId);
         }
 
         [Fact]

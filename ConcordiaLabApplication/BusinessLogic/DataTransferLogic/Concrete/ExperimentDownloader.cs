@@ -30,7 +30,7 @@ public class ExperimentDownloader : IExperimentDownloader
     public async Task<IEnumerable<Experiment>?> DownloadExperiments()
     {
 
-        IEnumerable<Experiment>? AddedExperiments = null;
+        IEnumerable<Experiment> AddedExperiments = new List<Experiment>();
 
         var experimentsInToDoList = await _receiver.GetAllExperimentsInToDoList();
 
@@ -60,7 +60,7 @@ public class ExperimentDownloader : IExperimentDownloader
                 {
                     if (scientistIdList!.Any(p => p.id == -1))
                         throw new ScientistIdNotPresentOnDatabaseException($"One or more of the assignees are not saved on the database, check Trello MemberId\n" +
-                            $"Trello members Id: {string.Join(",", scientistIdList!.Where(g => g.id == -1).Select(p => $"{p.trelloId}"))}");
+                            $"Trello members Id: {string.Join(", ", scientistIdList!.Where(g => g.id == -1).Select(p => $"{p.trelloId}"))}");
                     experimentToAdd.ScientistsIds = scientistIdList!.Select(p => p.id);
                     experimentToAdd.Scientists = scientistIdList!.Select(p => _scientistRepository.GetById(p.id)!) ?? new List<Scientist>();
                 }

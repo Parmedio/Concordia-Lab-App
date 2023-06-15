@@ -2,7 +2,7 @@
 
 using PersistentLayer.Models;
 
-namespace ConcordiaAppTestLayer.MockData;
+namespace ConcordiaAppTestLayer.BusinessLogicTests.MockData;
 
 public static class DataServiceMockData
 {
@@ -96,6 +96,7 @@ public static class DataServiceMockData
             Id = 1,
             TrelloCardId = "bbb",
             Title = "cacciaPiccola",
+            ColumnId = 0
 
         };
         businessExperimentDto3 = new BusinessExperimentDto()

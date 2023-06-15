@@ -53,7 +53,7 @@ namespace PersistentLayerTest
             {
                 foreach (var experiment in list.Experiments!)
                 {
-                    experiment.Scientists!.Select(s => s.Id).Contains(1).Should().BeTrue();
+                    experiment.Scientists!.Select(s => s.Id).Contains(4).Should().BeTrue();
 
                     experiment.Comments!.ToList().ForEach(comment =>
                     {

@@ -6,7 +6,7 @@ using BusinessLogic.DataTransferLogic.Concrete;
 using BusinessLogic.DTOs.TrelloDtos;
 using BusinessLogic.Exceptions;
 
-using ConcordiaAppTestLayer.MockData;
+using ConcordiaAppTestLayer.BusinessLogicTests.MockData;
 
 using FluentAssertions;
 
@@ -15,7 +15,7 @@ using Moq;
 using PersistentLayer.Models;
 using PersistentLayer.Repositories.Abstract;
 
-namespace ConcordiaAppTestLayer;
+namespace ConcordiaAppTestLayer.BusinessLogicTests;
 
 public class CommentDownloaderTests
 {
@@ -100,7 +100,7 @@ public class CommentDownloaderTests
         Mock.Get(_scientistRepository).Setup(p => p.GetLocalIdByTrelloId(mockData.TrelloComment1OnCard5New.IdMemberCreator)).Returns(value: null);
         Mock.Get(_experimentRepository).Setup(p => p.GetLocalIdByTrelloId(mockData.TrelloComment1OnCard5New.Data.Card.Id)).Returns(value: null);
 
-        _commentDownloader.Invoking(p => p.DownloadComments().Result).Should().Throw<ExperimentNotPresentInLocalDatabaseException>().WithMessage("The Experiment is not saved in the local database. Try Again.");
+        _commentDownloader.Invoking(p => p.DownloadComments().Result).Should().Throw<ExperimentNotPresentInLocalDatabaseException>().WithMessage("The Experiment with associated Trello ID: eee is not saved in the local database. Try Again.");
 
     }
 
@@ -115,7 +115,7 @@ public class CommentDownloaderTests
         Mock.Get(_experimentRepository).Setup(p => p.GetLocalIdByTrelloId(mockData.TrelloComment1OnCard5New.Data.Card.Id)).Returns(5);
         Mock.Get(_commentRepository).Setup(p => p.AddComment(mockData.ToBeAddedComment1OnCard5NewWithInfo)).Returns(value: null);
 
-        _commentDownloader.Invoking(p => p.DownloadComments().Result).Should().Throw<AddACommentFailedException>().WithMessage("Failed To Add comment to Database during the Download Operation from Trello");
+        _commentDownloader.Invoking(p => p.DownloadComments().Result).Should().Throw<AddACommentFailedException>().WithMessage($"Failed To Add comment with text: primoCommentoVecchio and Id: ddd to the Database during the Download Operation from Trello");
 
     }
 

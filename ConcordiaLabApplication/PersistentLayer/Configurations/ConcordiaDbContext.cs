@@ -18,18 +18,11 @@ public class ConcordiaDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.ApplyConfiguration(new CommentsConfiguration());
+        modelBuilder.ApplyConfiguration(new ExperimentsConfiguration());
         modelBuilder.ApplyConfiguration(new LabelsConfiguration());
         modelBuilder.ApplyConfiguration(new ScientistsConfiguration());
-
-        modelBuilder.Entity<Comment>()
-            .HasIndex(c => c.TrelloId)
-            .IsUnique();
+        modelBuilder.ApplyConfiguration(new ColumnsConfiguration());
         base.OnModelCreating(modelBuilder);
-
-        modelBuilder.Entity<Column>().HasData(
-                   new Column { Id = 1, TrelloId = "64760804e47275c707e05d38", Title = "to do" },
-                   new Column { Id = 2, TrelloId = "64760804e47275c707e05d39", Title = "in progress" },
-                   new Column { Id = 3, TrelloId = "64760804e47275c707e05d3a", Title = "completed" }
-                   );
     }
 }

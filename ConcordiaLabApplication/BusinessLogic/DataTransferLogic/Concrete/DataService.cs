@@ -14,7 +14,7 @@ namespace BusinessLogic.DataTransferLogic.Concrete;
 public class DataService : IDataService
 {
 
-    private readonly IColumnRepository _listRepository;
+    private readonly IColumnRepository _columnRepository;
     private readonly ICommentRepository _commentRepository;
     private readonly IExperimentRepository _experimentRepository;
     private readonly IScientistRepository _scientistRepository;
@@ -22,7 +22,7 @@ public class DataService : IDataService
 
     public DataService(IColumnRepository listRepository, ICommentRepository commentRepository, IExperimentRepository experimentRepository, IMapper mapper, IScientistRepository scientistRepository)
     {
-        _listRepository = listRepository;
+        _columnRepository = listRepository;
         _commentRepository = commentRepository;
         _experimentRepository = experimentRepository;
         _mapper = mapper;
@@ -41,14 +41,14 @@ public class DataService : IDataService
         return businessCommentDto;
     }
 
-    public IEnumerable<BusinessColumnDto> GetAllLists(int scientistId)
+    public IEnumerable<BusinessColumnDto> GetallColumns(int scientistId)
     {
-        IEnumerable<BusinessColumnDto>? businessColumns;
-        businessColumns = _mapper.Map<IEnumerable<BusinessColumnDto>?>(_listRepository.GetByScientistId(scientistId));
+        IEnumerable<BusinessColumnDto> businessColumns;
+        businessColumns = _mapper.Map<IEnumerable<BusinessColumnDto>>(_columnRepository.GetByScientistId(scientistId));
 
         if (businessColumns.IsNullOrEmpty())
         {
-            throw new AllListsEmptyException("The database has no lists.");
+            throw new allColumnsEmptyException("The database has no lists.");
         }
 
         return businessColumns!;
@@ -65,15 +65,15 @@ public class DataService : IDataService
         return updatedExperiment!;
     }
 
-    public IEnumerable<BusinessColumnDto> GetAllLists()
+    public IEnumerable<BusinessColumnDto> GetallColumns()
     {
         IEnumerable<BusinessColumnDto> businessColumns;
-        var allLists = _listRepository.GetAll().AsEnumerable();
-        businessColumns = _mapper.Map<IEnumerable<Column>, IEnumerable<BusinessColumnDto>>(allLists);
+        var allColumns = _columnRepository.GetAll().AsEnumerable();
+        businessColumns = _mapper.Map<IEnumerable<Column>, IEnumerable<BusinessColumnDto>>(allColumns);
 
         if (!businessColumns.Any())
         {
-            throw new AllListsEmptyException("The database has no lists.");
+            throw new allColumnsEmptyException("The database has no lists.");
         }
 
         return businessColumns!;
@@ -88,9 +88,9 @@ public class DataService : IDataService
 
     public IEnumerable<BusinessExperimentDto> GetAllExperiments(int scientistId)
     {
-        IEnumerable<BusinessExperimentDto>? businessExperiments;
+        IEnumerable<BusinessExperimentDto> businessExperiments;
         IEnumerable<Experiment> allExperiments = _experimentRepository.GetAll();
-        businessExperiments = _mapper.Map<IEnumerable<BusinessExperimentDto>?>(allExperiments.Where(p => !p.ScientistsIds.IsNullOrEmpty() && p.ScientistsIds!.Contains(scientistId)));
+        businessExperiments = _mapper.Map<IEnumerable<BusinessExperimentDto>?>(allExperiments.Where(p => !p.ScientistsIds.IsNullOrEmpty() && p.ScientistsIds!.Contains(scientistId))) ?? new List<BusinessExperimentDto>();
         return businessExperiments!;
     }
 
