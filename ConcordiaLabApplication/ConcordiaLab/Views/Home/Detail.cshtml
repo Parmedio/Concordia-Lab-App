@@ -49,18 +49,18 @@
                 <svg class="segment" xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M6 2a.5.5 0 0 1 .47.33L10 12.036l1.53-4.208A.5.5 0 0 1 12 7.5h3.5a.5.5 0 0 1 0 1h-3.15l-1.88 5.17a.5.5 0 0 1-.94 0L6 3.964 4.47 8.171A.5.5 0 0 1 4 8.5H.5a.5.5 0 0 1 0-1h3.15l1.88-5.17A.5.5 0 0 1 6 2Z" />
                 </svg>
-                <form class="select-dropdown" id="status-form" method="get" asp-controller="Home" asp-action="@ViewContext.RouteData.Values["action"]">
+                <form class="select-dropdown" id="status-form" method="post" asp-controller="Home" asp-action="UpdateExperimentStatus">
                     <input type="hidden" name="experimentId" value="@ViewData["ExperimentId"]" />
                     <input type="hidden" name="selectedViewMode" value="@ViewData["SelectedViewMode"]" />
                     <input type="hidden" name="scientistId" value="@ViewData["SelectedScientistId"]" />
+                    <input type="hidden" name="wholeExperiment" value="@ViewData["SelectedScientistId"]" />
 
-                    <select @canChangeProgress id="status-dropdown" class="form-select" name="scientistId" onchange="document.getElementById('status-form').submit()">
+                    <select @canChangeProgress id="status-dropdown" class="form-select" name="statusId" onchange="document.getElementById('status-form').submit()">
                         @foreach (var status in progressStatuses!)
                         {
-                            <option value="@status.Id" selected="@(status.Name == experiment.BelongToColumn)">@status.Name</option>
+                            <option value="@status.Id" selected="@(status.Name == experiment.ColumnName)">@status.Name</option>
                         }
                     </select>
-
                 </form>
             </div>
             <div class="d-flex align-items-center w-50 bg-custom me-1 rounded-2">

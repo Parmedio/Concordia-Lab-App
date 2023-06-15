@@ -8,7 +8,8 @@
         public string? Priority { get; set; }
         public string? LastComment { get; set; }
         public string? AuthorComment { get; set; }
-        public string BelongToColumn { get; set; } = null!;
+        public int ColumnId { get; set; } = 0!;
+        public string ColumnName { get; set; } = null!;
 
         public DateTime? DueDate { get; set; }
         public IEnumerable<ViewMScientist>? Scientists { get; set; }

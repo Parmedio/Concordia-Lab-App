@@ -32,6 +32,7 @@ namespace ConcordiaLab.Controllers
             }
         }
 
+        [HttpGet]
         public IActionResult Index(int scientistId = 0)
         {
             _logger.LogInformation("Index was called");
@@ -46,6 +47,7 @@ namespace ConcordiaLab.Controllers
             return View(dashboard);
         }
 
+        [HttpGet]
         public IActionResult Priority(int scientistId = 0)
         {
             _logger.LogInformation("Priority was called");
@@ -61,6 +63,7 @@ namespace ConcordiaLab.Controllers
             return View(priorityList);
         }
 
+        [HttpGet]
         public IActionResult Detail(int experimentId, int scientistId, string selectedViewMode)
         {
             _logger.LogInformation("Detail was called");
@@ -80,6 +83,19 @@ namespace ConcordiaLab.Controllers
 
             return View(detail);
         }
+
+        [HttpPost]
+        public IActionResult UpdateExperimentStatus(int experimentId, int scientistId, string selectedViewMode, int statusId)
+        {
+            var updatedExperiment = _mapper.Map<BusinessExperimentDto>(BuildDetailedExperiment(experimentId));
+            updatedExperiment.ColumnName = _progressStatuses.FirstOrDefault(x => x.Id == statusId)!.Name;
+            updatedExperiment.ColumnId = statusId;
+
+            _clientService.MoveExperiment(updatedExperiment);
+
+            return RedirectToAction("Detail", new { experimentId, scientistId, selectedViewMode });
+        }
+
 
         public IActionResult Privacy()
         {
@@ -112,7 +128,7 @@ namespace ConcordiaLab.Controllers
 
         private ViewMExperiment BuildDetailedExperiment(int ExpId)
         {
-            var detailedExperiment = _mapper.Map<ViewMExperiment>(_clientService.GetExperimentById(ExpId)); //fare mappatura
+            var detailedExperiment = _mapper.Map<ViewMExperiment>(_clientService.GetExperimentById(ExpId));
 
             return detailedExperiment;
         }
