@@ -27,13 +27,14 @@ public class ColumnRepository : IColumnRepository
 
     public IEnumerable<Column> GetByScientistId(int scientistId)
     {
-        return _dbContext.Columns.AsNoTracking()
+        var filteredColumns = _dbContext.Columns.AsNoTracking()
             .Include(l => l.Experiments!)
                 .ThenInclude(e => e.Scientists!)
             .Include(l => l.Experiments!)
                 .ThenInclude(l => l.Comments)
             .Include(l => l.Experiments!)
-                .ThenInclude(e => e.Label)
-            .Where(l => l.Experiments!.Any(e => e.Scientists!.Select(s => s.Id).Contains(scientistId)));
+                .ThenInclude(e => e.Label);
+        filteredColumns.ToList().ForEach(p => p.Experiments = p.Experiments.Where(p => p.ScientistsIds.Contains(scientistId)));
+        return filteredColumns;
     }
 }
