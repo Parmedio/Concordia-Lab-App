@@ -7,7 +7,7 @@ public class UriCreatorFactory : IUriCreatorFactory
     private readonly IConfiguration _configuration;
     private readonly string _apiKey;
     private readonly string _concordiaToken;
-    private readonly string _ToDoListId;
+    private readonly string _ToDoColumnId;
     private readonly string _BoardId;
 
     public UriCreatorFactory(IConfiguration configuration)
@@ -16,17 +16,17 @@ public class UriCreatorFactory : IUriCreatorFactory
         _apiKey = _configuration.GetSection("TrelloAuthorization").GetSection("Key").Value!;
         _concordiaToken = _configuration.GetSection("TrelloAuthorization").GetSection("Token").Value!;
 #if DEBUG
-        _ToDoListId = _configuration.GetSection("TrelloTestEnvironment").GetSection("List").GetSection("idToDo").Value!;
+        _ToDoColumnId = _configuration.GetSection("TrelloTestEnvironment").GetSection("List").GetSection("idToDo").Value!;
         _BoardId = _configuration.GetSection("TrelloTestEnvironment").GetSection("idBoard").Value!;
 #else
-        _ToDoListId = _configuration.GetSection("TrelloIDsDevelopment").GetSection("List").GetSection("idToDo").Value!;
+        _ToDoColumnId = _configuration.GetSection("TrelloIDsDevelopment").GetSection("Column").GetSection("idToDo").Value!;
         _BoardId = _configuration.GetSection("TrelloIDsDevelopment").GetSection("idBoard").Value!;
 #endif
     }
 
-    public string GetAllCardsOnToDoList()
+    public string GetAllCardsOnToDoColumn()
     {
-        return $"lists/{_ToDoListId}/cards?{GetBaseAuth()}";
+        return $"lists/{_ToDoColumnId}/cards?{GetBaseAuth()}";
     }
 
     public string GetAllCommentsOnABoard()
@@ -34,9 +34,9 @@ public class UriCreatorFactory : IUriCreatorFactory
         return $"boards/{_BoardId}/actions?filter=commentCard&{GetBaseAuth()}";
     }
 
-    public string UpdateAnExperiment(string cardId, string listId)
+    public string UpdateAnExperiment(string cardId, string columnId)
     {
-        return $"cards/{cardId}?idList={listId}&{GetBaseAuth()}";
+        return $"cards/{cardId}?idList={columnId}&{GetBaseAuth()}";
     }
 
     public string AddACommentOnACard(string cardId, string text, string authToken)

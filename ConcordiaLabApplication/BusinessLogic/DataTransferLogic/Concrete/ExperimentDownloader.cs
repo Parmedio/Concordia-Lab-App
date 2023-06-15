@@ -32,18 +32,18 @@ public class ExperimentDownloader : IExperimentDownloader
 
         IEnumerable<Experiment> AddedExperiments = new List<Experiment>();
 
-        var experimentsInToDoList = await _receiver.GetAllExperimentsInToDoList();
+        var experimentsInToDoColumn = await _receiver.GetAllExperimentsInToDoColumn();
 
-        if (!experimentsInToDoList.IsNullOrEmpty())
+        if (!experimentsInToDoColumn.IsNullOrEmpty())
         {
-            var resultOfSyncNewExperiments = SyncDatabaseWithAllExperimentsInToDoList(experimentsInToDoList!);
+            var resultOfSyncNewExperiments = SyncDatabaseWithAllExperimentsInToDoColumn(experimentsInToDoColumn!);
             AddedExperiments = resultOfSyncNewExperiments.Item2;
         }
 
         return AddedExperiments;
     }
 
-    private (int, IEnumerable<Experiment>) SyncDatabaseWithAllExperimentsInToDoList(IEnumerable<TrelloExperimentDto> experiments)
+    private (int, IEnumerable<Experiment>) SyncDatabaseWithAllExperimentsInToDoColumn(IEnumerable<TrelloExperimentDto> experiments)
     {
         int count = 0;
         List<Experiment> addedExperiments = new List<Experiment>();

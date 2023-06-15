@@ -38,7 +38,7 @@ public class ExperimentDownloaderTests
     [Fact]
     public void DownloadShouldWorkWithExperiments()
     {
-        Mock.Get(_apiReceiver).Setup(p => p.GetAllExperimentsInToDoList()).ReturnsAsync(DataSyncerMockData.trelloExperiments);
+        Mock.Get(_apiReceiver).Setup(p => p.GetAllExperimentsInToDoColumn()).ReturnsAsync(DataSyncerMockData.trelloExperiments);
         Mock.Get(_experimentRepository).Setup(p => p.GetLocalIdByTrelloId(DataSyncerMockData.trelloExperiment1.Id)).Returns(1);
         Mock.Get(_experimentRepository).Setup(p => p.GetLocalIdByTrelloId(DataSyncerMockData.trelloExperiment2.Id)).Returns(2);
         Mock.Get(_experimentRepository).Setup(p => p.GetLocalIdByTrelloId(DataSyncerMockData.trelloExperiment3.Id)).Returns(3);
@@ -59,7 +59,7 @@ public class ExperimentDownloaderTests
     public void DownloadExperimentsShouldWorkSecondTest()
     {
         var mockData = new DataSyncerMockData2();
-        Mock.Get(_apiReceiver).Setup(p => p.GetAllExperimentsInToDoList()).ReturnsAsync(mockData.ExperimentsInToDoList);
+        Mock.Get(_apiReceiver).Setup(p => p.GetAllExperimentsInToDoColumn()).ReturnsAsync(mockData.ExperimentsInToDoList);
         Mock.Get(_experimentRepository).Setup(p => p.GetLocalIdByTrelloId(mockData.TrelloExperiment1.Id)).Returns(1);
         Mock.Get(_experimentRepository).Setup(p => p.GetLocalIdByTrelloId(mockData.TrelloExperiment2.Id)).Returns(2);
         Mock.Get(_experimentRepository).Setup(p => p.GetLocalIdByTrelloId(mockData.TrelloExperiment4New.Id)).Returns(value: null);
@@ -84,7 +84,7 @@ public class ExperimentDownloaderTests
     public void DownloadShouldWorkWithNoExperiments()
     {
         var mockData = new DataSyncerMockData2();
-        Mock.Get(_apiReceiver).Setup(p => p.GetAllExperimentsInToDoList()).ReturnsAsync(value: null);
+        Mock.Get(_apiReceiver).Setup(p => p.GetAllExperimentsInToDoColumn()).ReturnsAsync(value: null);
 
         var result = _experimentDownloader.DownloadExperiments().Result;
         result.Should().HaveCount(0);
@@ -94,7 +94,7 @@ public class ExperimentDownloaderTests
     public void DownloadExperimentsThrowExceptionIfAssigneeDoesNotExist()
     {
         var mockData = new DataSyncerMockData2();
-        Mock.Get(_apiReceiver).Setup(p => p.GetAllExperimentsInToDoList()).ReturnsAsync(new List<TrelloExperimentDto>() { mockData.TrelloExperiment4New });
+        Mock.Get(_apiReceiver).Setup(p => p.GetAllExperimentsInToDoColumn()).ReturnsAsync(new List<TrelloExperimentDto>() { mockData.TrelloExperiment4New });
         Mock.Get(_experimentRepository).Setup(p => p.GetLocalIdByTrelloId(mockData.TrelloExperiment4New.Id)).Returns(value: null);
         Mock.Get(_mapper).Setup(p => p.Map<TrelloExperimentDto, Experiment>(mockData.TrelloExperiment4New)).Returns(mockData.MappedExperiment4New);
         Mock.Get(_experimentRepository).Setup(p => p.GetLocalIdByTrelloId(It.IsAny<string>())).Returns(value: null);

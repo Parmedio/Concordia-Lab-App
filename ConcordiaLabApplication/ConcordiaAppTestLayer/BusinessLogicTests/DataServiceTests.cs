@@ -3,7 +3,9 @@
 using BusinessLogic.DataTransferLogic.Concrete;
 using BusinessLogic.DTOs.BusinessDTO;
 using BusinessLogic.Exceptions;
+
 using ConcordiaAppTestLayer.BusinessLogicTests.MockData;
+
 using FluentAssertions;
 
 using Moq;
@@ -76,10 +78,10 @@ public class DataServiceTests
     [Fact]
     public void GetAllColumnshouldGiveallColumns()
     {
-        Mock.Get(_columnRepository).Setup(p => p.GetAll()).Returns(DataServiceMockData.allList);
-        Mock.Get(_mapper).Setup(p => p.Map<IEnumerable<Column>, IEnumerable<BusinessColumnDto>>(It.IsAny<IEnumerable<Column>>())).Returns(DataServiceMockData.allbList);
+        Mock.Get(_columnRepository).Setup(p => p.GetAll()).Returns(DataServiceMockData.allColumns);
+        Mock.Get(_mapper).Setup(p => p.Map<IEnumerable<Column>, IEnumerable<BusinessColumnDto>>(It.IsAny<IEnumerable<Column>>())).Returns(DataServiceMockData.allbColumn);
 
-        _sut.GetAllColumns().Should().Equal(DataServiceMockData.allbList, (p, g) => p.Id == g.Id);
+        _sut.GetAllColumns().Should().Equal(DataServiceMockData.allbColumn, (p, g) => p.Id == g.Id);
         _sut.GetAllColumns().Should().HaveCount(1);
         _sut.GetAllColumns().FirstOrDefault()!.Experiments.Should().HaveCount(p => p == 2);
     }
@@ -87,10 +89,10 @@ public class DataServiceTests
     [Fact]
     public void GetAllColumnshouldGiveallColumnsByScientistId()
     {
-        Mock.Get(_columnRepository).Setup(p => p.GetByScientistId(0)).Returns(DataServiceMockData.allListById);
-        Mock.Get(_mapper).Setup(p => p.Map<IEnumerable<BusinessColumnDto>?>(_columnRepository.GetByScientistId(0))).Returns(DataServiceMockData.allbListById);
+        Mock.Get(_columnRepository).Setup(p => p.GetByScientistId(0)).Returns(DataServiceMockData.allColumnsById);
+        Mock.Get(_mapper).Setup(p => p.Map<IEnumerable<BusinessColumnDto>?>(_columnRepository.GetByScientistId(0))).Returns(DataServiceMockData.allbColumnById);
 
-        _sut.GetAllColumns(0).Should().Equal(DataServiceMockData.allbListById, (p, g) => p.Id == g.Id);
+        _sut.GetAllColumns(0).Should().Equal(DataServiceMockData.allbColumnById, (p, g) => p.Id == g.Id);
         _sut.GetAllColumns(0).Should().HaveCount(c => c == 1);
         _sut.GetAllColumns(0).FirstOrDefault()!.Experiments.Should().HaveCount(p => p == 1);
     }
@@ -117,7 +119,7 @@ public class DataServiceTests
     public void GetAllExperiments_ShouldReturn2Experiments()
     {
         Mock.Get(_experimentRepository).Setup(p => p.GetAll()).Returns(DataServiceMockData.experiments);
-        Mock.Get(_mapper).Setup(p => p.Map<IEnumerable<BusinessExperimentDto>>(_experimentRepository.GetAll())).Returns(DataServiceMockData.businessListAll.Experiments!);
+        Mock.Get(_mapper).Setup(p => p.Map<IEnumerable<BusinessExperimentDto>>(_experimentRepository.GetAll())).Returns(DataServiceMockData.businessColumnAll.Experiments!);
 
         _sut.GetAllExperiments().Should().HaveCount(2);
     }
@@ -125,19 +127,21 @@ public class DataServiceTests
     public static IEnumerable<object[]> MemberDataForGetAllExperiments =>
         new List<object[]>
         {
-            new object[] { 0, 1, new List<BusinessExperimentDto> { DataServiceMockData.businessExperimentDto1 } , new List<Experiment> { DataServiceMockData.experiment1} },
-            new object[] { 1, 1, new List<BusinessExperimentDto> { DataServiceMockData.businessExperimentDto2 } , new List<Experiment> { DataServiceMockData.experiment2} }
+            new object[] { 1, 1, new List<BusinessExperimentDto> { DataServiceMockData.businessExperimentDto1 } , new List<Experiment> { DataServiceMockData.experiment1} },
+            new object[] { 2, 1, new List<BusinessExperimentDto> { DataServiceMockData.businessExperimentDto2 } , new List<Experiment> { DataServiceMockData.experiment2} }
         };
 
     [Theory]
     [MemberData(nameof(MemberDataForGetAllExperiments))]
-    public void GetAllExperimentsByScientistId_ShouldReturnExperiments(int scientistId, int countOfResult, List<BusinessExperimentDto> ResultExperiment, List<Experiment> FilteredExperiment)
+    public void GetAllExperimentsByScientistId_ShouldReturnExperiments(int scientistId, int countOfResult, List<BusinessExperimentDto> resultExperiment, List<Experiment> filteredExperiment)
     {
         Mock.Get(_experimentRepository).Setup(p => p.GetAll()).Returns(DataServiceMockData.experiments);
-        Mock.Get(_mapper).Setup(p => p.Map<IEnumerable<BusinessExperimentDto>>(FilteredExperiment)).Returns(ResultExperiment);
+        Mock.Get(_mapper).Setup(p => p.Map<IEnumerable<BusinessExperimentDto>>(filteredExperiment)).Returns(resultExperiment);
 
+        var filtered = DataServiceMockData.experiments.Where(p => p.Scientists != null && p.Scientists.Any(s => s.Id == scientistId)) ?? new List<Experiment>();
+        filteredExperiment.Should().Equal(filtered);
         _sut.GetAllExperiments(scientistId).Should().HaveCount(countOfResult);
-        _sut.GetAllExperiments(scientistId).Should().Equal(ResultExperiment);
+        _sut.GetAllExperiments(scientistId).Should().Equal(resultExperiment);
     }
 
     [Fact]

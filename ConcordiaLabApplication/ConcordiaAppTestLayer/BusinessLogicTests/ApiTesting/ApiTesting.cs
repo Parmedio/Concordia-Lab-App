@@ -30,7 +30,7 @@ public class ApiTesting
     }
 
     [Fact]
-    public async Task GetAllExperimentsInToDoList_ShouldReturn1Experiment()
+    public async Task GetAllExperimentsInToDoColumn_ShouldReturn1Experiment()
     {
 
         using var client = new HttpClient()
@@ -38,8 +38,8 @@ public class ApiTesting
             BaseAddress = baseUrl
         };
         Mock.Get(_factoryMock).Setup(_ => _.CreateClient("ApiConsumer")).Returns(client);
-        Mock.Get(uriFactoryMock).Setup(p => p.GetAllCardsOnToDoList()).Returns("lists/6482fa302b3165154f5b6e99/cards?key=9ba27d32be683843dd1ffb346ae07641&token=ATTAd93cf67ec0072d821ff32e199156a675ed9301feea0f899df160829b3f14082dAB1E41AD");
-        var experiments = await _receiver.GetAllExperimentsInToDoList();
+        Mock.Get(uriFactoryMock).Setup(p => p.GetAllCardsOnToDoColumn()).Returns("lists/6482fa302b3165154f5b6e99/cards?key=9ba27d32be683843dd1ffb346ae07641&token=ATTAd93cf67ec0072d821ff32e199156a675ed9301feea0f899df160829b3f14082dAB1E41AD");
+        var experiments = await _receiver.GetAllExperimentsInToDoColumn();
 
         experiments.Should().HaveCount(1);
         experiments!.FirstOrDefault()!.Name.Should().Be("EsperimentoDiProva");
@@ -52,7 +52,7 @@ public class ApiTesting
     }
 
     [Fact]
-    public async Task GetAllExperimentsInToDoList_ShouldThrowException()
+    public async Task GetAllExperimentsInToDoColumn_ShouldThrowException()
     {
 
         using var client = new HttpClient()
@@ -60,9 +60,9 @@ public class ApiTesting
             BaseAddress = baseUrl
         };
         Mock.Get(_factoryMock).Setup(_ => _.CreateClient("ApiConsumer")).Returns(client);
-        Mock.Get(uriFactoryMock).Setup(p => p.GetAllCardsOnToDoList()).Returns("lists/aa/cards?key=9ba27d32be683843dd1ffb346ae07641&token=ATTAd93cf67ec0072d821ff32e199156a675ed9301feea0f899df160829b3f14082dAB1E41AD");
-        var experiments = _receiver.GetAllExperimentsInToDoList();
-        await _receiver.Invoking(p => p.GetAllExperimentsInToDoList()).Should().ThrowAsync<HttpRequestException>();
+        Mock.Get(uriFactoryMock).Setup(p => p.GetAllCardsOnToDoColumn()).Returns("lists/aa/cards?key=9ba27d32be683843dd1ffb346ae07641&token=ATTAd93cf67ec0072d821ff32e199156a675ed9301feea0f899df160829b3f14082dAB1E41AD");
+        var experiments = _receiver.GetAllExperimentsInToDoColumn();
+        await _receiver.Invoking(p => p.GetAllExperimentsInToDoColumn()).Should().ThrowAsync<HttpRequestException>();
 
     }
 
@@ -109,22 +109,22 @@ public class ApiTesting
             BaseAddress = baseUrl
         };
         var cardID = "6482fba0e13f2eaf24ec081f";
-        var listId = "6482fa39b72a7053b7b07e17";
-        var listId2 = "6482fa302b3165154f5b6e99";
+        var columnId = "6482fa39b72a7053b7b07e17";
+        var columnId2 = "6482fa302b3165154f5b6e99";
         Mock.Get(_factoryMock).Setup(_ => _.CreateClient("ApiConsumer")).Returns(client);
-        Mock.Get(uriFactoryMock).Setup(p => p.UpdateAnExperiment(cardID, listId)).Returns("cards/6482fba0e13f2eaf24ec081f?idList=6482fa39b72a7053b7b07e17&key=9ba27d32be683843dd1ffb346ae07641&token=ATTAd93cf67ec0072d821ff32e199156a675ed9301feea0f899df160829b3f14082dAB1E41AD");
-        await _sender.Invoking(p => p.UpdateAnExperiment(cardID, listId)).Should().NotThrowAsync();
+        Mock.Get(uriFactoryMock).Setup(p => p.UpdateAnExperiment(cardID, columnId)).Returns("cards/6482fba0e13f2eaf24ec081f?idList=6482fa39b72a7053b7b07e17&key=9ba27d32be683843dd1ffb346ae07641&token=ATTAd93cf67ec0072d821ff32e199156a675ed9301feea0f899df160829b3f14082dAB1E41AD");
+        await _sender.Invoking(p => p.UpdateAnExperiment(cardID, columnId)).Should().NotThrowAsync();
 
 
         Mock.Get(_factoryMock).Setup(_ => _.CreateClient("ApiConsumer")).Returns(client);
-        Mock.Get(uriFactoryMock).Setup(p => p.GetAllCardsOnToDoList()).Returns("lists/6482fa302b3165154f5b6e99/cards?key=9ba27d32be683843dd1ffb346ae07641&token=ATTAd93cf67ec0072d821ff32e199156a675ed9301feea0f899df160829b3f14082dAB1E41AD");
-        var experiments = await _receiver.GetAllExperimentsInToDoList();
+        Mock.Get(uriFactoryMock).Setup(p => p.GetAllCardsOnToDoColumn()).Returns("lists/6482fa302b3165154f5b6e99/cards?key=9ba27d32be683843dd1ffb346ae07641&token=ATTAd93cf67ec0072d821ff32e199156a675ed9301feea0f899df160829b3f14082dAB1E41AD");
+        var experiments = await _receiver.GetAllExperimentsInToDoColumn();
         experiments.Should().HaveCount(0);
 
-        Mock.Get(uriFactoryMock).Setup(p => p.UpdateAnExperiment(cardID, listId2)).Returns("cards/6482fba0e13f2eaf24ec081f?idList=6482fa302b3165154f5b6e99&key=9ba27d32be683843dd1ffb346ae07641&token=ATTAd93cf67ec0072d821ff32e199156a675ed9301feea0f899df160829b3f14082dAB1E41AD");
-        await _sender.UpdateAnExperiment(cardID, listId2);
+        Mock.Get(uriFactoryMock).Setup(p => p.UpdateAnExperiment(cardID, columnId)).Returns("cards/6482fba0e13f2eaf24ec081f?idList=6482fa302b3165154f5b6e99&key=9ba27d32be683843dd1ffb346ae07641&token=ATTAd93cf67ec0072d821ff32e199156a675ed9301feea0f899df160829b3f14082dAB1E41AD");
+        await _sender.UpdateAnExperiment(cardID, columnId);
 
-        experiments = await _receiver.GetAllExperimentsInToDoList();
+        experiments = await _receiver.GetAllExperimentsInToDoColumn();
         experiments.Should().HaveCount(1);
 
     }

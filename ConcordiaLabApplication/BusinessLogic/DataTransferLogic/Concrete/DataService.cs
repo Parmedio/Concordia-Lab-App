@@ -90,8 +90,8 @@ public class DataService : IDataService
     {
         IEnumerable<BusinessExperimentDto> businessExperiments;
         IEnumerable<Experiment> allExperiments = _experimentRepository.GetAll();
-        businessExperiments = _mapper.Map<IEnumerable<BusinessExperimentDto>?>(allExperiments
-            .Where(p => p.Scientists != null && p.Scientists.Any(s => s.Id == scientistId))) ?? new List<BusinessExperimentDto>();
+        businessExperiments = _mapper.Map<IEnumerable<BusinessExperimentDto>>(allExperiments
+            .Where(p => p.Scientists != null && p.Scientists.Any(s => s.Id == scientistId)) ?? new List<Experiment>());
         return businessExperiments!;
     }
 
