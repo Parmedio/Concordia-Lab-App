@@ -6,6 +6,7 @@ public interface IDataService
 {
     public IEnumerable<BusinessColumnDto> GetAllLists();
     public IEnumerable<BusinessColumnDto> GetAllLists(int scientistId);
+    public IEnumerable<BusinessColumnDto> GetAllSimple();
     public IEnumerable<BusinessExperimentDto> GetAllExperiments();
     public IEnumerable<BusinessExperimentDto> GetAllExperiments(int scientistId);
     public BusinessExperimentDto GetExperimentById(int experimentId);

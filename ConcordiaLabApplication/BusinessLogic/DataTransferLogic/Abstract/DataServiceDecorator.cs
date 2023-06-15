@@ -42,6 +42,11 @@ public abstract class DataServiceDecorator : IDataService
         return _component.GetAllScientist();
     }
 
+    public IEnumerable<BusinessColumnDto> GetAllSimple()
+    {
+        return _component.GetAllSimple();
+    }
+
     public BusinessExperimentDto GetExperimentById(int experimentId)
     {
         return _component.GetExperimentById(experimentId);

@@ -16,13 +16,10 @@ public class MainProfile : Profile
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Title))
             .ForMember(dest => dest.Experiments, opt => opt.MapFrom(src => src.Experiments));
 
-
-
         CreateMap<Scientist, BusinessScientistDto>()
             .ForMember("Id", opt => opt.MapFrom(src => src.Id))
             .ForMember("TrelloToken", opt => opt.MapFrom(src => src.TrelloToken))
             .ForMember("Name", opt => opt.MapFrom(src => src.Name));
-
 
         CreateMap<Experiment, BusinessExperimentDto>()
             .ForMember("Id", opt => opt.MapFrom(src => src.Id))
@@ -69,7 +66,5 @@ public class MainProfile : Profile
             .ForMember(dest => dest.Comments, opt => opt.Ignore())
             .ForMember(dest => dest.Scientists, opt => opt.Ignore())
             .ForMember(dest => dest.ScientistsIds, opt => opt.Ignore());
-
     }
-
 }

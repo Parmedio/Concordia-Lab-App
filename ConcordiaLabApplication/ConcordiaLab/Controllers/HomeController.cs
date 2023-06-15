@@ -4,6 +4,7 @@ using ConcordiaLab.ViewModels;
 using ConcordiaLab.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using BusinessLogic.DTOs.BusinessDTO;
 
 namespace ConcordiaLab.Controllers
 {
@@ -13,12 +14,22 @@ namespace ConcordiaLab.Controllers
         private readonly IMapper _mapper;
         private readonly IClientService _clientService;
         private static readonly List<string> _viewMode= new List<string>() { "status", "priority" };
+        private static List<ViewMColumn> _progressStatuses = new List<ViewMColumn>();
+        private static List<ViewMScientist> _allScientist = new List<ViewMScientist>();
 
         public HomeController(ILogger<HomeController> logger, IMapper mapper, IClientService clientService)
         {
             _logger = logger;
             _mapper = mapper;
             _clientService = clientService;
+            if (!_progressStatuses.Any())
+            {
+                _progressStatuses = _mapper.Map<List<ViewMColumn>>(_clientService.GetAllSimple());
+            }
+            if (!_allScientist.Any())
+            {
+                _allScientist = _mapper.Map<List<ViewMScientist>>(_clientService.GetAllScientist());
+            }
         }
 
         public IActionResult Index(int scientistId = 0)
@@ -26,7 +37,7 @@ namespace ConcordiaLab.Controllers
             _logger.LogInformation("Index was called");
 
             ViewData["SelectedScientistId"] = scientistId;
-            ViewData["Scientists"] = _clientService.GetAllScientist();
+            ViewData["Scientists"] = _allScientist;
 
             ViewData["ViewMode"] = _viewMode;
             ViewData["SelectedViewMode"] = "status";
@@ -40,7 +51,7 @@ namespace ConcordiaLab.Controllers
             _logger.LogInformation("Priority was called");
 
             ViewData["SelectedScientistId"] = scientistId;
-            ViewData["Scientists"] = _clientService.GetAllScientist();
+            ViewData["Scientists"] = _allScientist;
 
             ViewData["ViewMode"] = _viewMode;
             ViewData["SelectedViewMode"] = "priority";
@@ -57,14 +68,16 @@ namespace ConcordiaLab.Controllers
             var detail = BuildDetailedExperiment(experimentId);
 
             ViewData["SelectedScientistId"] = scientistId;
-            ViewData["Scientists"] = _clientService.GetAllScientist();
+            ViewData["Scientists"] = _allScientist;
+
+            ViewData["ProgressStatuses"] = _progressStatuses;
 
             ViewData["ViewMode"] = _viewMode;
             ViewData["SelectedViewMode"] = selectedViewMode;
 
             ViewData["ExperimentId"] = experimentId;
-            ViewData["ExperimentScientistIds"] = detail.Scientists.Select(x => x.Id);
-            
+            ViewData["ExperimentScientistIds"] = detail.Scientists?.Any() ?? false ? detail.Scientists?.Select(x => x.Id).ToList() : new List<int>();
+
             return View(detail);
         }
 
@@ -79,11 +92,11 @@ namespace ConcordiaLab.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        private IEnumerable<ViewMList> BuildIndex(int scientistId)
+        private IEnumerable<ViewMColumn> BuildIndex(int scientistId)
         {
             var unorderedExperiments = scientistId == 0 ?
-                _mapper.Map<IEnumerable<ViewMList>>(_clientService.GetAllLists()) :
-                _mapper.Map<IEnumerable<ViewMList>>(_clientService.GetAllLists(scientistId));
+                _mapper.Map<IEnumerable<ViewMColumn>>(_clientService.GetAllLists()) :
+                _mapper.Map<IEnumerable<ViewMColumn>>(_clientService.GetAllLists(scientistId));
 
             return (unorderedExperiments);
         }
@@ -109,26 +122,34 @@ namespace ConcordiaLab.Controllers
             var today = DateTime.Today;
             var dueDateThreshold = today.AddDays(5);
 
+            var nullPriorityExperimentsWithNearDueDate = listToOrder
+                .Where(e => e.Priority == null && e.DueDate <= dueDateThreshold);
+
+            var nullPriorityExperimentsWithFarOrNullDueDate = listToOrder
+                .Where(e => e.Priority == null && (e.DueDate > dueDateThreshold || e.DueDate is null));
+
             var highPriorityExperiments = listToOrder
-                .Where(e => e.Priority.ToLower() == "high");
+                .Where(e => e.Priority?.ToLower() == "high");
 
             var mediumPriorityExperimentsWithNearDueDate = listToOrder
-                .Where(e => e.Priority.ToLower() == "medium" && e.DueDate <= dueDateThreshold);
+                .Where(e => e.Priority?.ToLower() == "medium" && e.DueDate <= dueDateThreshold);
 
             var lowPriorityExperimentsWithNearDueDate = listToOrder
-                .Where(e => e.Priority.ToLower() == "low" && e.DueDate <= dueDateThreshold);
+                .Where(e => e.Priority?.ToLower() == "low" && e.DueDate <= dueDateThreshold);
 
-            var mediumPriorityExperiments = listToOrder
-                .Where(e => e.Priority.ToLower() == "medium" && (e.DueDate > dueDateThreshold || e.DueDate is null));
+            var mediumPriorityExperimentsWithFarOrNullDueDate = listToOrder
+                .Where(e => e.Priority?.ToLower() == "medium" && (e.DueDate > dueDateThreshold || e.DueDate is null));
 
-            var lowPriorityExperiments = listToOrder
-                .Where(e => e.Priority.ToLower() == "low" && (e.DueDate > dueDateThreshold || e.DueDate is null));
+            var lowPriorityExperimentsWithFarOrNullDueDate = listToOrder
+                .Where(e => e.Priority?.ToLower() == "low" && (e.DueDate > dueDateThreshold || e.DueDate is null));
 
             var sortedExperiments = highPriorityExperiments
                 .Concat(mediumPriorityExperimentsWithNearDueDate)
                 .Concat(lowPriorityExperimentsWithNearDueDate)
-                .Concat(mediumPriorityExperiments)
-                .Concat(lowPriorityExperiments)
+                .Concat(nullPriorityExperimentsWithNearDueDate)
+                .Concat(mediumPriorityExperimentsWithFarOrNullDueDate)
+                .Concat(lowPriorityExperimentsWithFarOrNullDueDate)
+                .Concat(nullPriorityExperimentsWithFarOrNullDueDate)
                 .ToList();
 
             return sortedExperiments;

@@ -14,15 +14,15 @@ namespace BusinessLogic.DataTransferLogic.Concrete;
 public class DataService : IDataService
 {
 
-    private readonly IColumnRepository _listRepository;
+    private readonly IColumnRepository _columnRepository;
     private readonly ICommentRepository _commentRepository;
     private readonly IExperimentRepository _experimentRepository;
     private readonly IScientistRepository _scientistRepository;
     private readonly IMapper _mapper;
 
-    public DataService(IColumnRepository listRepository, ICommentRepository commentRepository, IExperimentRepository experimentRepository, IMapper mapper, IScientistRepository scientistRepository)
+    public DataService(IColumnRepository columnRepository, ICommentRepository commentRepository, IExperimentRepository experimentRepository, IMapper mapper, IScientistRepository scientistRepository)
     {
-        _listRepository = listRepository;
+        _columnRepository = columnRepository;
         _commentRepository = commentRepository;
         _experimentRepository = experimentRepository;
         _mapper = mapper;
@@ -44,7 +44,7 @@ public class DataService : IDataService
     public IEnumerable<BusinessColumnDto> GetAllLists(int scientistId)
     {
         IEnumerable<BusinessColumnDto>? businessLists;
-        businessLists = _mapper.Map<IEnumerable<BusinessColumnDto>?>(_listRepository.GetByScientistId(scientistId));
+        businessLists = _mapper.Map<IEnumerable<BusinessColumnDto>?>(_columnRepository.GetByScientistId(scientistId));
 
         if (businessLists.IsNullOrEmpty())
         {
@@ -68,7 +68,7 @@ public class DataService : IDataService
     public IEnumerable<BusinessColumnDto> GetAllLists()
     {
         IEnumerable<BusinessColumnDto> businessLists;
-        var allLists = _listRepository.GetAll().AsEnumerable<Column>();
+        var allLists = _columnRepository.GetAll().AsEnumerable<Column>();
         businessLists = _mapper.Map<IEnumerable<Column>, IEnumerable<BusinessColumnDto>>(allLists);
 
         if (!businessLists.Any())
@@ -90,7 +90,8 @@ public class DataService : IDataService
     {
         IEnumerable<BusinessExperimentDto>? businessExperiments;
         IEnumerable<Experiment> allExperiments = _experimentRepository.GetAll();
-        businessExperiments = _mapper.Map<IEnumerable<BusinessExperimentDto>?>(allExperiments.Where(p => !p.ScientistsIds.IsNullOrEmpty() && p.ScientistsIds!.Contains(scientistId)));
+        businessExperiments = _mapper.Map<IEnumerable<BusinessExperimentDto>?>(allExperiments
+            .Where(p => p.Scientists != null && p.Scientists.Any(s => s.Id == scientistId)));
         return businessExperiments!;
     }
 
@@ -103,5 +104,13 @@ public class DataService : IDataService
         if (experiment is null)
             throw new ExperimentNotPresentInLocalDatabaseException($"Experiment with ID: {experimentId} is not present in the local Database");
         return _mapper.Map<BusinessExperimentDto>(experiment);
+    }
+
+    public IEnumerable<BusinessColumnDto> GetAllSimple()
+    {
+        var columns = _columnRepository.GetAllSimple();
+        if (columns.Count() < 3)
+            throw new NotImplementedException();
+        return _mapper.Map<IEnumerable<BusinessColumnDto>>(columns);
     }
 }

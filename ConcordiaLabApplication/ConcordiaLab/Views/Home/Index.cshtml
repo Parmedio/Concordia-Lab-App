@@ -1,5 +1,5 @@
 ﻿@using ConcordiaLab.ViewModels;
-@model IEnumerable<ViewMList>
+@model IEnumerable<ViewMColumn>
 
 @{
     ViewData["Title"] = "Experiment Dashboard";
@@ -28,7 +28,7 @@
                         <h6 class="card-subtitle mb-2 text-muted">
                             <b>Scientists:</b><br />
                             @{
-                                if (!experiment.Scientists!.Any())
+                                if (experiment.Scientists!.Any())
                                 {
                                     var scientistsCount = experiment.Scientists.Count();
                                     var scientistsList = string.Join(", ", experiment.Scientists.Select(s => $"{s.UserName}"));

@@ -25,15 +25,31 @@ public class ColumnRepository : IColumnRepository
         return allColumns;
     }
 
+    public IEnumerable<Column> GetAllSimple()
+    {
+        var allColumns = _dbContext.Columns;
+        return allColumns;
+    }
+
     public IEnumerable<Column> GetByScientistId(int scientistId)
     {
-        return _dbContext.Columns.AsNoTracking()
-            .Include(l => l.Experiments!)
-                .ThenInclude(e => e.Scientists!)
-            .Include(l => l.Experiments!)
+        var allColumns = _dbContext.Columns
+            .Include(l => l.Experiments)
+                .ThenInclude(e => e.Scientists)
+            .Include(l => l.Experiments)
                 .ThenInclude(l => l.Comments)
-            .Include(l => l.Experiments!)
+            .Include(l => l.Experiments)
                 .ThenInclude(e => e.Label)
-            .Where(l => l.Experiments!.Any(e => e.Scientists!.Select(s => s.Id).Contains(scientistId)));
+            .AsNoTracking()
+            .ToList();
+
+        var filteredColumns = allColumns.Select(column =>
+        {
+            column.Experiments = column.Experiments.Where(experiment =>
+                experiment.Scientists.Any(scientist => scientist.Id == scientistId)).ToList();
+            return column;
+        });
+
+        return filteredColumns;
     }
 }

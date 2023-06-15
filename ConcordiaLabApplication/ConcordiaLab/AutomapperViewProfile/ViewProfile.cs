@@ -11,7 +11,8 @@ namespace ConcordiaLab.AutomapperViewProfile
         public ViewProfile()
         {
             CreateMap<BusinessScientistDto, ViewMScientist>()
-                .ForMember("UserName", opt => opt.MapFrom(src => src.Name));
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
 
             CreateMap<BusinessExperimentDto, ViewMExperiment>()
                 .ForMember(dest => dest.DueDate, opt => opt.MapFrom(src => src.Date))
@@ -20,7 +21,7 @@ namespace ConcordiaLab.AutomapperViewProfile
                 .ForMember(dest => dest.BelongToList, opt => opt.MapFrom(src => src.ColumnName))
                 .ForMember(dest => dest.Scientists, opt => opt.MapFrom(src => src.Scientists));
 
-            CreateMap<BusinessColumnDto, ViewMList>();
+            CreateMap<BusinessColumnDto, ViewMColumn>();
         }
     }
 }

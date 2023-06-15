@@ -8,4 +8,6 @@ public interface IColumnRepository
     public IEnumerable<Column> GetAll();
 
     public IEnumerable<Column> GetByScientistId(int scientistId);
+
+    public IEnumerable<Column> GetAllSimple();
 }

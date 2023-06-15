@@ -73,4 +73,9 @@ public class ClientService : IClientService
     {
         return _dataHandler.GetExperimentById(experimentId);
     }
+
+    public IEnumerable<BusinessColumnDto> GetAllSimple()
+    {
+        return _dataHandler.GetAllSimple();
+    }
 }
