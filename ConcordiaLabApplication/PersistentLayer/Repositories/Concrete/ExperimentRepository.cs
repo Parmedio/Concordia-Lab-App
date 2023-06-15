@@ -90,12 +90,13 @@ public class ExperimentRepository : IExperimentRepository
 
     public Experiment? Update(int experimentId, int ColumnIdDestination)
     {
-        var current = _dbContext.Experiments.FirstOrDefault(x => x.Id == experimentId) ;
+        var current = _dbContext.Experiments.FirstOrDefault(x => x.Id == experimentId);
         if (current != null)
         {
             current.ColumnId = ColumnIdDestination;
             _dbContext.Update(current);
             _dbContext.SaveChanges();
+            current.Column = _dbContext.Columns.SingleOrDefault(p => p.Id == current.ColumnId)!;
         }
         return current;
     }
