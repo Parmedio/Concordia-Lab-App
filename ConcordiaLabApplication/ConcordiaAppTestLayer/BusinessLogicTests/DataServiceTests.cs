@@ -38,21 +38,32 @@ public class DataServiceTests
     [Fact]
     public void AddACommentShouldWork()
     {
-        Comment comment1 = new Comment(0, "aaa", "sono un commento", DateTime.Now, "Giovanni");
+        Comment comment1 = new Comment(0, null, "sono un commento", DateTime.Now, "Giovanni");
         comment1.ScientistId = 2;
         BusinessCommentDto bcomment1 = new BusinessCommentDto()
         {
             CardID = 1,
             CommentText = "sono un commento",
-            TrelloCardId = "aaa",
+            CreatorName = "Giovanni",
             Scientist = new BusinessScientistDto()
             {
                 Id = 2
             }
         };
+
+        Scientist scientistWithId2 = new Scientist(2, "TrelloToken", "TrelloMemberId", "Giovanni");
+        Experiment experimentThatContainsComment = new Experiment(1, "TrelloCardId", "Esperimento di Prova", null, null);
+
         Mock.Get(_mapper).Setup(p => p.Map<Comment>(bcomment1)).Returns(comment1);
-        Mock.Get(_commentRepository).Setup(p => p.AddComment(comment1)).Returns(DataSyncerMockData.comment1);
-        _sut.AddComment(bcomment1, 2).Should().Be(bcomment1);
+        comment1.Scientist = scientistWithId2;
+        comment1.Experiment = experimentThatContainsComment;
+        Mock.Get(_commentRepository).Setup(p => p.AddComment(comment1)).Returns(comment1);
+        var result = _sut.AddComment(bcomment1, 2);
+        result.CreatorName.Should().Be("Giovanni");
+        result.Id.Should().Be(0);
+        result.CardID.Should().Be(1);
+        result.Scientist!.Id.Should().Be(2);
+        result.CommentText.Should().Be("sono un commento");
     }
 
     [Fact]

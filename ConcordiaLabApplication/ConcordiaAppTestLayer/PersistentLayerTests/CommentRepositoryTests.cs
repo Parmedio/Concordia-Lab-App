@@ -22,7 +22,7 @@ public class CommentRepositoryTests
 
         var comment = new Comment { TrelloId = "rfgerre444f", Body = "Test Comment", ExperimentId = 1, ScientistId = 2 };
         var Returnedcomment = _sut.AddComment(comment);
-        Assert.NotEqual(Returnedcomment, comment);
+        Assert.Equal(Returnedcomment, comment);
 
         var commentAdded = _sut.GetCommentByTrelloId("rfgerre444f");
         Assert.NotNull(commentAdded);

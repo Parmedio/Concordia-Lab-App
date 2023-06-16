@@ -36,14 +36,12 @@ public class DataService : IDataService
         var addedComment = _commentRepository.AddComment(commentToAdd);
 
         if (addedComment is null)
+        {
             throw new AddACommentFailedException($"Failed to add comment: \"{businessCommentDto.CommentText}\" by scientist with Id: {scientistId} ");
-        
-        //fare prima controllo (e lanciare eccezione in caso) poi fare assegnazione
-
+        }
+        businessCommentDto.Id = addedComment.Id;
         businessCommentDto.TrelloCardId = addedComment.Experiment.TrelloId;
-
-        businessCommentDto.Scientist!.TrelloToken = addedComment.Scientist?.TrelloToken ?? throw new LocalCommentWithoutScientistException($"There was an error retrieving the author of the comment:\n{businessCommentDto.CommentText}\nwith Id:\n{businessCommentDto.Id}\non the experiment:\n{addedComment.Experiment.Title}");
-        
+        businessCommentDto.Scientist!.TrelloToken = addedComment.Scientist?.TrelloToken ?? throw new LocalCommentWithoutScientistException($"There was an error retrieving the author of the comment: {businessCommentDto.CommentText} with Id: {businessCommentDto.Id} on the experiment {addedComment.Experiment.Title}");
         return businessCommentDto;
     }
 
