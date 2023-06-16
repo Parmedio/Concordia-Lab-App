@@ -53,8 +53,8 @@ public class CommentDownloaderTests
         Mock.Get(_experimentRepository).Setup(p => p.GetLocalIdByTrelloId(DataSyncerMockData.trelloComment3.Data.Card.Id)).Returns(3);
         Mock.Get(_scientistRepository).Setup(p => p.GetLocalIdByTrelloId(DataSyncerMockData.trelloComment1.IdMemberCreator)).Returns(value: null);
         Mock.Get(_scientistRepository).Setup(p => p.GetLocalIdByTrelloId(DataSyncerMockData.trelloComment3.IdMemberCreator)).Returns(value: null);
-        Mock.Get(_commentRepository).Setup(p => p.AddComment(DataSyncerMockData.comment1map)).Returns(4);
-        Mock.Get(_commentRepository).Setup(p => p.AddComment(DataSyncerMockData.comment2map)).Returns(5);
+        Mock.Get(_commentRepository).Setup(p => p.AddComment(DataSyncerMockData.comment1map)).Returns(DataSyncerMockData.comment1);
+        Mock.Get(_commentRepository).Setup(p => p.AddComment(DataSyncerMockData.comment2map)).Returns(DataSyncerMockData.comment2);
 
 
         _commentDownloader.DownloadComments().Result.Should().Equal(DataSyncerMockData.ExpectedResult1.Item1);
@@ -73,7 +73,7 @@ public class CommentDownloaderTests
         Mock.Get(_mapper).Setup(p => p.Map<Comment>(mockData.TrelloComment1OnCard5New)).Returns(mockData.MappedComment1OnCard5New);
         Mock.Get(_scientistRepository).Setup(p => p.GetLocalIdByTrelloId(mockData.TrelloComment1OnCard5New.IdMemberCreator)).Returns(value: null);
         Mock.Get(_experimentRepository).Setup(p => p.GetLocalIdByTrelloId(mockData.TrelloComment1OnCard5New.Data.Card.Id)).Returns(5);
-        Mock.Get(_commentRepository).Setup(p => p.AddComment(mockData.ToBeAddedComment1OnCard5NewWithInfo)).Returns(4);
+        Mock.Get(_commentRepository).Setup(p => p.AddComment(mockData.ToBeAddedComment1OnCard5NewWithInfo)).Returns(mockData.AddedComment1OnCard5NewWithInfo);
 
         var result = _commentDownloader.DownloadComments().Result;
         result!.Should().Equal(mockData.NewCommentIds);

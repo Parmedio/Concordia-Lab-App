@@ -48,10 +48,10 @@ namespace ConcordiaAppTestLayer.BusinessLogicTests
 
 #if DEBUG
             string url = "lists/64760975fbea80d6ef329080/cards?key=9ba27d32be683843dd1ffb346ae07641&token=ATTAd93cf67ec0072d821ff32e199156a675ed9301feea0f899df160829b3f14082dAB1E41AD";
-            _sut.GetAllCardsOnToDoList().Should().Be(url);
+            _sut.GetAllCardsOnToDoColumn().Should().Be(url);
 #else
             string releaseUrl = "lists/64760804e47275c707e05d38/cards?key=9ba27d32be683843dd1ffb346ae07641&token=ATTAd93cf67ec0072d821ff32e199156a675ed9301feea0f899df160829b3f14082dAB1E41AD";
-            _sut.GetAllCardsOnToDoList().Should().Be(releaseUrl);
+            _sut.GetAllCardsOnToDoColumn().Should().Be(releaseUrl);
 #endif
         }
 

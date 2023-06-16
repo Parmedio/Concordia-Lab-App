@@ -16,13 +16,13 @@ public class CommentRepositoryTests
     }
 
     [Fact]
-    public void Add_Comment_Should_Return_CommentId_()
+    public void Add_Comment_Should_Return_Comment()
     {
         using var transaction = _dbContext.Database.BeginTransaction();
 
         var comment = new Comment { TrelloId = "rfgerre444f", Body = "Test Comment", ExperimentId = 1, ScientistId = 2 };
-        var commentId = _sut.AddComment(comment);
-        Assert.NotEqual(0, commentId);
+        var Returnedcomment = _sut.AddComment(comment);
+        Assert.NotEqual(Returnedcomment, comment);
 
         var commentAdded = _sut.GetCommentByTrelloId("rfgerre444f");
         Assert.NotNull(commentAdded);
