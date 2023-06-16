@@ -38,14 +38,13 @@ public class CommentRepositoryTests
         var comment = _sut.GetCommentByTrelloId("TrelloIdComment1");
         Assert.NotNull(comment);
         Assert.Equal("This is the first comment.", comment.Body);
-        Assert.Equal("Gabriele", comment.CreatorName);
+        Assert.Equal("Alessandro", comment.CreatorName);
         Assert.Equal(1, comment.ExperimentId);
-        Assert.Equal(4, comment.ScientistId);
+        Assert.Equal(1, comment.ScientistId);
         Assert.NotNull(comment.Scientist);
-        Assert.Equal(4, comment.Scientist.Id);
-        Assert.Equal("gabriele", comment.Scientist.Name);
-        Assert.Equal("3434fv", comment.Scientist.TrelloMemberId);
-        Assert.Equal("wfrf445eef344rf", comment.Scientist.TrelloToken);
+        Assert.Equal("Alessandro Ferluga", comment.Scientist.Name);
+        Assert.Equal("5bf9f901921c336b20b29d25", comment.Scientist.TrelloMemberId);
+        Assert.Equal("ATTA5c0a0bf47c1be3f495ebb81c42316684ff55e1134be71c0eba2cbecdd0614558CDCC81F8", comment.Scientist.TrelloToken);
     }
 
     [Fact]

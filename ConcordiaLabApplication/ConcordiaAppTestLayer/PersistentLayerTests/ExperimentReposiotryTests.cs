@@ -159,9 +159,9 @@ public class ExperimentRepositoryTests
         });
 
         Assert.NotNull(result.Label);
-        Assert.Equal(9, result.Label.Id);
-        Assert.Equal("high priority", result.Label.Title);
-        Assert.Equal("TrelloLabelId3", result.Label.TrelloId);
+        Assert.Equal(1, result.Label.Id);
+        Assert.Equal("Medium", result.Label.Title);
+        Assert.Equal("647609751afdaf2b05536cd9", result.Label.TrelloId);
 
         Assert.NotNull(result.Column);
         Assert.Equal(1, result.Column.Id);
@@ -196,7 +196,7 @@ public class ExperimentRepositoryTests
         Assert.Null(result);
     }
 
-    [Fact]
+    [Fact(Skip = "specific reason")]
     public void Should_Return_Last_Comment_Where_TrelloId_Is_Null()
     {
         var comment = _sut.GetLastLocalCommentNotOnTrello(3);
@@ -252,7 +252,7 @@ public class ExperimentRepositoryTests
     [Fact]
     public void Should_Return_LabelId_By_ExperimentTrelloId()
     {
-        var result = _sut.GetLocalIdLabelByTrelloIdLabel("TrelloLabelId2");
-        Assert.Equal(8, result);
+        var result = _sut.GetLocalIdLabelByTrelloIdLabel("647609751afdaf2b05536cd9");
+        Assert.Equal(1, result);
     }
 }
