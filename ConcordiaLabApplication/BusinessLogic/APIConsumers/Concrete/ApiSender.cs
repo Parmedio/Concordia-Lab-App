@@ -1,5 +1,7 @@
 using BusinessLogic.APIConsumers.UriCreators;
 
+using Newtonsoft.Json;
+
 namespace BusinessLogic.APIConsumers.Concrete;
 
 public class ApiSender : IApiSender
@@ -16,8 +18,10 @@ public class ApiSender : IApiSender
     public async Task<string> AddAComment(string cardId, string commentText, string authToken)
     {
         var client = _clientFactory.CreateClient("ApiConsumer");
-        var response = await client.GetFromJsonAsync<TrelloId>(_uriCreatorFactory.AddACommentOnACard(cardId, commentText, authToken));
-        return response.Id;
+        var response = await client.PostAsync(_uriCreatorFactory.AddACommentOnACard(cardId, commentText, authToken), null);
+        response.EnsureSuccessStatusCode();
+        var Id = JsonConvert.DeserializeObject<TrelloId>(await response.Content.ReadAsStringAsync(), settings: null)?.Id ?? string.Empty;
+        return Id;
     }
 
     public async Task<bool> UpdateAnExperiment(string cardId, string newListId)

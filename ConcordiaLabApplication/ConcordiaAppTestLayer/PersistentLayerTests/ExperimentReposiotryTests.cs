@@ -165,7 +165,7 @@ public class ExperimentRepositoryTests
 
         Assert.NotNull(result.Column);
         Assert.Equal(1, result.Column.Id);
-        Assert.Equal("64760804e47275c707e05d38", result.Column.TrelloId);
+        Assert.Equal("64760975fbea80d6ef329080", result.Column.TrelloId);
         Assert.Equal("to do", result.Column.Title);
     }
 

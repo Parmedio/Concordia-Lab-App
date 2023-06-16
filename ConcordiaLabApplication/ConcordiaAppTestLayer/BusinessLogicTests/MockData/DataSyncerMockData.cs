@@ -409,6 +409,6 @@ public static class DataSyncerMockData
             experiment4map
         };
 
-        ExpectedResult1 = (new List<int> { 4, 5 }.AsEnumerable(), new List<Experiment>() { experiment4 }.AsEnumerable());
+        ExpectedResult1 = (new List<int> { 1, 2 }.AsEnumerable(), new List<Experiment>() { experiment4 }.AsEnumerable());
     }
 }
