@@ -34,10 +34,13 @@ public class DataService : IDataService
         Comment commentToAdd = _mapper.Map<Comment>(businessCommentDto);
         commentToAdd.ScientistId = scientistId;
         var addedComment = _commentRepository.AddComment(commentToAdd);
+
         if (addedComment is null)
         {
             throw new AddACommentFailedException($"Failed to add comment: \"{businessCommentDto.CommentText}\" by scientist with Id: {scientistId} ");
         }
+        businessCommentDto.TrelloCardId = addedComment.Experiment.TrelloId;
+        businessCommentDto.Scientist!.TrelloToken = addedComment.Scientist?.TrelloToken ?? throw new LocalCommentWithoutScientistException($"There was an error retrieving the author of the comment: {businessCommentDto.CommentText} with Id: {businessCommentDto.Id} on the experiment {addedComment.Experiment.Title}");
         return businessCommentDto;
     }
 
@@ -48,7 +51,7 @@ public class DataService : IDataService
 
         if (businessColumns.IsNullOrEmpty())
         {
-            throw new allColumnsEmptyException("The database has no lists.");
+            throw new ColumnsNumberException("The database has no lists.");
         }
 
         return businessColumns!;
@@ -73,7 +76,7 @@ public class DataService : IDataService
 
         if (!businessColumns.Any())
         {
-            throw new allColumnsEmptyException("The database has no lists.");
+            throw new ColumnsNumberException("The database has no lists.");
         }
 
         return businessColumns!;
@@ -109,8 +112,8 @@ public class DataService : IDataService
     public IEnumerable<BusinessColumnDto> GetAllSimple()
     {
         var columns = _columnRepository.GetAllSimple();
-        if (columns.Count() < 3)
-            throw new NotImplementedException();
+        if (columns.Count() != 3)
+            throw new ColumnsNumberException($"The number of columns present in the database is wrong, obtained count: {columns.Count()}");
         return _mapper.Map<IEnumerable<BusinessColumnDto>>(columns);
     }
 }

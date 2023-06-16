@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -32,7 +33,7 @@ namespace PersistentLayer.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TrelloId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TrelloId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -61,7 +62,7 @@ namespace PersistentLayer.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TrelloId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TrelloId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DeadLine = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -142,9 +143,9 @@ namespace PersistentLayer.Migrations
                 columns: new[] { "Id", "Title", "TrelloId" },
                 values: new object[,]
                 {
-                    { 1, "to do", "64760804e47275c707e05d38" },
-                    { 2, "in progress", "64760804e47275c707e05d39" },
-                    { 3, "completed", "64760804e47275c707e05d3a" }
+                    { 1, "to do", "64760975fbea80d6ef329080" },
+                    { 2, "in progress", "64760975fbea80d6ef329081" },
+                    { 3, "completed", "64760975fbea80d6ef329082" }
                 });
 
             migrationBuilder.InsertData(
@@ -198,9 +199,21 @@ namespace PersistentLayer.Migrations
                 column: "LabelId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Experiments_TrelloId",
+                table: "Experiments",
+                column: "TrelloId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ExperimentScientist_ScientistsId",
                 table: "ExperimentScientist",
                 column: "ScientistsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Labels_TrelloId",
+                table: "Labels",
+                column: "TrelloId",
+                unique: true);
         }
 
         /// <inheritdoc />

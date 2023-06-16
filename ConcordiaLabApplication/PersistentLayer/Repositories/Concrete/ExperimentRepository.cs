@@ -47,19 +47,18 @@ public class ExperimentRepository : IExperimentRepository
                                      .SingleOrDefault(e => e.Id == experimentId);
     }
 
-    public Comment? GetLastCommentWithTrelloIdNull(int experimentId)
+    public Comment? GetLastLocalCommentNotOnTrello(int experimentId)
     {
-        var experiment = _dbContext.Experiments
-            .Include(e => e.Comments)
-            .FirstOrDefault(e => e.Id == experimentId);
+        var lastComment = _dbContext.Experiments
+            .Include(c => c.Comments!)
+            .ThenInclude(p => p.Scientist)
+            .Where(p => p.Comments!.Any())?
+            .SingleOrDefault(p => p.Id == experimentId)?
+            .Comments!
+            .OrderByDescending(p => p.Date)
+            .FirstOrDefault();
 
-        if (experiment != null)
-        {
-            return experiment.Comments!
-                .FirstOrDefault(c => c.TrelloId == null);
-        }
-
-        return null;
+        return lastComment?.TrelloId is null ? lastComment : null;
     }
 
     public int? GetLocalIdByTrelloId(string trelloId)

@@ -11,6 +11,6 @@ public interface IExperimentRepository
     public IEnumerable<Experiment> GetAll();
     public Experiment? GetById(int experimentId);
     public int? GetLocalIdByTrelloId(string trelloId);
-    public Comment? GetLastCommentWithTrelloIdNull(int experimentId);
+    public Comment? GetLastLocalCommentNotOnTrello(int experimentId);
     public int? GetLocalIdLabelByTrelloIdLabel(string trelloIdLabel);
 }

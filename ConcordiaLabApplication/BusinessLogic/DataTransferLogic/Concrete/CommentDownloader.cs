@@ -54,9 +54,9 @@ public class CommentDownloader : ICommentDownloader
                 commentToAdd.ExperimentId = _experimentRepository.GetLocalIdByTrelloId(comment.Data.Card.Id) ??
                     throw new ExperimentNotPresentInLocalDatabaseException($"The Experiment with associated Trello ID: {comment.Data.Card.Id} is not saved in the local database. Try Again.");
 
-                int? newId = _commentRepository.AddComment(commentToAdd);
+                Comment? newId = _commentRepository.AddComment(commentToAdd);
                 if (newId is not null)
-                    addedCommentIds.Add(newId ?? -1);
+                    addedCommentIds.Add(newId.Id);
                 else
                     throw new AddACommentFailedException($"Failed To Add comment with text: {commentToAdd.Body} and Id: {commentToAdd.TrelloId} to the Database during the Download Operation from Trello");
             }

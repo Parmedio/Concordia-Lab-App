@@ -1,5 +1,4 @@
-﻿using BusinessLogic.APIConsumers.Abstract;
-using BusinessLogic.DataTransferLogic.Abstract;
+﻿using BusinessLogic.DataTransferLogic.Abstract;
 using BusinessLogic.DTOs.BusinessDTO;
 
 namespace BusinessLogic.DataTransferLogic.Concrete;
@@ -16,7 +15,7 @@ public class ConnectionConcreteDecorator : DataServiceDecorator
     public override BusinessCommentDto AddComment(BusinessCommentDto businessCommentDto, int scientistId)
     {
         var comment = base.AddComment(businessCommentDto, scientistId);
-        _sender.AddAComment(comment.TrelloCardId, comment.CommentText, comment.Scientist.TrelloToken);
+        _sender.AddAComment(comment.TrelloCardId, comment.CommentText, comment.Scientist!.TrelloToken);
         return comment;
     }
 

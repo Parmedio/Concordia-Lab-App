@@ -7,7 +7,6 @@
 
         public virtual Experiment Experiment { get; set; } = null!;
         public virtual Scientist? Scientist { get; set; } = null!;
-
     }
 
 }

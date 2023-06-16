@@ -12,16 +12,18 @@ public class Uploader : IUploader
 {
     private readonly IApiSender _sender;
     private readonly IExperimentRepository _experimentRepository;
+    private readonly ICommentRepository _commentRepository;
 
-    public Uploader(IApiSender sender, IExperimentRepository experimentRepository)
+    public Uploader(IApiSender sender, IExperimentRepository experimentRepository, ICommentRepository commentRepository)
     {
         _sender = sender;
         _experimentRepository = experimentRepository;
+        _commentRepository = commentRepository;
     }
 
     public async Task Upload()
     {
-        var experiments = _experimentRepository.GetAll();
+        var experiments = _experimentRepository.GetAll().ToList();
         await SyncTrelloWithAllUpdates(experiments);
     }
 
@@ -35,12 +37,28 @@ public class Uploader : IUploader
             Comment? commentToAdd = null;
             if (!experiment.Comments.IsNullOrEmpty())
             {
-                commentToAdd = _experimentRepository.GetLastCommentWithTrelloIdNull(experiment.Id);
+                commentToAdd = _experimentRepository.GetLastLocalCommentNotOnTrello(experiment.Id);
 
-                if (!await _sender.AddAComment(experiment.TrelloId, commentToAdd!.Body, commentToAdd.Scientist!.TrelloToken))
-                    throw new UploadFailedException($"The process failed while uploading the experiment: {experiment.Title}. Error while trying to upload its latest comment: {commentToAdd.Body}");
+                if (commentToAdd is null)
+                    continue;
+
+                var trelloId = await _sender.AddAComment(experiment.TrelloId, commentToAdd!.Body, commentToAdd.Scientist!.TrelloToken);
+                Comment updatedComment = CreateUpdatedComment(commentToAdd, trelloId);
+                _commentRepository.UpdateAComment(updatedComment);
             }
-
         }
     }
+
+    private Comment CreateUpdatedComment(Comment comment, string trelloId)
+        => new Comment(
+                    comment.Id,
+                    trelloId,
+                    comment.Body,
+                    comment.Date,
+                    comment.CreatorName
+                    )
+        {
+            ScientistId = comment.ScientistId,
+            ExperimentId = comment.ExperimentId
+        };
 }

@@ -51,7 +51,7 @@ public class DataServiceTests
             }
         };
         Mock.Get(_mapper).Setup(p => p.Map<Comment>(bcomment1)).Returns(comment1);
-        Mock.Get(_commentRepository).Setup(p => p.AddComment(comment1)).Returns(0);
+        Mock.Get(_commentRepository).Setup(p => p.AddComment(comment1)).Returns(DataSyncerMockData.comment1);
         _sut.AddComment(bcomment1, 2).Should().Be(bcomment1);
     }
 
@@ -103,7 +103,7 @@ public class DataServiceTests
         Mock.Get(_columnRepository).Setup(p => p.GetAll()).Returns(value: null);
         Mock.Get(_mapper).Setup(p => p.Map<IEnumerable<BusinessColumnDto>?>(_columnRepository.GetAll())).Returns(value: null);
 
-        _sut.Invoking(p => p.GetAllColumns(2)).Should().Throw<allColumnsEmptyException>().WithMessage("The database has no lists.");
+        _sut.Invoking(p => p.GetAllColumns(2)).Should().Throw<ColumnsNumberException>().WithMessage("The database has no lists.");
     }
 
     [Fact]
@@ -112,7 +112,7 @@ public class DataServiceTests
         Mock.Get(_columnRepository).Setup(p => p.GetByScientistId(1)).Returns(value: null);
         Mock.Get(_mapper).Setup(p => p.Map<IEnumerable<BusinessColumnDto>?>(_columnRepository.GetByScientistId(1))).Returns(value: null);
 
-        _sut.Invoking(p => p.GetAllColumns(2)).Should().Throw<allColumnsEmptyException>().WithMessage("The database has no lists.");
+        _sut.Invoking(p => p.GetAllColumns(2)).Should().Throw<ColumnsNumberException>().WithMessage("The database has no lists.");
     }
 
     [Fact]

@@ -199,7 +199,7 @@ public class ExperimentRepositoryTests
     [Fact]
     public void Should_Return_Last_Comment_Where_TrelloId_Is_Null()
     {
-        var comment = _sut.GetLastCommentWithTrelloIdNull(3);
+        var comment = _sut.GetLastLocalCommentNotOnTrello(3);
         Assert.NotNull(comment);
         Assert.True(comment.Id == 4);
     }

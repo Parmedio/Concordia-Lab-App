@@ -1,9 +1,13 @@
-﻿using AutoMapper;
+﻿
+using AutoMapper;
 
+using BusinessLogic.DataTransferLogic.DateTimeConverter;
 using BusinessLogic.DTOs.BusinessDTO;
 using BusinessLogic.DTOs.TrelloDtos;
 
 using PersistentLayer.Models;
+
+using static BusinessLogic.DataTransferLogic.DateTimeConverter.ConverterFromUTCToLocalTime;
 
 namespace BusinessLogic.AutomapperProfiles;
 
@@ -42,6 +46,18 @@ public class MainProfile : Profile
             .ForMember(dest => dest.CommentText, opt => opt.MapFrom(src => src.Body))
             .ForMember(dest => dest.CreatorName, opt => opt.MapFrom(src => src.CreatorName));
 
+        CreateMap<BusinessCommentDto, Comment>()
+            .ConvertUsing(src => new Comment(
+                    0,
+                    null,
+                    src.CommentText,
+                    DateTime.UtcNow,
+                    src.CreatorName
+                )
+            {
+                ExperimentId = src.CardID,
+            });
+
         CreateMap<TrelloCommentDto, Comment>()
             .ConvertUsing(src => new Comment(
                     0,
@@ -57,7 +73,6 @@ public class MainProfile : Profile
                     src.Id,
                     src.Name,
                     src.Desc,
-                    src.Due
-                ));
+                    src.Due.ConvertToAntartideTimeZone()));
     }
 }

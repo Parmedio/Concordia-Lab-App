@@ -17,22 +17,24 @@ public class UploaderTests
 {
     private readonly IUploader _uploader;
     private readonly IApiSender _sender;
-    private readonly IExperimentRepository _repository;
+    private readonly IExperimentRepository _experimentRepository;
+    private readonly ICommentRepository _commentRepository;
 
     public UploaderTests()
     {
         _sender = Mock.Of<IApiSender>();
-        _repository = Mock.Of<IExperimentRepository>();
-        _uploader = new Uploader(_sender, _repository);
+        _experimentRepository = Mock.Of<IExperimentRepository>();
+        _commentRepository = Mock.Of<ICommentRepository>();
+        _uploader = new Uploader(_sender, _experimentRepository, _commentRepository);
     }
 
     [Fact]
     public void UploadShouldWork()
     {
         var data = new DataSyncerMockData2();
-        Mock.Get(_repository).Setup(p => p.GetAll()).Returns(new List<Experiment>() { data.LocalExperiment1InToDo });
+        Mock.Get(_experimentRepository).Setup(p => p.GetAll()).Returns(new List<Experiment>() { data.LocalExperiment1InToDo });
         Mock.Get(_sender).Setup(p => p.UpdateAnExperiment(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
-        Mock.Get(_sender).Setup(p => p.AddAComment(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
+        Mock.Get(_sender).Setup(p => p.AddAComment(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync("notUsefulString");
         _uploader.Invoking(p => p.Upload()).Should().NotThrowAsync();
     }
 
@@ -40,9 +42,9 @@ public class UploaderTests
     public void UploadShouldThrowUploadFailedExpectionWhileAddingExperiments()
     {
         var data = new DataSyncerMockData2();
-        Mock.Get(_repository).Setup(p => p.GetAll()).Returns(new List<Experiment>() { data.LocalExperiment1InToDo });
+        Mock.Get(_experimentRepository).Setup(p => p.GetAll()).Returns(new List<Experiment>() { data.LocalExperiment1InToDo });
         Mock.Get(_sender).Setup(p => p.UpdateAnExperiment(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(false);
-        Mock.Get(_sender).Setup(p => p.AddAComment(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
+        Mock.Get(_sender).Setup(p => p.AddAComment(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync("notUsefulString");
         _uploader.Invoking(p => p.Upload()).Should().ThrowAsync<UploadFailedException>().WithMessage($"The process failed while uploading experiments. Failed at experiment: {data.LocalExperiment1InToDo.Title}");
     }
 
@@ -50,9 +52,9 @@ public class UploaderTests
     public void UploadShouldThrowUploadFailedExceptionWhileAddingComments()
     {
         var data = new DataSyncerMockData2();
-        Mock.Get(_repository).Setup(p => p.GetAll()).Returns(new List<Experiment>() { data.LocalExperiment1InToDo });
+        Mock.Get(_experimentRepository).Setup(p => p.GetAll()).Returns(new List<Experiment>() { data.LocalExperiment1InToDo });
         Mock.Get(_sender).Setup(p => p.UpdateAnExperiment(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
-        Mock.Get(_sender).Setup(p => p.AddAComment(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(false);
+        Mock.Get(_sender).Setup(p => p.AddAComment(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync("notUsefulString");
         _uploader.Invoking(p => p.Upload()).Should().ThrowAsync<UploadFailedException>().WithMessage($"The process failed while uploading the experiment: {data.LocalExperiment1InToDo.Title}. Error while trying to upload its latest comment: primoCommentoVecchio");
     }
 }

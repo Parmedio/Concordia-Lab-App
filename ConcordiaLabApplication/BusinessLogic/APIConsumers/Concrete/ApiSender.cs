@@ -13,11 +13,11 @@ public class ApiSender : IApiSender
         _uriCreatorFactory = uriCreatorFactory;
     }
 
-    public async Task<bool> AddAComment(string cardId, string commentText, string authToken)
+    public async Task<string> AddAComment(string cardId, string commentText, string authToken)
     {
         var client = _clientFactory.CreateClient("ApiConsumer");
-        var response = await client.PostAsync(_uriCreatorFactory.AddACommentOnACard(cardId, commentText, authToken), null);
-        return response.IsSuccessStatusCode;
+        var response = await client.GetFromJsonAsync<TrelloId>(_uriCreatorFactory.AddACommentOnACard(cardId, commentText, authToken));
+        return response.Id;
     }
 
     public async Task<bool> UpdateAnExperiment(string cardId, string newListId)
@@ -26,4 +26,10 @@ public class ApiSender : IApiSender
         var response = await client.PutAsync(_uriCreatorFactory.UpdateAnExperiment(cardId, newListId), null);
         return response.IsSuccessStatusCode;
     }
+
+    private class TrelloId
+    {
+        public string Id { get; set; } = null!;
+    }
 }
+

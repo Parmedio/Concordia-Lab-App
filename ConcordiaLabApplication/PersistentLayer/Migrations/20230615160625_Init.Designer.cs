@@ -12,7 +12,7 @@ using PersistentLayer.Configurations;
 namespace PersistentLayer.Migrations
 {
     [DbContext(typeof(ConcordiaDbContext))]
-    [Migration("20230614103927_Init")]
+    [Migration("20230615160625_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -65,19 +65,19 @@ namespace PersistentLayer.Migrations
                         {
                             Id = 1,
                             Title = "to do",
-                            TrelloId = "64760804e47275c707e05d38"
+                            TrelloId = "64760975fbea80d6ef329080"
                         },
                         new
                         {
                             Id = 2,
                             Title = "in progress",
-                            TrelloId = "64760804e47275c707e05d39"
+                            TrelloId = "64760975fbea80d6ef329081"
                         },
                         new
                         {
                             Id = 3,
                             Title = "completed",
-                            TrelloId = "64760804e47275c707e05d3a"
+                            TrelloId = "64760975fbea80d6ef329082"
                         });
                 });
 
@@ -148,13 +148,16 @@ namespace PersistentLayer.Migrations
 
                     b.Property<string>("TrelloId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ColumnId");
 
                     b.HasIndex("LabelId");
+
+                    b.HasIndex("TrelloId")
+                        .IsUnique();
 
                     b.ToTable("Experiments");
                 });
@@ -173,9 +176,12 @@ namespace PersistentLayer.Migrations
 
                     b.Property<string>("TrelloId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TrelloId")
+                        .IsUnique();
 
                     b.ToTable("Labels");
 
