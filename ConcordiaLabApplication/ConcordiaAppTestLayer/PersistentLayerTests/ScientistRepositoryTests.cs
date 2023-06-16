@@ -17,8 +17,8 @@ public class ScientistRepositoryTests
     [Fact]
     public void Should_Retrun_LocalId_By_TrelloId()
     {
-        var scientistId = _sut.GetLocalIdByTrelloId("3434fv");
-        Assert.Equal(4, scientistId);
+        var scientistId = _sut.GetLocalIdByTrelloId("639c692ed850f6055714fd55");
+        Assert.Equal(2, scientistId);
     }
 
     [Fact]
