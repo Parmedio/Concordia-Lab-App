@@ -46,14 +46,14 @@
                                 <svg class="segment" xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" viewBox="0 0 16 16">
                                     <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z" />
                                 </svg>
-                                <p class="priority"><b>@experiment.Priority</b></p>
+                                <p class="priority"><b>@(experiment.Priority != null ? experiment.Priority: "none")</b></p>
                             </div>
                             <div class="d-flex align-items-center w-50 bg-custom ms-1 rounded-2">
                                 <svg class="segment" xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" viewBox="0 0 16 16">
                                     <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z" />
                                     <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z" />
                                 </svg>
-                                <p class="due-date">@(experiment.DueDate != null ? experiment.DueDate?.ToString("dd ") + experiment.DueDate?.ToString("MMM").Substring(0, 3).ToUpper() : "no date")</p>
+                                <p class="due-date">@(experiment.DueDate != null ? experiment.DueDate?.ToString("dd ") + experiment.DueDate?.ToString("MMM").Substring(0, 3).ToUpper() : "none")</p>
                             </div>
                         </div>
                     </div>
@@ -106,7 +106,6 @@
         text-align: center;
         border-radius: 4px;
         margin: 6px 6px 6px 0px;
-        background-color: white;
     }
 
     .low {
@@ -124,6 +123,15 @@
         background-color: mistyrose;
     }
 
+    .none {
+        color: whitesmoke;
+        background-color: whitesmoke;
+    }
+
+    .present{
+        background-color: white
+    }
+
     .to-do {
         background: linear-gradient(180deg, rgba(207,207,207,0.6) 0%, rgba(253,187,45,0) 60%);
     }
@@ -139,6 +147,7 @@
 
 <script>
     var elements = document.getElementsByClassName('priority');
+    
     var i = elements.length - 1;
 
     while (i >= 0) {
@@ -151,9 +160,28 @@
             element.classList.add('medium');
         } else if (priority === 'High') {
             element.classList.add('high');
+        } else if (priority === 'none') {
+            element.classList.add('none');
         }
 
         i--;
+    }
+
+    var elementsD = document.getElementsByClassName('due-date');
+
+    var z = elementsD.length - 1;
+
+    while (z >= 0) {
+        var elementD = elementsD[z];
+        var date = elementD.innerText.trim();
+
+        if (date === 'none') {
+            elementD.classList.add('none');
+        } else {
+            elementD.classList.add('present');
+        }
+
+        z--;
     }
 
     var lists = document.getElementsByClassName('d-flex flex-column w-100 list');

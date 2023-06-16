@@ -41,7 +41,12 @@ public class DataService : IDataService
         }
         businessCommentDto.Id = addedComment.Id;
         businessCommentDto.TrelloCardId = addedComment.Experiment.TrelloId;
-        businessCommentDto.Scientist!.TrelloToken = addedComment.Scientist?.TrelloToken ?? throw new LocalCommentWithoutScientistException($"There was an error retrieving the author of the comment: {businessCommentDto.CommentText} with Id: {businessCommentDto.Id} on the experiment {addedComment.Experiment.Title}");
+
+        businessCommentDto.Scientist = _mapper.Map<Scientist?, BusinessScientistDto?>(addedComment.Scientist);
+
+        if (businessCommentDto.Scientist is null)
+            throw new LocalCommentWithoutScientistException($"There was an error retrieving the author of the comment: {businessCommentDto.CommentText} with Id: {businessCommentDto.Id} on the experiment: {addedComment.Experiment.Title}");
+        
         return businessCommentDto;
     }
 
