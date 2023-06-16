@@ -5,9 +5,17 @@
     ViewData["Title"] = "Experiment Detail";
     Layout = "_Layout";
     var experiment = Model;
-    var selectedScientistId = ViewData["SelectedScientistId"] as int?;
+
+    var selectedScientistId = ViewData["SelectedScientistId"];
     var experimentScientistIds = ViewData["ExperimentScientistIds"] as List<int>;
-    var canChangeProgress = experimentScientistIds!.Contains(selectedScientistId ?? 0) ? "" : "disabled=\"true\"";
+
+    var commentAuthorName = experiment.Scientists?
+    .Where(s => s.Id == (int)selectedScientistId!)
+    .Select(s => s.UserName)
+    .FirstOrDefault();
+
+    var canChangeFeature = (experimentScientistIds!.Contains((int)selectedScientistId!) || experimentScientistIds.Contains(0)) ? "" : "disabled=\"true\"";
+
     var selectedViewMode = ViewData["SelectedViewMode"] as string ?? string.Empty;
     var progressStatuses = ViewData["ProgressStatuses"] as List<ViewMColumn>;
 }
@@ -31,12 +39,36 @@
                 }
             }
         </h6>
+
         <div>
             <h6 class="card-subtitle mb-2">
                 <b>Last comment:</b><br />
             </h6>
             <p>@experiment.LastComment</p>
         </div>
+
+
+
+
+        <div>
+            <button id="leaveCommentButton" onclick="enableCommentField()" @canChangeFeature>Leave a comment</button>
+        </div>
+
+        <form id="comment-form"  method="post" asp-controller="Home" asp-action="PostNewComment">
+            <input type="hidden" name="experimentId" value="@ViewData["ExperimentId"]" />
+            <input type="hidden" name="selectedViewMode" value="@ViewData["SelectedViewMode"]" />
+            <input type="hidden" name="scientistId" value="@ViewData["SelectedScientistId"]" />
+            <input type="hidden" name="commentAuthorName" value="@commentAuthorName" />
+            <div id="commentContainer" style="display: none;">
+                <textarea name="commentText" id="commentText" rows="4" cols="50"></textarea>
+
+                <a class="btn btn-outline-primary" onclick="document.getElementById('comment-form').submit()">post new comment</a>
+            </div>
+        </form>
+
+
+
+
         <div>
             <h6 class="card-subtitle mb-2">
                 <b>Description:</b><br />
@@ -53,12 +85,11 @@
                     <input type="hidden" name="experimentId" value="@ViewData["ExperimentId"]" />
                     <input type="hidden" name="selectedViewMode" value="@ViewData["SelectedViewMode"]" />
                     <input type="hidden" name="scientistId" value="@ViewData["SelectedScientistId"]" />
-                    <input type="hidden" name="wholeExperiment" value="@ViewData["SelectedScientistId"]" />
 
-                    <select @canChangeProgress id="status-dropdown" class="form-select" name="statusId" onchange="document.getElementById('status-form').submit()">
+                    <select id="status-dropdown" class="form-select" name="statusId" onchange="document.getElementById('status-form').submit()" @canChangeFeature>
                         @foreach (var status in progressStatuses!)
                         {
-                            <option value="@status.Id" selected="@(status.Name == experiment.ColumnName)">@status.Name</option>
+                            <option value="@status.Id" selected="@(status.Id == experiment.ColumnId)">@status.Name</option>
                         }
                     </select>
                 </form>
@@ -159,33 +190,8 @@
         i--;
     }
 
-    $(function () {
-        var currentAction = "@(ViewContext.RouteData.Values["action"].ToString())";
-        var experimentScientistIds = @(ViewData["ExperimentScientistIds"] != null ? Html.Raw(Json.Serialize(ViewData["ExperimentScientistIds"])) : "[]");
-
-        $('#status-dropdown').change(function () {
-            var selectedScientistId = this.value;
-            var selectedScientistIsInExperiment = experimentScientistIds.includes(parseInt(selectedScientistId));
-            var selectedViewMode = document.getElementById('viewmode-dropdown').value;
-
-            if (currentAction === "Detail" && selectedScientistIsInExperiment) {
-
-                $('#scientist-form').attr('action', '/Home/Detail');
-
-            } else if (selectedViewMode === "priority") {
-
-                $('#scientist-form input[name="experimentId"]').remove();
-                $('#scientist-form input[name="selectedViewMode"]').remove();
-                $('#scientist-form').attr('action', '/Home/Priority');
-
-            } else if (selectedViewMode === "status") {
-
-                $('#scientist-form input[name="experimentId"]').remove();
-                $('#scientist-form input[name="selectedViewMode"]').remove();
-                $('#scientist-form').attr('action', '/Home/Index');
-
-            }
-            $('#scientist-form').submit();
-        });
-    });
+    function enableCommentField() {
+        var commentContainer = document.getElementById("commentContainer");
+        commentContainer.style.display = "block";
+    }
 </script>

@@ -79,7 +79,8 @@ namespace ConcordiaLab.Controllers
             ViewData["SelectedViewMode"] = selectedViewMode;
 
             ViewData["ExperimentId"] = experimentId;
-            ViewData["ExperimentScientistIds"] = detail.Scientists?.Any() ?? false ? detail.Scientists?.Select(x => x.Id).ToList() : new List<int>();
+
+            ViewData["ExperimentScientistIds"] = detail.Scientists?.Any() ?? false ? detail.Scientists?.Select(x => x.Id).ToList() : new List<int> { 0 };
 
             return View(detail);
         }
@@ -87,13 +88,33 @@ namespace ConcordiaLab.Controllers
         [HttpPost]
         public IActionResult UpdateExperimentStatus(int experimentId, int scientistId, string selectedViewMode, int statusId)
         {
-            var updatedExperiment = _mapper.Map<BusinessExperimentDto>(BuildDetailedExperiment(experimentId));
+            _logger.LogInformation("Update experiment status was called");
+
+            var updatedExperiment = _clientService.GetExperimentById(experimentId);
             updatedExperiment.ColumnName = _progressStatuses.FirstOrDefault(x => x.Id == statusId)!.Name;
             updatedExperiment.ColumnId = statusId;
 
             _clientService.MoveExperiment(updatedExperiment);
 
             return RedirectToAction("Detail", new { experimentId, scientistId, selectedViewMode });
+        }
+
+        [HttpPost]
+        public IActionResult PostNewComment(int experimentId, int scientistId, string commentAuthorName, string selectedViewMode, string commentText)
+        {
+            _logger.LogInformation("Post new comment was called");
+
+            var newComment = new BusinessCommentDto
+            {
+                CardID = experimentId,
+                CommentText = commentText,
+                CreatorName = commentAuthorName
+            };
+
+            _clientService.AddComment(newComment, scientistId);
+
+            return RedirectToAction("Detail", new { experimentId, scientistId, selectedViewMode });
+
         }
 
 
