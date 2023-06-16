@@ -17,6 +17,10 @@ namespace PersistentLayer.Repositories.Concrete
         {
             var entity = _dbContext.Comments.Add(comment);
             _dbContext.SaveChanges();
+
+            entity.Entity.Experiment = _dbContext.Experiments.SingleOrDefault(e => e.Id == comment.ExperimentId);
+            entity.Entity.Scientist = _dbContext.Scientists.SingleOrDefault(s => s.Id == comment.ScientistId);
+
             return entity.Entity;
         }
 
