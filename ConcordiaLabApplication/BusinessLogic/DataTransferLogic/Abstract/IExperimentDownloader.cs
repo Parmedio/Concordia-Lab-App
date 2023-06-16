@@ -4,5 +4,5 @@ namespace BusinessLogic.DataTransferLogic.Abstract;
 
 public interface IExperimentDownloader
 {
-    Task<IEnumerable<Experiment>?> DownloadExperiments();
+    Task<(IEnumerable<Experiment>?, string)> DownloadExperiments();
 }

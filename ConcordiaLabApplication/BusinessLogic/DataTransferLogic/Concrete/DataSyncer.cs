@@ -27,19 +27,8 @@ public class DataSyncer : IDataSyncer
         try
         {
             _logger.LogInformation("Download experiments from Trello started...");
-            var task1 = await _experimentDownloader.DownloadExperiments();
-
-            _logger.LogInformation("Experiments' download was completed successfully. ");
-            if (!task1.IsNullOrEmpty())
-                _logger.LogInformation($"Added {task1!.Count()} new experiments. ");
-            else
-                _logger.LogInformation("No experiment were added");
-
-
-        }
-        catch (ScientistIdNotPresentOnDatabaseException ex)
-        {
-            _logger.LogWarning($"An exception was caught while downloading experiments: {ex.Message}");
+            var downloader = await _experimentDownloader.DownloadExperiments();
+            _logger.LogInformation($"{downloader.Item2}");
         }
         catch (Exception ex)
         {

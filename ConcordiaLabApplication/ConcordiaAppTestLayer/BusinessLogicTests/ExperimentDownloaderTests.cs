@@ -4,7 +4,6 @@ using BusinessLogic.APIConsumers.Abstract;
 using BusinessLogic.DataTransferLogic.Abstract;
 using BusinessLogic.DataTransferLogic.Concrete;
 using BusinessLogic.DTOs.TrelloDtos;
-using BusinessLogic.Exceptions;
 
 using ConcordiaAppTestLayer.BusinessLogicTests.MockData;
 
@@ -52,7 +51,7 @@ public class ExperimentDownloaderTests
         Mock.Get(_experimentRepository).Setup(p => p.GetLocalIdLabelByTrelloIdLabel("tough")).Returns(3);
         Mock.Get(_experimentRepository).Setup(p => p.Add(DataSyncerMockData.experimentAdded)).Returns(DataSyncerMockData.experiment4);
 
-        _experimentDownloader.DownloadExperiments().Result.Should().Equal(DataSyncerMockData.ExpectedResult1.Item2);
+        _experimentDownloader.DownloadExperiments().Result.Item1.Should().Equal(DataSyncerMockData.ExpectedResult1.Item2);
     }
 
     [Fact]
@@ -76,7 +75,7 @@ public class ExperimentDownloaderTests
         Mock.Get(_experimentRepository).Setup(p => p.Add(It.Is<Experiment>(p => p.TrelloId == "eee"))).Returns(mockData.AddedExperiment5NewWithInfo);
 
         var result = _experimentDownloader.DownloadExperiments().Result;
-        result.Should().Equal(mockData.AddedExperiments);
+        result.Item1.Should().Equal(mockData.AddedExperiments);
 
     }
 
@@ -87,19 +86,8 @@ public class ExperimentDownloaderTests
         Mock.Get(_apiReceiver).Setup(p => p.GetAllExperimentsInToDoColumn()).ReturnsAsync(value: null);
 
         var result = _experimentDownloader.DownloadExperiments().Result;
-        result.Should().HaveCount(0);
+        result.Item1.Should().HaveCount(0);
     }
 
-    [Fact]
-    public void DownloadExperimentsThrowExceptionIfAssigneeDoesNotExist()
-    {
-        var mockData = new DataSyncerMockData2();
-        Mock.Get(_apiReceiver).Setup(p => p.GetAllExperimentsInToDoColumn()).ReturnsAsync(new List<TrelloExperimentDto>() { mockData.TrelloExperiment4New });
-        Mock.Get(_experimentRepository).Setup(p => p.GetLocalIdByTrelloId(mockData.TrelloExperiment4New.Id)).Returns(value: null);
-        Mock.Get(_mapper).Setup(p => p.Map<TrelloExperimentDto, Experiment>(mockData.TrelloExperiment4New)).Returns(mockData.MappedExperiment4New);
-        Mock.Get(_experimentRepository).Setup(p => p.GetLocalIdByTrelloId(It.IsAny<string>())).Returns(value: null);
 
-        _experimentDownloader.Invoking(p => p.DownloadExperiments().Result).Should().Throw<ScientistIdNotPresentOnDatabaseException>().WithMessage("One or more of the assignees are not saved on the database, check Trello MemberId\n" +
-                            $"Trello members Id: alessandro, marco");
-    }
 }
