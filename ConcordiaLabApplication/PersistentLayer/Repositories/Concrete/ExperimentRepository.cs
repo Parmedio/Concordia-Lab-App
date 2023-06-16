@@ -22,26 +22,26 @@ public class ExperimentRepository : IExperimentRepository
 
     public Experiment Add(Experiment experiment)
     {
-        var entity = _dbContext.Experiments.Add(experiment);
-        _dbContext.SaveChanges();
-
         if (experiment.ScientistsIds != null)
         {
-            var scientists = _dbContext.Scientists.AsNoTracking().Where(s => experiment.ScientistsIds.Contains(s.Id));
-            entity.Entity.Scientists = scientists.ToList();
+            var scientists = _dbContext.Scientists.Where(s => experiment.ScientistsIds.Contains(s.Id));          
+            experiment.Scientists = scientists.ToList();
         }
 
         if (experiment.LabelId != 0)
         {
-            var label = _dbContext.Labels.AsNoTracking().SingleOrDefault(l => l.Id == experiment.LabelId);
-            entity.Entity.Label = label;
+            var label = _dbContext.Labels.SingleOrDefault(l => l.Id == experiment.LabelId);
+           experiment.Label = label;
         }
 
         if (experiment.ListId != 0)
         {
-            var list = _dbContext.EntityLists.AsNoTracking().SingleOrDefault(l => l.Id == experiment.ListId);
-            entity.Entity.List = list;
+            var list = _dbContext.EntityLists.SingleOrDefault(l => l.Id == experiment.ListId);
+            experiment.List = list;
         }
+
+        var entity = _dbContext.Experiments.Add(experiment);
+        _dbContext.SaveChanges();
         return entity.Entity;
     }
 

@@ -50,7 +50,7 @@ namespace PersistentLayer.Tests
 
             Assert.NotNull(lists);
 
-            Assert.Equal(3, lists.Count());
+            Assert.Equal(1, lists.Count());
             foreach (var list in lists)
             {
                 foreach (var experiment in list.Experiments!)

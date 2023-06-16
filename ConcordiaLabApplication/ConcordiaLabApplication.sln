@@ -11,13 +11,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLogic", "BusinessLo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcordiaAppTestLayer", "ConcordiaAppTestLayer\ConcordiaAppTestLayer.csproj", "{9A1E50E4-3423-40F0-9067-3345A97DA64C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackgroundServices", "BackgroundService\BackgroundServices.csproj", "{D857DE11-8239-4DA8-A55A-8B5FB7F6A6A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConnectionScheduler", "BackgroundService\ConnectionScheduler.csproj", "{D857DE11-8239-4DA8-A55A-8B5FB7F6A6A0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersistentLayer.Tests", "PersistentLayerTest\PersistentLayer.Tests.csproj", "{FF12A514-03A1-4DD0-AC38-3F3EEDD9E527}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiTesting.cs", "ApiTesting.cs\ApiTesting.cs.csproj", "{212E6F23-F79F-4819-AD8F-1EA76882A777}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Syncer", "Syncer\Syncer.csproj", "{4E58CA51-9C00-4F1B-ADED-324E7043C181}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchedulerTests", "SchedulerTests\SchedulerTests.csproj", "{801BAA39-A96C-4394-8302-B0F21C973C19}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,10 +53,10 @@ Global
 		{212E6F23-F79F-4819-AD8F-1EA76882A777}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{212E6F23-F79F-4819-AD8F-1EA76882A777}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{212E6F23-F79F-4819-AD8F-1EA76882A777}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4E58CA51-9C00-4F1B-ADED-324E7043C181}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4E58CA51-9C00-4F1B-ADED-324E7043C181}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4E58CA51-9C00-4F1B-ADED-324E7043C181}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4E58CA51-9C00-4F1B-ADED-324E7043C181}.Release|Any CPU.Build.0 = Release|Any CPU
+		{801BAA39-A96C-4394-8302-B0F21C973C19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{801BAA39-A96C-4394-8302-B0F21C973C19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{801BAA39-A96C-4394-8302-B0F21C973C19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{801BAA39-A96C-4394-8302-B0F21C973C19}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -6,7 +6,7 @@ namespace PersistentLayerTest
 {
     public class TestDatabaseFixture
     {
-        private const string ConnectionString = @"Data Source=DESKTOP-476F63V\SQLEXPRESS;Initial Catalog=ConcordiaLab;Integrated Security=true;TrustServerCertificate=True;";
+        private const string ConnectionString = @"Data Source=DESKTOP-476F63V\SQLEXPRESS;Initial Catalog=ConcordiaLabTest;Integrated Security=true;TrustServerCertificate=True;";
 
         private static readonly object _lock = new();
         private static bool _databaseInitialized;
@@ -22,14 +22,6 @@ namespace PersistentLayerTest
                         context.Database.EnsureDeleted();
                         context.Database.EnsureCreated();
 
-                        var scientists = new List<Scientist>
-                        {
-                            new Scientist { TrelloToken = "wfrf445eef344rf", TrelloMemberId = "3434fv", Name = "gabriele" },
-                            new Scientist { TrelloToken = "wedecerfedef", TrelloMemberId = "324332d", Name = "marco" },
-                            new Scientist { TrelloToken = "wwdwx2rycecee23", TrelloMemberId = "dcwd2323c", Name = "alessandro" }
-                        };
-                        context.Scientists.AddRange(scientists);
-                        context.SaveChanges();
 
                         var labels = new List<Label>
                         {
@@ -40,12 +32,29 @@ namespace PersistentLayerTest
                         context.Labels.AddRange(labels);
                         context.SaveChanges();
 
+                        var scientists = new List<Scientist>
+                        {
+                            new Scientist { TrelloToken = "wfrf445eef344rf", TrelloMemberId = "3434fv", Name = "gabriele" },
+                            new Scientist { TrelloToken = "wedecerfedef", TrelloMemberId = "324332d", Name = "marco" },
+                            new Scientist { TrelloToken = "wwdwx2rycecee23", TrelloMemberId = "dcwd2323c", Name = "alessandro" }
+                        };
+                        context.Scientists.AddRange(scientists);
+                        context.SaveChanges();
+
+                        var lists = new List<Column>
+                        {
+                            new Column { TrelloId = "ce34442cw", Title = "to do" },
+                            new Column { TrelloId = "efcrvrt23", Title = "in progress" },
+                            new Column { TrelloId = "wede224ev", Title = "done" }
+                        };
+
+
                         var experiments = new List<Experiment>
                         {
-                            new Experiment { TrelloId = "TrelloId1", Title = "Experiment 1", Description = "This is experiment 1", ListId = 1, LabelId = 3, Scientists = scientists },
-                            new Experiment { TrelloId = "TrelloId2", Title = "Experiment 2", Description = "This is experiment 2", ListId = 2, LabelId = 1, Scientists = scientists },
-                            new Experiment { TrelloId = "TrelloId3", Title = "Experiment 3", Description = "This is experiment 3", ListId = 3, LabelId = 2, Scientists = scientists},
-                            new Experiment { TrelloId = "TrelloId4", Title = "Experiment 4", Description = "This is experiment 4", ListId = 2, LabelId = 3, Scientists = scientists },
+                            new Experiment { TrelloId = "TrelloId1", Title = "Experiment 1", Description = "This is experiment 1", ListId = 1, LabelId = 3, ScientistsIds = new List<int>{1,2,3 }  },
+                            new Experiment { TrelloId = "TrelloId2", Title = "Experiment 2", Description = "This is experiment 2", ListId = 2, LabelId = 1, ScientistsIds = new List<int>{1,2,3 }  },
+                            new Experiment { TrelloId = "TrelloId3", Title = "Experiment 3", Description = "This is experiment 3", ListId = 3, LabelId = 2, ScientistsIds = new List<int>{1,2,3 } },
+                            new Experiment { TrelloId = "TrelloId4", Title = "Experiment 4", Description = "This is experiment 4", ListId = 2, LabelId = 3, ScientistsIds = new List<int>{1,2,3 } },
                             new Experiment { TrelloId = "TrelloId5", Title = "Experiment 5", Description = "This is experiment 4", ListId = 2, LabelId = 3, Scientists = null},
                         };
                         context.Experiments.AddRange(experiments);

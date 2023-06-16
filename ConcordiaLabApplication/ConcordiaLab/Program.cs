@@ -1,9 +1,8 @@
 
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
-
-using BackgroundServices;
-
+using BackgroundServices.Abstract;
+using BackgroundServices.Concrete;
 using BusinessLogic.APIConsumers.Abstract;
 using BusinessLogic.APIConsumers.Concrete;
 using BusinessLogic.APIConsumers.UriCreators;
@@ -19,6 +18,7 @@ using Microsoft.EntityFrameworkCore;
 using PersistentLayer.Configurations;
 using PersistentLayer.Repositories.Abstract;
 using PersistentLayer.Repositories.Concrete;
+using Quartz.Impl;
 
 namespace ConcordiaLab;
 
@@ -41,6 +41,17 @@ public class Program
 
         mappingConfiguration.AssertConfigurationIsValid();
 
+        //***** scheduler
+        builder.Services.AddSingleton(provider =>
+        {
+            var schedulerFactory = new StdSchedulerFactory();
+            var scheduler = schedulerFactory.GetScheduler().GetAwaiter().GetResult();
+            scheduler.Start().GetAwaiter().GetResult();
+            return scheduler;
+        });
+
+        builder.Services.AddHostedService<DataSynchronizer>();
+        // *****************************************************
 
         builder.Services.AddControllersWithViews();
         builder.Services.AddHttpClient("ApiConsumer", client =>
@@ -58,10 +69,10 @@ public class Program
             cfg.AllowNullDestinationValues = true;
         });
 
-        builder.Services.AddHostedService(provider => provider.GetRequiredService<ConnectionChecker>());
+        builder.Services.AddHostedService(provider => provider.GetRequiredService<DataSynchronizer>());
         builder.Services.AddLogging();
 
-        builder.Services.AddSingleton<ConnectionChecker>();
+        builder.Services.AddSingleton<DataSynchronizer>();
         builder.Services.AddScoped<IApiSender, ApiSender>();
         builder.Services.AddScoped<IApiReceiver, ApiReceiver>();
         builder.Services.AddScoped<DataService>();
@@ -74,7 +85,6 @@ public class Program
         builder.Services.AddScoped<IScientistRepository, ScientistRepository>();
 
         builder.Services.AddTransient<IUriCreatorFactory, UriCreatorFactory>();
-        builder.Services.AddTransient<IRetrieveConnectionTimeInterval, RetrieveConnectionTimeInterval>();
         builder.Services.AddTransient<IDataHandlerFactory, DataHandlerFactory>();
         builder.Services.AddTransient<IClientService, ClientService>();
         builder.Services.AddTransient<ICommentDownloader, CommentDownloader>();
@@ -83,7 +93,7 @@ public class Program
 
 
         builder.Services.AddLogging(configure => configure.AddConsole())
-                .AddTransient<ConnectionChecker>();
+                .AddTransient<DataSynchronizer>();
 
 
         var app = builder.Build();

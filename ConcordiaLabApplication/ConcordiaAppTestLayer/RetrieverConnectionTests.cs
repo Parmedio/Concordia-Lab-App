@@ -1,5 +1,5 @@
 using BackgroundServices;
-
+using BackgroundServices.Abstract;
 using FluentAssertions;
 
 using Microsoft.Extensions.Configuration;
@@ -19,7 +19,7 @@ namespace ConcordiaAppTestLayer
             Mock.Get(_configuration).Setup(p => p.GetSection("ConnectionCheckerInfo:ConnectionIntervalInfo:initialDate").Value).Returns("2023-1-1T00:00:00.000Z");
             Mock.Get(_configuration).Setup(p => p.GetSection("ConnectionCheckerInfo:ConnectionIntervalInfo:offset").Value).Returns("00.00:8:00");
             Mock.Get(_configuration).Setup(p => p.GetSection("ConnectionCheckerInfo:ConnectionIntervalInfo:duration").Value).Returns("00:4:00");
-            _sut = new RetrieveConnectionTimeInterval(_configuration);
+            //_sut = new RetrieveConnectionTimeInterval(_configuration);
         }
 
 

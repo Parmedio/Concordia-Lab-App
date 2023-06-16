@@ -1,6 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using BackgroundServices.Abstract;
+using Microsoft.Extensions.Configuration;
 
-namespace BackgroundServices;
+namespace BackgroundServices.Concrete;
 
 public class RetrieveConnectionTimeInterval : IRetrieveConnectionTimeInterval
 {

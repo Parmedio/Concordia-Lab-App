@@ -15,5 +15,5 @@ public record Experiment(int Id = default, string TrelloId = null!, string Title
     public virtual IEnumerable<Scientist>? Scientists { get; set; }
 
     [NotMapped]
-    public virtual IEnumerable<int>? ScientistsIds { get; set; }
+    public IEnumerable<int>? ScientistsIds { get; set; }
 }

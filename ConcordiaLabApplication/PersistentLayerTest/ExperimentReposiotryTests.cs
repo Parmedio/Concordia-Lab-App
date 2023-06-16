@@ -234,10 +234,10 @@ namespace PersistentLayer.Tests
         }
 
         [Fact]
-        public void Should_Return_LabelId_By_ExperimentTrelloId()
+        public void Should_Return_LabelId_By_LabelTrelloId()
         {
-            var result = _sut.GetLocalIdLabelByTrelloIdLabel("TrelloLabelId2");
-            Assert.Equal(result, 2);
+            var result = _sut.GetLocalIdLabelByTrelloIdLabel("TrelloLabelId3");
+            Assert.Equal(result, 3);
         }
     }
 }

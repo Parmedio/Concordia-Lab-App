@@ -1,4 +1,4 @@
-﻿namespace BackgroundServices;
+﻿namespace BackgroundServices.Abstract;
 
 public interface IRetrieveConnectionTimeInterval
 {
