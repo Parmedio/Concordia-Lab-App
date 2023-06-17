@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
 using PersistentLayer.Configurations;
 using PersistentLayer.Models;
 using PersistentLayer.Repositories.Abstract;
@@ -33,20 +32,23 @@ public class ColumnRepository : IColumnRepository
 
     public IEnumerable<Column> GetByScientistId(int scientistId)
     {
+        var scientist = _dbContext.Scientists.SingleOrDefault(s => s.Id == scientistId);
+        if (scientist == null)  return Enumerable.Empty<Column>(); 
+
         var allColumns = _dbContext.Columns
-            .Include(l => l.Experiments)
-                .ThenInclude(e => e.Scientists)
-            .Include(l => l.Experiments)
-                .ThenInclude(l => l.Comments)
-            .Include(l => l.Experiments)
+            .Include(l => l.Experiments!)
+                .ThenInclude(e => e.Scientists!)
+            .Include(l => l.Experiments!)
+                .ThenInclude(l => l.Comments!)
+            .Include(l => l.Experiments!)
                 .ThenInclude(e => e.Label)
             .AsNoTracking()
             .ToList();
 
         var filteredColumns = allColumns.Select(column =>
         {
-            column.Experiments = column.Experiments.Where(experiment =>
-                experiment.Scientists.Any(scientist => scientist.Id == scientistId)).ToList();
+            column.Experiments = column.Experiments! .Where(experiment =>
+                experiment.Scientists!.Any(scientist => scientist.Id == scientistId)).ToList();
             return column;
         });
 

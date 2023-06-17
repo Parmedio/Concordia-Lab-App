@@ -1,23 +1,22 @@
 ﻿using FluentAssertions;
-
 using PersistentLayer.Configurations;
 using PersistentLayer.Repositories.Concrete;
 
 namespace ConcordiaAppTestLayer.PersistentLayerTests;
 
-public class ListReposiotoryTests
+public class ColumnReposiotoryTests
 {
     private readonly ColumnRepository _sut;
     private readonly ConcordiaDbContext _dbContext;
 
-    public ListReposiotoryTests()
+    public ColumnReposiotoryTests()
     {
         _dbContext = new TestDatabaseFixture().CreateContext();
         _sut = new ColumnRepository(_dbContext);
     }
 
     [Fact]
-    public void Should_Return_All_Lists()
+    public void Should_Return_All_Columns()
     {
         var lists = _sut.GetAll();
         Assert.Equal(3, lists.Count());
@@ -42,7 +41,7 @@ public class ListReposiotoryTests
     }
 
     [Fact]
-    public void Should_Return_Lists_Of_A_Scientist_By_ScientisId()
+    public void Should_Return_Columns_Of_A_Scientist_By_ScientisId()
     {
         var lists = _sut.GetByScientistId(1);
 
@@ -63,5 +62,19 @@ public class ListReposiotoryTests
                 experiment.Label!.VerifyAllPropertiesNotNull().Should().BeTrue();
             }
         }
+    }
+
+    [Fact]
+    public void Should_Return_Empty_List_By_ScientistId_Not_Existing()
+    {
+        var columns = _sut.GetByScientistId(0);
+        Assert.Empty(columns);
+    }
+
+    [Fact]
+    public void Should_Return_All_Columns_Simple()
+    {
+        var list = _sut.GetAllSimple();
+        Assert.Equal(3, list.Count());
     }
 }

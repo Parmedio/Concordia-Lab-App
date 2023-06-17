@@ -177,10 +177,17 @@ public class ExperimentRepositoryTests
     }
 
     [Fact]
+    public void Get_Should_Return_Null_With_Id_Not_Existing()
+    {
+        var result = _sut.GetById(0);
+        Assert.Null(result);
+    }
+
+    [Fact]
     public void Should_Return_All_Experiments()
     {
         var result = _sut.GetAll();
-        Assert.Equal(4, result.Count());
+        Assert.Equal(5, result.Count());
 
         result.ToList().ForEach(experiment =>
         {
@@ -190,18 +197,19 @@ public class ExperimentRepositoryTests
     }
 
     [Fact]
-    public void Get_Should_Return_Null_With_Id_Not_Existing()
-    {
-        var result = _sut.GetById(0);
-        Assert.Null(result);
-    }
-
-    [Fact(Skip = "specific reason")]
-    public void Should_Return_Last_Comment_Where_TrelloId_Is_Null()
+    public void Should_Return_Last_Local_Comment_Not_In_Trello_By_ExperimentId()
     {
         var comment = _sut.GetLastLocalCommentNotOnTrello(3);
         Assert.NotNull(comment);
-        Assert.True(comment.Id == 4);
+        Assert.Null(comment.TrelloId);
+        Assert.True(comment.Id == 5);
+    }
+
+    [Fact]
+    public void Should_Return_Null_When_Last_Comment_Is_In_Trello_By_ExperimentId()
+    {
+        var comment = _sut.GetLastLocalCommentNotOnTrello(2);
+        Assert.Null(comment);
     }
 
     [Fact]
