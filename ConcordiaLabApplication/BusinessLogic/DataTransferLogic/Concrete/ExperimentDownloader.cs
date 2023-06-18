@@ -1,12 +1,9 @@
 ﻿using AutoMapper;
-
 using BusinessLogic.APIConsumers.Abstract;
 using BusinessLogic.DataTransferLogic.Abstract;
 using BusinessLogic.DTOs.TrelloDtos;
 using BusinessLogic.Exceptions;
-
 using Microsoft.IdentityModel.Tokens;
-
 using PersistentLayer.Models;
 using PersistentLayer.Repositories.Abstract;
 
@@ -29,7 +26,6 @@ public class ExperimentDownloader : IExperimentDownloader
 
     public async Task<IEnumerable<Experiment>?> DownloadExperiments()
     {
-
         IEnumerable<Experiment> AddedExperiments = new List<Experiment>();
 
         var experimentsInToDoColumn = await _receiver.GetAllExperimentsInToDoColumn();

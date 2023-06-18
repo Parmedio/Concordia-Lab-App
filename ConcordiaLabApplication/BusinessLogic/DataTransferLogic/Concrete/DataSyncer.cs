@@ -1,6 +1,5 @@
 ﻿using BusinessLogic.DataTransferLogic.Abstract;
 using BusinessLogic.Exceptions;
-
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 
@@ -34,8 +33,6 @@ public class DataSyncer : IDataSyncer
                 _logger.LogInformation($"Added {task1!.Count()} new experiments. ");
             else
                 _logger.LogInformation("No experiment were added");
-
-
         }
         catch (ScientistIdNotPresentOnDatabaseException ex)
         {
@@ -83,6 +80,5 @@ public class DataSyncer : IDataSyncer
         {
             _logger.LogWarning($"Un unexpected Exception was caught while uploading local data: {ex.Message}");
         }
-
     }
 }

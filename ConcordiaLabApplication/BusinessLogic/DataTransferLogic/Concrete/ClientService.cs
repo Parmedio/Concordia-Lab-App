@@ -27,55 +27,34 @@ public class ClientService : IClientService
     }
 
     public BusinessCommentDto AddComment(BusinessCommentDto businessCommentDto, int scientistId)
-    {
-        return _dataHandler.AddComment(businessCommentDto, scientistId);
-    }
+        => _dataHandler.AddComment(businessCommentDto, scientistId);
 
     public IEnumerable<BusinessColumnDto> GetAllColumns(int scientistId)
-    {
-        return _dataHandler.GetAllColumns(scientistId);
-    }
+        => _dataHandler.GetAllColumns(scientistId);
 
-    public BusinessExperimentDto MoveExperiment(BusinessExperimentDto businessExperimentDto)
-    {
-        return _dataHandler.MoveExperiment(businessExperimentDto);
-    }
+    public BusinessExperimentDto MoveExperiment(BusinessExperimentDto businessExperimentDto) 
+        => _dataHandler.MoveExperiment(businessExperimentDto);
 
     public async Task SyncDataAsyncs()
     {
-        if (_connectionAvailable)
-        {
-            await _dataSyncer.SynchronizeAsync();
-        }
+        if (_connectionAvailable) await _dataSyncer.SynchronizeAsync();
     }
 
     public IEnumerable<BusinessColumnDto> GetAllColumns()
-    {
-        return _dataHandler.GetAllColumns();
-    }
+        => _dataHandler.GetAllColumns();
 
     public IEnumerable<BusinessExperimentDto> GetAllExperiments()
-    {
-        return _dataHandler.GetAllExperiments();
-    }
+        => _dataHandler.GetAllExperiments();
 
     public IEnumerable<BusinessExperimentDto> GetAllExperiments(int scientistId)
-    {
-        return _dataHandler.GetAllExperiments(scientistId);
-    }
+        => _dataHandler.GetAllExperiments(scientistId);
 
     public IEnumerable<BusinessScientistDto> GetAllScientist()
-    {
-        return _dataHandler.GetAllScientist();
-    }
+        => _dataHandler.GetAllScientist();
 
     public BusinessExperimentDto GetExperimentById(int experimentId)
-    {
-        return _dataHandler.GetExperimentById(experimentId);
-    }
+        => _dataHandler.GetExperimentById(experimentId);
 
     public IEnumerable<BusinessColumnDto> GetAllSimple()
-    {
-        return _dataHandler.GetAllSimple();
-    }
+        => _dataHandler.GetAllSimple();
 }

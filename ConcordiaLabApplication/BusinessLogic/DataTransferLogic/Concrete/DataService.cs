@@ -1,11 +1,8 @@
 ﻿using AutoMapper;
-
 using BusinessLogic.DataTransferLogic.Abstract;
 using BusinessLogic.DTOs.BusinessDTO;
 using BusinessLogic.Exceptions;
-
 using Microsoft.IdentityModel.Tokens;
-
 using PersistentLayer.Models;
 using PersistentLayer.Repositories.Abstract;
 
