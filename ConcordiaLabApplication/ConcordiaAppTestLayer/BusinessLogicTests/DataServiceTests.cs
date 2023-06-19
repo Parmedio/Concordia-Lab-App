@@ -38,7 +38,7 @@ public class DataServiceTests
     [Fact]
     public void AddACommentShouldWork()
     {
-        Comment comment1 = new Comment(0, null, "sono un commento", DateTime.Now, "Giovanni");
+        Comment comment1 = new Comment(0, "sono un commento", DateTime.Now, "Giovanni");
         comment1.ScientistId = 2;
         BusinessCommentDto bcomment1 = new BusinessCommentDto()
         {
@@ -69,7 +69,7 @@ public class DataServiceTests
     [Fact]
     public void AddACommentShouldThrowException()
     {
-        Comment comment1 = new Comment(0, "aaa", "sono un commento", DateTime.Now, "Thomas");
+        Comment comment1 = new Comment(0, "sono un commento", DateTime.Now, "Thomas") { TrelloId = "aaa" };
         comment1.ScientistId = 44;
         BusinessCommentDto bcomment1 = new BusinessCommentDto()
         {

@@ -49,7 +49,6 @@ public class MainProfile : Profile
         CreateMap<BusinessCommentDto, Comment>()
             .ConvertUsing(src => new Comment(
                     0,
-                    null,
                     src.CommentText,
                     DateTime.UtcNow,
                     src.CreatorName
@@ -61,11 +60,13 @@ public class MainProfile : Profile
         CreateMap<TrelloCommentDto, Comment>()
             .ConvertUsing(src => new Comment(
                     0,
-                    src.Id,
                     src.Data.Text,
                     src.Date,
                     src.MemberCreator.Username
-                ));
+                )
+            {
+                TrelloId = src.Id
+            });
 
         CreateMap<TrelloExperimentDto, Experiment>()
             .ConvertUsing(src => new Experiment(

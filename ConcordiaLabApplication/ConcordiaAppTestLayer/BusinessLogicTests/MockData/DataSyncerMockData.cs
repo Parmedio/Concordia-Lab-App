@@ -309,80 +309,21 @@ public static class DataSyncerMockData
             Date = DateTime.Parse("2023-07-02T21:00:00.000Z")
         };
 
-        comment1 = new Comment(
-            1,
-            "bbb",
-            "commeno2",
-            DateTime.Parse("2023-01-02T21:00:00.000Z"),
-            "afu"
-            )
-        {
-            ScientistId = 2,
-            ExperimentId = 1
-        };
-        comment2 = new Comment(
-            2,
-            "ddd",
-            "commento4",
-            DateTime.Parse("2023-01-02T21:00:00.000Z"),
-            "marco"
-            )
-        {
-            ScientistId = 1,
-            ExperimentId = 2
-        };
-        comment3 = new Comment(
-            3,
-            "eee",
-            "commento5",
-            DateTime.Parse("2023-01-02T21:00:00.000Z"),
-            "afu"
-            )
-        {
-            ExperimentId = 5,
-            ScientistId = 2
-        };
-        comment1map = new Comment(
-            0,
-            "aaa",
-            "commento5",
-            DateTime.Parse("2023-07-02T21:00:00.000Z"),
-            "Giovanni"
-            )
-        {
-
-        };
-        comment1added = new Comment(
-            4,
-            "aaa",
-            "commento5",
-            DateTime.Parse("2023-07-02T21:00:00.000Z"),
-            "Giovanni"
-            )
-        {
-            ExperimentId = 1,
-            ScientistId = null
-        };
-        comment2map = new Comment(
-            0,
-            "ccc",
-            "commento5",
-            DateTime.Parse("2023-07-02T21:00:00.000Z"),
-            "Francesco"
-            )
-        {
-            ExperimentId = 3
-        };
+        comment1 = new Comment(1, "commeno2", DateTime.Parse("2023-01-02T21:00:00.000Z"), "afu") { TrelloId = "bbb" };
+        comment2 = new Comment(2, "commento4", DateTime.Parse("2023-01-02T21:00:00.000Z"), "marco") { TrelloId = "ddd" };
+        comment3 = new Comment(3, "commento5", DateTime.Parse("2023-01-02T21:00:00.000Z"), "afu") { TrelloId = "eee" };
+        comment1map = new Comment(0, "commento5", DateTime.Parse("2023-07-02T21:00:00.000Z"), "Giovanni") { TrelloId = "aaa" };
+        comment1added = new Comment(4, "commento5", DateTime.Parse("2023-07-02T21:00:00.000Z"), "Giovanni") { TrelloId = "aaa" };
+        comment2map = new Comment(0, "commento5", DateTime.Parse("2023-07-02T21:00:00.000Z"), "Francesco") { TrelloId = "ccc" };
 
         comment2added = new Comment(
         5,
-        "ccc",
         "commento5",
         DateTime.Parse("2023-07-02T21:00:00.000Z"),
         "Francesco"
         )
         {
-
+            TrelloId = "ccc"
         };
 
         allCommentsOnTrello = new()
