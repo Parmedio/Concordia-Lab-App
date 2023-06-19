@@ -5,6 +5,7 @@ using ConcordiaLab.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using BusinessLogic.DTOs.BusinessDTO;
+using PersistentLayer.Models;
 
 namespace ConcordiaLab.Controllers
 {
@@ -117,9 +118,13 @@ namespace ConcordiaLab.Controllers
 
         }
 
-
-        public IActionResult Privacy()
+        public IActionResult About(int scientistId, string selectedViewMode)
         {
+            ViewData["SelectedScientistId"] = scientistId;
+            ViewData["Scientists"] = _allScientist;
+
+            ViewData["ViewMode"] = _viewMode;
+            ViewData["SelectedViewMode"] = selectedViewMode;
             return View();
         }
 
