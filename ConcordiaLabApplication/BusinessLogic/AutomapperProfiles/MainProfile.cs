@@ -23,7 +23,7 @@ public class MainProfile : Profile
         CreateMap<Scientist, BusinessScientistDto>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.TrelloToken, opt => opt.MapFrom(src => src.TrelloToken))
-            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name));
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => FromatScientistName(src.Name)));
 
         CreateMap<Experiment, BusinessExperimentDto>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
@@ -75,5 +75,19 @@ public class MainProfile : Profile
                     src.Name,
                     src.Desc,
                     src.Due.ConvertToAntartideTimeZone()));
+    }
+
+    public static string FromatScientistName(string completeName)
+    {
+        int indexOfFirstSpace = completeName.IndexOf(' ');
+        if (indexOfFirstSpace < 0)
+        {
+            return completeName;
+        }
+
+        string name = completeName.Substring(0, 1).ToUpper() + ".";
+        string surname = completeName.Substring(indexOfFirstSpace + 1);
+
+        return $"{name} {surname}";
     }
 }
