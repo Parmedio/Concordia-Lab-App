@@ -14,8 +14,8 @@
     .Select(s => s.UserName)
     .FirstOrDefault();
 
-    var canChangeStatus = (experimentScientistIds!.Contains((int)selectedScientistId!) || experimentScientistIds.Contains(0)) ? "" : "disabled=\"true\"";
-    var canComment = (experimentScientistIds!.Contains((int)selectedScientistId!) && (int)selectedScientistId != 0) ? "" : "disabled=\"true\"";
+    var canChangeStatus = (experimentScientistIds!.Contains((int)selectedScientistId!) || experimentScientistIds.Contains(0)) ? "" : "disabled=true";
+    var canComment = (experimentScientistIds!.Contains((int)selectedScientistId!) && (int)selectedScientistId != 0) ? "" : "disabled=true";
 
     var selectedViewMode = ViewData["SelectedViewMode"] as string ?? string.Empty;
     var progressStatuses = ViewData["ProgressStatuses"] as List<ViewMColumn>;
@@ -40,49 +40,37 @@
                 }
             }
         </h6>
-
         <div>
-            <h6 class="card-subtitle mb-2">
+            <h6 class="card-subtitle">
                 <b>Last comment:</b><br />
             </h6>
             <p>@experiment.LastComment</p>
         </div>
-
-
-
-
         <div>
-            <button id="leaveCommentButton" onclick="enableCommentField()" @canComment>
+            <button class="btn btn-outline-primary mb-2" id="leaveCommentButton" onclick="enableCommentField()" @canComment>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" viewBox="0 0 16 16">
                     <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
                     <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
                 </svg>
             </button>
         </div>
-
-        <form id="comment-form"  method="post" asp-controller="Home" asp-action="PostNewComment">
+        <form id="comment-form" method="post" asp-controller="Home" asp-action="PostNewComment">
             <input type="hidden" name="experimentId" value="@ViewData["ExperimentId"]" />
             <input type="hidden" name="selectedViewMode" value="@ViewData["SelectedViewMode"]" />
             <input type="hidden" name="scientistId" value="@ViewData["SelectedScientistId"]" />
             <input type="hidden" name="commentAuthorName" value="@commentAuthorName" />
-            <div id="commentContainer" style="display: none;">
-                <textarea name="commentText" id="commentText" rows="4" cols="50"></textarea>
-
+            <div id="commentContainer" style="display: none; flex-direction: column;">
+                <textarea class="mb-2 rounded-2" name="commentText" id="commentText" rows="4" cols="60"></textarea>
                 <a class="btn btn-outline-primary" onclick="document.getElementById('comment-form').submit()">post new comment</a>
             </div>
         </form>
-
-
-
-
         <div>
-            <h6 class="card-subtitle mb-2">
+            <h6 class="card-subtitle my-2">
                 <b>Description:</b><br />
             </h6>
             <p>@experiment.Description</p>
         </div>
         <div class="d-flex">
-
             <div class="d-flex align-items-center w-50 bg-custom me-1 rounded-2">
                 <svg class="segment" xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M6 2a.5.5 0 0 1 .47.33L10 12.036l1.53-4.208A.5.5 0 0 1 12 7.5h3.5a.5.5 0 0 1 0 1h-3.15l-1.88 5.17a.5.5 0 0 1-.94 0L6 3.964 4.47 8.171A.5.5 0 0 1 4 8.5H.5a.5.5 0 0 1 0-1h3.15l1.88-5.17A.5.5 0 0 1 6 2Z" />
@@ -91,7 +79,6 @@
                     <input type="hidden" name="experimentId" value="@ViewData["ExperimentId"]" />
                     <input type="hidden" name="selectedViewMode" value="@ViewData["SelectedViewMode"]" />
                     <input type="hidden" name="scientistId" value="@ViewData["SelectedScientistId"]" />
-
                     <select id="status-dropdown" class="form-select" name="statusId" onchange="document.getElementById('status-form').submit()" @canChangeStatus>
                         @foreach (var status in progressStatuses!)
                         {
@@ -117,7 +104,7 @@
     </div>
 </div>
 
-<a class="btn btn-outline-primary" asp-action="@(selectedViewMode == "status" ? "index" : selectedViewMode)" asp-route-scientistId="@selectedScientistId">go back</a>
+<a class="btn btn-outline-primary ms-2 mt-2" asp-action="@(selectedViewMode == "status" ? "index" : selectedViewMode)" asp-route-scientistId="@selectedScientistId">go back</a>
 
 <style>
     .experiment-title {
@@ -227,6 +214,6 @@
 
     function enableCommentField() {
         var commentContainer = document.getElementById("commentContainer");
-        commentContainer.style.display = "block";
+        commentContainer.style.display = commentContainer.style.display == "flex" ? "none" : "flex";
     }
 </script>

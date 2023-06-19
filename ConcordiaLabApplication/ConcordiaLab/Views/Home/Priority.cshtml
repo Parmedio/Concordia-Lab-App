@@ -121,6 +121,15 @@
         margin: 6px;
     }
 
+    .none {
+        color: white;
+        background-color: white;
+    }
+
+    .present {
+        background-color: white
+    }
+
     .segment {
         width: 32%;
         display: flex;
@@ -192,5 +201,21 @@
         }
 
         z--;
+    }
+
+    var elementsD = document.getElementsByClassName('due-date');
+    var k = elementsD.length - 1;
+
+    while (k >= 0) {
+        var elementD = elementsD[k];
+        var date = elementD.innerText.trim();
+
+        if (date === 'no date') {
+            elementD.classList.add('none');
+        } else {
+            elementD.classList.add('present');
+        }
+
+        k--;
     }
 </script>
