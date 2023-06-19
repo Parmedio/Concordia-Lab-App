@@ -28,10 +28,10 @@ public class ExperimentDownloader : IExperimentDownloader
         _mapper = mapper;
     }
 
-    public async Task<(IEnumerable<Experiment>?, string)> DownloadExperiments()
+    public async Task<SyncResult<Experiment>> DownloadExperiments()
     {
 
-        (IEnumerable<Experiment>?, string) AddedExperiments = (new List<Experiment>(), string.Empty);
+        SyncResult<Experiment> AddedExperiments = new SyncResult<Experiment>();
 
         var experimentsInToDoColumn = await _receiver.GetAllExperimentsInToDoColumn();
 
@@ -39,12 +39,13 @@ public class ExperimentDownloader : IExperimentDownloader
         {
             var resultOfSyncNewExperiments = SyncDatabaseWithAllExperimentsInToDoColumn(experimentsInToDoColumn!);
             AddedExperiments = resultOfSyncNewExperiments;
+            return AddedExperiments;
         }
-
+        AddedExperiments.AppendLine("No experiments found on Trello");
         return AddedExperiments;
     }
 
-    private (IEnumerable<Experiment>, string) SyncDatabaseWithAllExperimentsInToDoColumn(IEnumerable<TrelloExperimentDto> experiments)
+    private SyncResult<Experiment> SyncDatabaseWithAllExperimentsInToDoColumn(IEnumerable<TrelloExperimentDto> experiments)
     {
         StringBuilder infoMessage = new StringBuilder();
         List<Experiment> addedExperiments = new List<Experiment>();
@@ -53,7 +54,7 @@ public class ExperimentDownloader : IExperimentDownloader
         infoMessage.AppendLine("======================================");
         foreach (var experiment in experiments)
         {
-            infoMessage.Append($"{$" - {experiment.Name}",-30}");
+            infoMessage.Append($"{$" - {experiment.Name}",-50}");
             if (_experimentRepository.GetLocalIdByTrelloId(experiment.Id!) is null)
             {
                 var experimentToAdd = _mapper.Map<TrelloExperimentDto, Experiment>(experiment);
@@ -88,6 +89,6 @@ public class ExperimentDownloader : IExperimentDownloader
         infoMessage.AppendLine("Download ended successfully");
         infoMessage.AppendLine($"{addedExperiments.Count()} Were added.");
         infoMessage.AppendLine("======================================");
-        return (addedExperiments.AsEnumerable(), infoMessage.ToString());
+        return new SyncResult<Experiment>(addedExperiments, infoMessage);
     }
 }

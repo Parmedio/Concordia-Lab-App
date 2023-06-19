@@ -1,8 +1,10 @@
-﻿using PersistentLayer.Models;
+﻿using BusinessLogic.DataTransferLogic.Concrete;
+
+using PersistentLayer.Models;
 
 namespace BusinessLogic.DataTransferLogic.Abstract;
 
 public interface IExperimentDownloader
 {
-    Task<(IEnumerable<Experiment>?, string)> DownloadExperiments();
+    Task<SyncResult<Experiment>> DownloadExperiments();
 }

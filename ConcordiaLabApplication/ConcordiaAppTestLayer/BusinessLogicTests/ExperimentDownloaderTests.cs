@@ -51,7 +51,7 @@ public class ExperimentDownloaderTests
         Mock.Get(_experimentRepository).Setup(p => p.GetLocalIdLabelByTrelloIdLabel("tough")).Returns(3);
         Mock.Get(_experimentRepository).Setup(p => p.Add(DataSyncerMockData.experimentAdded)).Returns(DataSyncerMockData.experiment4);
 
-        _experimentDownloader.DownloadExperiments().Result.Item1.Should().Equal(DataSyncerMockData.ExpectedResult1.Item2);
+        _experimentDownloader.DownloadExperiments().Result.Items.Should().Equal(DataSyncerMockData.ExpectedResult1.Item2);
     }
 
     [Fact]
@@ -75,7 +75,7 @@ public class ExperimentDownloaderTests
         Mock.Get(_experimentRepository).Setup(p => p.Add(It.Is<Experiment>(p => p.TrelloId == "eee"))).Returns(mockData.AddedExperiment5NewWithInfo);
 
         var result = _experimentDownloader.DownloadExperiments().Result;
-        result.Item1.Should().Equal(mockData.AddedExperiments);
+        result.Items.Should().Equal(mockData.AddedExperiments);
 
     }
 
@@ -86,7 +86,7 @@ public class ExperimentDownloaderTests
         Mock.Get(_apiReceiver).Setup(p => p.GetAllExperimentsInToDoColumn()).ReturnsAsync(value: null);
 
         var result = _experimentDownloader.DownloadExperiments().Result;
-        result.Item1.Should().HaveCount(0);
+        result.Items.Should().HaveCount(0);
     }
 
 

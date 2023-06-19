@@ -1,6 +1,10 @@
-﻿namespace BusinessLogic.DataTransferLogic.Abstract;
+﻿using BusinessLogic.DataTransferLogic.Concrete;
+
+using PersistentLayer.Models;
+
+namespace BusinessLogic.DataTransferLogic.Abstract;
 
 public interface IUploader
 {
-    Task Upload();
+    public Task<SyncResult<Experiment>> Upload();
 }
