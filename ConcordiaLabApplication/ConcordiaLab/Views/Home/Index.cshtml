@@ -30,8 +30,8 @@
                             @{
                                 if (experiment.Scientists!.Any())
                                 {
-                                    var scientistsCount = experiment.Scientists.Count();
-                                    var scientistsList = string.Join(", ", experiment.Scientists.Select(s => $"{s.UserName}"));
+                                    var scientistsCount = experiment.Scientists!.Count();
+                                    var scientistsList = string.Join(", ", experiment.Scientists!.Select(s => $"{s.UserName}"));
 
                                     if (scientistsCount > 0)
                                     {

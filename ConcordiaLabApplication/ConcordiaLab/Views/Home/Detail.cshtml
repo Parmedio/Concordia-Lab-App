@@ -10,9 +10,9 @@
     var experimentScientistIds = ViewData["ExperimentScientistIds"] as List<int>;
 
     var commentAuthorName = experiment.Scientists?
-    .Where(s => s.Id == (int)selectedScientistId!)
-    .Select(s => s.UserName)
-    .FirstOrDefault();
+        .Where(s => s.Id == (int)selectedScientistId!)
+        .Select(s => s.UserName)
+        .FirstOrDefault();
 
     var canChangeStatus = (experimentScientistIds!.Contains((int)selectedScientistId!) || experimentScientistIds.Contains(0)) ? "" : "disabled=true";
     var canComment = (experimentScientistIds!.Contains((int)selectedScientistId!) && (int)selectedScientistId != 0) ? "" : "disabled=true";
@@ -42,8 +42,9 @@
         </h6>
         <div>
             <h6 class="card-subtitle">
-                <b>Last comment:</b><br />
+                <b>Last comment</b>@(experiment.AuthorComment?.Any() ?? false ? $" ({experiment.AuthorComment})" : string.Empty)<b>:</b><br />
             </h6>
+
             <p>@experiment.LastComment</p>
         </div>
         <div>
