@@ -297,68 +297,24 @@ public class DataSyncerMockData2
 
         };
 
-        LocalComment1OnCard1 = new Comment(
-            1,
-            "aaa",
-            "primoCommentoVecchio",
-            DateTime.Parse("2022-4-11T12:00:00.000Z"),
-            "external1")
-        {
-            ExperimentId = 1
-        };
+        LocalComment1OnCard1 = new Comment(1, "primoCommentoVecchio", DateTime.Parse("2022-4-11T12:00:00.000Z"), "external1") { TrelloId = "aaa" };
 
-        LocalComment1OnCard2 = new Comment(
-            2,
-            "bbb",
-            "secondoCommentoVecchio",
-            DateTime.Parse("2022-4-11T12:00:00.000Z"),
-            "afu")
-        {
-            ExperimentId = 2,
-            ScientistId = 1
-        };
+        LocalComment1OnCard2 = new Comment(2, "secondoCommentoVecchio", DateTime.Parse("2022-4-11T12:00:00.000Z"), "afu") { TrelloId = "bbb" };
 
-        LocalComment1OnCard3 = new Comment(
-            3,
-            "ccc",
-            "terzoCommentoVecchio",
-            DateTime.Parse("2022-4-11T12:00:00.000Z"),
-            "marco")
-        {
-            ExperimentId = 3,
-            ScientistId = 2
-
-        };
+        LocalComment1OnCard3 = new Comment(3, "terzoCommentoVecchio", DateTime.Parse("2022-4-11T12:00:00.000Z"), "marco") { TrelloId = "ccc" };
 
         MappedComment1OnCard5New = new Comment(
             0,
-            "ddd",
             "primoCommentoVecchio",
             DateTime.Parse("2022-4-11T12:00:00.000Z"),
             "external2")
         {
-
+            TrelloId = "ddd"
         };
 
-        ToBeAddedComment1OnCard5NewWithInfo = new Comment(
-            0,
-            "ddd",
-            "primoCommentoVecchio",
-            DateTime.Parse("2022-4-11T12:00:00.000Z"),
-            "external2")
-        {
-            ExperimentId = 5
-        };
+        ToBeAddedComment1OnCard5NewWithInfo = new Comment(0, "primoCommentoVecchio", DateTime.Parse("2022-4-11T12:00:00.000Z"), "external2") { TrelloId = "ddd" };
 
-        AddedComment1OnCard5NewWithInfo = new Comment(
-            4,
-            "ddd",
-            "primoCommentoVecchio",
-            DateTime.Parse("2022-4-11T12:00:00.000Z"),
-            "external1")
-        {
-            ExperimentId = 5
-        };
+        AddedComment1OnCard5NewWithInfo = new Comment(4, "primoCommentoVecchio", DateTime.Parse("2022-4-11T12:00:00.000Z"), "external1") { TrelloId = "ddd" };
 
         ExperimentsInToDoList = new List<TrelloExperimentDto>()
         {

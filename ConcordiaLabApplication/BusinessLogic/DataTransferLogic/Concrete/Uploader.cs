@@ -57,9 +57,8 @@ public class Uploader : IUploader
                 result.Append($"{$"        - \"{string.Concat(commentToAdd.Body.Take(15))}...\"",-50}");
                 try
                 {
-                    var trelloId = await _sender.AddAComment(experiment.TrelloId, commentToAdd!.Body, commentToAdd.Scientist!.TrelloToken);
-                    Comment updatedComment = CreateUpdatedComment(commentToAdd, trelloId);
-                    _commentRepository.UpdateAComment(updatedComment);
+                    commentToAdd.TrelloId = await _sender.AddAComment(experiment.TrelloId, commentToAdd!.Body, commentToAdd.Scientist!.TrelloToken);
+                    _commentRepository.UpdateAComment(commentToAdd.Id, commentToAdd.TrelloId);
                     result.AppendLine(" => Upload successful");
                     addedCommentsCount++;
                 }
@@ -73,22 +72,9 @@ public class Uploader : IUploader
         }
         result.AppendLine("======================================");
         result.AppendLine("Uploaded ended successfully");
-        result.AppendLine($"{addedExperimentsCount} Experiments were added.");
+        result.AppendLine($"{addedExperimentsCount} Experiments were updated.");
         result.AppendLine($"{addedCommentsCount} Comments were added.");
         result.AppendLine("======================================");
         return result;
     }
-
-    private Comment CreateUpdatedComment(Comment comment, string trelloId)
-        => new Comment(
-                    comment.Id,
-                    trelloId,
-                    comment.Body,
-                    comment.Date,
-                    comment.CreatorName
-                    )
-        {
-            ScientistId = comment.ScientistId,
-            ExperimentId = comment.ExperimentId
-        };
 }
