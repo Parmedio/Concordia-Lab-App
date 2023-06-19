@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+
 using PersistentLayer.Configurations;
 using PersistentLayer.Models;
 using PersistentLayer.Repositories.Abstract;
@@ -26,10 +27,15 @@ public class CommentRepository : ICommentRepository
         .Include(c => c.Scientist)
         .SingleOrDefault(c => c.TrelloId == trelloId);
 
-    public Comment UpdateAComment(Comment comment)
+    public Comment? UpdateAComment(int id, string trelloId)
     {
-        var entity = _dbContext.Update(comment);
-        _dbContext.SaveChanges();
-        return entity.Entity;
+        var entity = _dbContext.Comments.SingleOrDefault(p => p.Id == id) ?? null;
+        if (entity is not null)
+        {
+            _dbContext.Update(entity);
+            entity.TrelloId = trelloId;
+            _dbContext.SaveChanges();
+        }
+        return entity;
     }
 }
