@@ -1,5 +1,4 @@
 ﻿using BusinessLogic.DataTransferLogic.Abstract;
-using BusinessLogic.Exceptions;
 
 using Microsoft.IdentityModel.Tokens;
 
@@ -21,32 +20,63 @@ public class Uploader : IUploader
         _commentRepository = commentRepository;
     }
 
-    public async Task Upload()
+    public async Task<SyncResult<Experiment>> Upload()
     {
+        SyncResult<Experiment> result = new SyncResult<Experiment>();
         var experiments = _experimentRepository.GetAll().ToList();
-        await SyncTrelloWithAllUpdates(experiments);
+        result = await SyncTrelloWithAllUpdates(experiments);
+        return result;
     }
 
-    private async Task SyncTrelloWithAllUpdates(IEnumerable<Experiment> experiments)
+    private async Task<SyncResult<Experiment>> SyncTrelloWithAllUpdates(IEnumerable<Experiment> experimentsToUpload)
     {
+        int addedCommentsCount = 0;
+        int addedExperimentsCount = 0;
+        List<Experiment> experiments = experimentsToUpload.ToList();
+        SyncResult<Experiment> result = new SyncResult<Experiment>();
+        result.AppendLine($"Found {experiments.Count()} experiment to upload.");
+        result.AppendLine("======================================");
         foreach (var experiment in experiments)
         {
+            result.Append($"{$" - {experiment.Title}",-50}");
             if (!await _sender.UpdateAnExperiment(experiment.TrelloId, experiment.Column!.TrelloId))
-                throw new UploadFailedException($"The process failed while uploading experiments. Failed at experiment: {experiment.Title}");
-
+            {
+                result.AppendLine($" => The process failed while uploading experiments. Failed at experiment: {experiment.Title}");
+                continue;
+            }
+            addedExperimentsCount++;
             Comment? commentToAdd = null;
             if (!experiment.Comments.IsNullOrEmpty())
             {
+                result.AppendLine(" => Upload successful");
                 commentToAdd = _experimentRepository.GetLastLocalCommentNotOnTrello(experiment.Id);
 
                 if (commentToAdd is null)
                     continue;
 
-                var trelloId = await _sender.AddAComment(experiment.TrelloId, commentToAdd!.Body, commentToAdd.Scientist!.TrelloToken);
-                Comment updatedComment = CreateUpdatedComment(commentToAdd, trelloId);
-                _commentRepository.UpdateAComment(updatedComment);
+                result.Append($"{$"        - \"{string.Concat(commentToAdd.Body.Take(15))}...\"",-50}");
+                try
+                {
+                    var trelloId = await _sender.AddAComment(experiment.TrelloId, commentToAdd!.Body, commentToAdd.Scientist!.TrelloToken);
+                    Comment updatedComment = CreateUpdatedComment(commentToAdd, trelloId);
+                    _commentRepository.UpdateAComment(updatedComment);
+                    result.AppendLine(" => Upload successful");
+                    addedCommentsCount++;
+                }
+                catch (Exception ex)
+                {
+                    result.AppendLine($" => Upload Failed: {ex.Message}");
+                }
             }
+            else
+                result.AppendLine(" => Upload successful");
         }
+        result.AppendLine("======================================");
+        result.AppendLine("Uploaded ended successfully");
+        result.AppendLine($"{addedExperimentsCount} Experiments were added.");
+        result.AppendLine($"{addedCommentsCount} Comments were added.");
+        result.AppendLine("======================================");
+        return result;
     }
 
     private Comment CreateUpdatedComment(Comment comment, string trelloId)

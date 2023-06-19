@@ -109,9 +109,20 @@ public class DataServiceTests
     }
 
     [Fact]
+    public void GetAllSimpleShouldReturnTheProperColumns()
+    {
+        Mock.Get(_columnRepository).Setup(p => p.GetAllSimple()).Returns(DataServiceMockData.allColumns);
+        Mock.Get(_mapper).Setup(p => p.Map<IEnumerable<Column>, IEnumerable<BusinessColumnDto>>(It.IsAny<IEnumerable<Column>>())).Returns(DataServiceMockData.allbColumn);
+
+        _sut.GetAllColumns().Should().Equal(DataServiceMockData.allbColumn, (p, g) => p.Id == g.Id);
+        _sut.GetAllColumns().Should().HaveCount(1);
+        _sut.GetAllColumns().FirstOrDefault()!.Experiments.Should().HaveCount(p => p == 2);
+    }
+
+    [Fact]
     public void GetAllColumnshouldThrowException()
     {
-        Mock.Get(_columnRepository).Setup(p => p.GetAll()).Returns(value: null);
+        Mock.Get(_columnRepository).Setup(p => p.GetAll()).Returns(new List<Column>() { });
         Mock.Get(_mapper).Setup(p => p.Map<IEnumerable<BusinessColumnDto>?>(_columnRepository.GetAll())).Returns(value: null);
 
         _sut.Invoking(p => p.GetAllColumns(2)).Should().Throw<ColumnsNumberException>().WithMessage("The database has no lists.");
