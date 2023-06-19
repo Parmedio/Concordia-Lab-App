@@ -52,12 +52,14 @@ public class DataServiceTests
         };
 
         Scientist scientistWithId2 = new Scientist(2, "TrelloToken", "TrelloMemberId", "Giovanni");
+        BusinessScientistDto businessScientistDto = new BusinessScientistDto() { Id = 2, Name = "Giovanni", TrelloToken = "TrelloToken" };
         Experiment experimentThatContainsComment = new Experiment(1, "TrelloCardId", "Esperimento di Prova", null, null);
 
         Mock.Get(_mapper).Setup(p => p.Map<Comment>(bcomment1)).Returns(comment1);
         comment1.Scientist = scientistWithId2;
         comment1.Experiment = experimentThatContainsComment;
         Mock.Get(_commentRepository).Setup(p => p.AddComment(comment1)).Returns(comment1);
+        Mock.Get(_mapper).Setup(p => p.Map<Scientist?, BusinessScientistDto?>(It.Is<Scientist>(p => p.Id == 2))).Returns(businessScientistDto);
         var result = _sut.AddComment(bcomment1, 2);
         result.CreatorName.Should().Be("Giovanni");
         result.Id.Should().Be(0);

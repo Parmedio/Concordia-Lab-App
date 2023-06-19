@@ -28,11 +28,10 @@ public class Uploader : IUploader
         return result;
     }
 
-    private async Task<SyncResult<Experiment>> SyncTrelloWithAllUpdates(IEnumerable<Experiment> experimentsToUpload)
+    private async Task<SyncResult<Experiment>> SyncTrelloWithAllUpdates(IEnumerable<Experiment> experiments)
     {
         int addedCommentsCount = 0;
         int addedExperimentsCount = 0;
-        List<Experiment> experiments = experimentsToUpload.ToList();
         SyncResult<Experiment> result = new SyncResult<Experiment>();
         result.AppendLine($"Found {experiments.Count()} experiment to upload.");
         result.AppendLine("======================================");
