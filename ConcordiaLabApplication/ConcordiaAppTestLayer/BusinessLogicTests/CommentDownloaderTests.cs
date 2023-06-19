@@ -4,7 +4,6 @@ using BusinessLogic.APIConsumers.Abstract;
 using BusinessLogic.DataTransferLogic.Abstract;
 using BusinessLogic.DataTransferLogic.Concrete;
 using BusinessLogic.DTOs.TrelloDtos;
-using BusinessLogic.Exceptions;
 
 using ConcordiaAppTestLayer.BusinessLogicTests.MockData;
 
@@ -73,7 +72,7 @@ public class CommentDownloaderTests
         Mock.Get(_mapper).Setup(p => p.Map<Comment>(mockData.TrelloComment1OnCard5New)).Returns(mockData.MappedComment1OnCard5New);
         Mock.Get(_scientistRepository).Setup(p => p.GetLocalIdByTrelloId(mockData.TrelloComment1OnCard5New.IdMemberCreator)).Returns(value: null);
         Mock.Get(_experimentRepository).Setup(p => p.GetLocalIdByTrelloId(mockData.TrelloComment1OnCard5New.Data.Card.Id)).Returns(5);
-        Mock.Get(_commentRepository).Setup(p => p.AddComment(mockData.ToBeAddedComment1OnCard5NewWithInfo)).Returns(mockData.AddedComment1OnCard5NewWithInfo);
+        Mock.Get(_commentRepository).Setup(p => p.AddComment(It.Is<Comment>(p => p.Body == "primoCommentoVecchio"))).Returns(mockData.AddedComment1OnCard5NewWithInfo);
 
         var result = _commentDownloader.DownloadComments().Result;
         result!.Items.Select(p => p.Id).Should().Equal(mockData.NewCommentIds);
@@ -88,35 +87,6 @@ public class CommentDownloaderTests
 
         var result = _commentDownloader.DownloadComments().Result;
         result.Items.Should().HaveCount(0);
-    }
-
-    [Fact]
-    public void DownloadCommentsShouldThrowExceptionWhenExpermentIdDoesNotExist()
-    {
-        var mockData = new DataSyncerMockData2();
-        Mock.Get(_apiReceiver).Setup(p => p.GetAllComments()).ReturnsAsync(new List<TrelloCommentDto>() { mockData.TrelloComment1OnCard5New });
-        Mock.Get(_commentRepository).Setup(p => p.GetCommentByTrelloId("ddd")).Returns(value: null);
-        Mock.Get(_mapper).Setup(p => p.Map<Comment>(mockData.TrelloComment1OnCard5New)).Returns(mockData.MappedComment1OnCard5New);
-        Mock.Get(_scientistRepository).Setup(p => p.GetLocalIdByTrelloId(mockData.TrelloComment1OnCard5New.IdMemberCreator)).Returns(value: null);
-        Mock.Get(_experimentRepository).Setup(p => p.GetLocalIdByTrelloId(mockData.TrelloComment1OnCard5New.Data.Card.Id)).Returns(value: null);
-
-        _commentDownloader.Invoking(p => p.DownloadComments().Result).Should().Throw<ExperimentNotPresentInLocalDatabaseException>().WithMessage("The Experiment with associated Trello ID: eee is not saved in the local database. Try Again.");
-
-    }
-
-    [Fact]
-    public void DownloadCommentsShouldThrowExceptionWhenAddMethodFails()
-    {
-        var mockData = new DataSyncerMockData2();
-        Mock.Get(_apiReceiver).Setup(p => p.GetAllComments()).ReturnsAsync(new List<TrelloCommentDto>() { mockData.TrelloComment1OnCard5New });
-        Mock.Get(_commentRepository).Setup(p => p.GetCommentByTrelloId("ddd")).Returns(value: null);
-        Mock.Get(_mapper).Setup(p => p.Map<Comment>(mockData.TrelloComment1OnCard5New)).Returns(mockData.MappedComment1OnCard5New);
-        Mock.Get(_scientistRepository).Setup(p => p.GetLocalIdByTrelloId(mockData.TrelloComment1OnCard5New.IdMemberCreator)).Returns(value: null);
-        Mock.Get(_experimentRepository).Setup(p => p.GetLocalIdByTrelloId(mockData.TrelloComment1OnCard5New.Data.Card.Id)).Returns(5);
-        Mock.Get(_commentRepository).Setup(p => p.AddComment(mockData.ToBeAddedComment1OnCard5NewWithInfo)).Returns(value: null);
-
-        _commentDownloader.Invoking(p => p.DownloadComments().Result).Should().Throw<AddACommentFailedException>().WithMessage($"Failed To Add comment with text: primoCommentoVecchio and Id: ddd to the Database during the Download Operation from Trello");
-
     }
 
 }

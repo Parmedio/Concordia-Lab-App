@@ -53,6 +53,7 @@ public class DataSyncerMockData2
             )
         {
             LabelId = 1,
+            Column = new Column(1, "aaa", "To Do"),
             ColumnId = 1,
             ScientistsIds = new List<int>() { 1 }
         };

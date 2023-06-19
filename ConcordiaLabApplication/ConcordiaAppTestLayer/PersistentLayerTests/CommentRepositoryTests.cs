@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+
 using PersistentLayer.Configurations;
 using PersistentLayer.Models;
 using PersistentLayer.Repositories.Concrete;
@@ -74,14 +75,14 @@ public class CommentRepositoryTests
 
         var commentUpdated = oldComment! with { Body = "test", CreatorName = "Gabriele", ExperimentId = 2, ScientistId = 3, Date = DateTime.Now };
 
-        var commentResult = _sut.UpdateAComment(commentUpdated);
+        var commentResult = _sut.UpdateAComment(commentUpdated.Id, oldComment.TrelloId!); ;
 
         Assert.NotNull(commentResult);
         Assert.Equal(oldComment.Id, commentResult.Id);
         Assert.Equal(oldComment.TrelloId, commentResult.TrelloId);
-        Assert.Equal("test", commentResult.Body);
-        Assert.Equal("Gabriele", commentResult.CreatorName);
-        Assert.Equal(2, commentResult.ExperimentId);
+        Assert.Equal("This is the first comment.", commentResult.Body);
+        Assert.Equal("Alessandro", commentResult.CreatorName);
+        Assert.Equal(1, commentResult.ExperimentId);
 
         transaction.Rollback();
     }
