@@ -1,6 +1,10 @@
-﻿namespace BusinessLogic.DataTransferLogic.Abstract;
+﻿using BusinessLogic.DataTransferLogic.Concrete;
+
+using PersistentLayer.Models;
+
+namespace BusinessLogic.DataTransferLogic.Abstract;
 
 public interface ICommentDownloader
 {
-    Task<IEnumerable<int>?> DownloadComments();
+    Task<SyncResult<Comment>> DownloadComments();
 }

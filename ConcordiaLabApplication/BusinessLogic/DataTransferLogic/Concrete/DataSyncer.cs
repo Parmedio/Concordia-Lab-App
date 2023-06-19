@@ -1,7 +1,6 @@
 ﻿using BusinessLogic.DataTransferLogic.Abstract;
-using BusinessLogic.Exceptions;
+
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
 
 namespace BusinessLogic.DataTransferLogic.Concrete;
 
@@ -26,17 +25,8 @@ public class DataSyncer : IDataSyncer
         try
         {
             _logger.LogInformation("Download experiments from Trello started...");
-            var task1 = await _experimentDownloader.DownloadExperiments();
-
-            _logger.LogInformation("Experiments' download was completed successfully. ");
-            if (!task1.IsNullOrEmpty())
-                _logger.LogInformation($"Added {task1!.Count()} new experiments. ");
-            else
-                _logger.LogInformation("No experiment were added");
-        }
-        catch (ScientistIdNotPresentOnDatabaseException ex)
-        {
-            _logger.LogWarning($"An exception was caught while downloading experiments: {ex.Message}");
+            var downloader = await _experimentDownloader.DownloadExperiments();
+            _logger.LogInformation(downloader.Message);
         }
         catch (Exception ex)
         {
@@ -46,20 +36,8 @@ public class DataSyncer : IDataSyncer
         try
         {
             _logger.LogInformation("Download comments from Trello started...");
-            var task2 = await _commentDownloader.DownloadComments();
-            _logger.LogInformation("Comments' download was completed successfully. ");
-            if (!task2.IsNullOrEmpty())
-                _logger.LogInformation($"Added {task2!.Count()} new experiments. ");
-            else
-                _logger.LogInformation("No comments were added");
-        }
-        catch (ExperimentNotPresentInLocalDatabaseException ex)
-        {
-            _logger.LogWarning($"An exception was caught while downloading comments: {ex.Message}");
-        }
-        catch (AddACommentFailedException ex)
-        {
-            _logger.LogWarning($"An exception was caught while downloading comments: {ex.Message}");
+            var commentsDownloader = await _commentDownloader.DownloadComments();
+            _logger.LogInformation(commentsDownloader.Message);
         }
         catch (Exception ex)
         {
@@ -69,12 +47,8 @@ public class DataSyncer : IDataSyncer
         try
         {
             _logger.LogInformation("Upload to Trello started...");
-            await _uploader.Upload();
-            _logger.LogInformation("Uploaded completed successfully");
-        }
-        catch (UploadFailedException ex)
-        {
-            _logger.LogWarning($"An exception was caught while uploading local data: {ex.Message}");
+            var uploadLog = await _uploader.Upload();
+            _logger.LogInformation(uploadLog.Message);
         }
         catch (Exception ex)
         {

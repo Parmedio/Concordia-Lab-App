@@ -57,7 +57,7 @@ public class CommentDownloaderTests
         Mock.Get(_commentRepository).Setup(p => p.AddComment(DataSyncerMockData.comment2map)).Returns(DataSyncerMockData.comment2);
 
 
-        _commentDownloader.DownloadComments().Result.Should().Equal(DataSyncerMockData.ExpectedResult1.Item1);
+        _commentDownloader.DownloadComments().Result.Items.Select(p => p.Id).Should().Equal(DataSyncerMockData.ExpectedResult1.Item1);
 
     }
 
@@ -76,7 +76,7 @@ public class CommentDownloaderTests
         Mock.Get(_commentRepository).Setup(p => p.AddComment(mockData.ToBeAddedComment1OnCard5NewWithInfo)).Returns(mockData.AddedComment1OnCard5NewWithInfo);
 
         var result = _commentDownloader.DownloadComments().Result;
-        result!.Should().Equal(mockData.NewCommentIds);
+        result!.Items.Select(p => p.Id).Should().Equal(mockData.NewCommentIds);
 
     }
 
@@ -87,7 +87,7 @@ public class CommentDownloaderTests
         Mock.Get(_apiReceiver).Setup(p => p.GetAllComments()).ReturnsAsync(new List<TrelloCommentDto>());
 
         var result = _commentDownloader.DownloadComments().Result;
-        result.Should().Equal(null);
+        result.Items.Should().HaveCount(0);
     }
 
     [Fact]
