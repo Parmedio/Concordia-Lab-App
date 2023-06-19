@@ -1,11 +1,8 @@
 ﻿using AutoMapper;
-
 using BusinessLogic.APIConsumers.Abstract;
 using BusinessLogic.DataTransferLogic.Abstract;
 using BusinessLogic.DTOs.TrelloDtos;
-
 using Microsoft.IdentityModel.Tokens;
-
 using PersistentLayer.Models;
 using PersistentLayer.Repositories.Abstract;
 
@@ -30,11 +27,8 @@ public class ExperimentDownloader : IExperimentDownloader
 
     public async Task<SyncResult<Experiment>> DownloadExperiments()
     {
-
         SyncResult<Experiment> AddedExperiments = new SyncResult<Experiment>();
-
         var experimentsInToDoColumn = await _receiver.GetAllExperimentsInToDoColumn();
-
         if (!experimentsInToDoColumn.IsNullOrEmpty())
         {
             var resultOfSyncNewExperiments = SyncDatabaseWithAllExperimentsInToDoColumn(experimentsInToDoColumn!);
@@ -67,7 +61,6 @@ public class ExperimentDownloader : IExperimentDownloader
                         infoMessage.Append($" => One or more of the assignees are not saved on the database, check Trello Members' Ids:\n" +
                             $"Trello members Id: {string.Join(", \n", scientistIdList!.Where(g => g.id == -1).Select(p => $"{p.trelloId}"))}");
                         continue;
-
                     }
                     experimentToAdd.ScientistsIds = scientistIdList!.Select(p => p.id);
                     experimentToAdd.Scientists = scientistIdList!.Select(p => _scientistRepository.GetById(p.id)!).ToList() ?? new List<Scientist>();

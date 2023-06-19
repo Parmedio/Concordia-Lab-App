@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-
 using System.Text;
 
 public static class NewtonsoftHttpClientExtensions
@@ -22,9 +21,7 @@ public static class NewtonsoftHttpClientExtensions
         ThrowIfInvalidParams(httpClient, uri);
 
         if (value is null)
-        {
             throw new ArgumentNullException(nameof(value));
-        }
 
         var json = JsonConvert.SerializeObject(value, settings);
 
@@ -38,13 +35,9 @@ public static class NewtonsoftHttpClientExtensions
     private static void ThrowIfInvalidParams(HttpClient httpClient, string uri)
     {
         if (httpClient == null)
-        {
             throw new ArgumentNullException(nameof(httpClient));
-        }
 
         if (string.IsNullOrWhiteSpace(uri))
-        {
             throw new ArgumentException("Can't be null or empty", nameof(uri));
-        }
     }
 }

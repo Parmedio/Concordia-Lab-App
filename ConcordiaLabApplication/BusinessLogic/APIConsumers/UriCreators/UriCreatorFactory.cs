@@ -25,27 +25,17 @@ public class UriCreatorFactory : IUriCreatorFactory
     }
 
     public string GetAllCardsOnToDoColumn()
-    {
-        return $"lists/{_ToDoColumnId}/cards?{GetBaseAuth()}";
-    }
-
+        => $"lists/{_ToDoColumnId}/cards?{GetBaseAuth()}";
+ 
     public string GetAllCommentsOnABoard()
-    {
-        return $"boards/{_BoardId}/actions?filter=commentCard&{GetBaseAuth()}";
-    }
+        => $"boards/{_BoardId}/actions?filter=commentCard&{GetBaseAuth()}";
 
     public string UpdateAnExperiment(string cardId, string columnId)
-    {
-        return $"cards/{cardId}?idList={columnId}&{GetBaseAuth()}";
-    }
+    => $"cards/{cardId}?idList={columnId}&{GetBaseAuth()}";
 
     public string AddACommentOnACard(string cardId, string text, string authToken)
-    {
-        return $"cards/{cardId}/actions/comments?text={text}&key={_apiKey}&token={authToken}";
-    }
+    => $"cards/{cardId}/actions/comments?text={text}&key={_apiKey}&token={authToken}";
 
     private string GetBaseAuth()
-    {
-        return $"key={_apiKey}&token={_concordiaToken}";
-    }
+        => $"key={_apiKey}&token={_concordiaToken}";
 }

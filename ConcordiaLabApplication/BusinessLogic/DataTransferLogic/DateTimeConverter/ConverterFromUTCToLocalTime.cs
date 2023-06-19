@@ -11,5 +11,4 @@ internal static class ConverterFromUTCToLocalTime
     internal static DateTime? ConvertToAntartideTimeZone(this DateTime? dateTimeToConvert)
         => dateTimeToConvert is null ? null : TimeZoneInfo.ConvertTimeFromUtc(dateTimeToConvert ?? DateTime.UtcNow, antartideTimeZone);
 
-
 }

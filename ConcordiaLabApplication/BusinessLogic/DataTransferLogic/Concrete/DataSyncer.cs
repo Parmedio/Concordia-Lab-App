@@ -54,6 +54,5 @@ public class DataSyncer : IDataSyncer
         {
             _logger.LogWarning($"Un unexpected Exception was caught while uploading local data: {ex.Message}");
         }
-
     }
 }

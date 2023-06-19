@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
 using PersistentLayer.Configurations;
 using PersistentLayer.Models;
 using PersistentLayer.Repositories.Abstract;
