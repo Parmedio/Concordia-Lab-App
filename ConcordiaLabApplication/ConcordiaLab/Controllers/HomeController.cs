@@ -187,6 +187,7 @@ namespace ConcordiaLab.Controllers
                 .Concat(mediumPriorityExperimentsWithFarOrNullDueDate)
                 .Concat(lowPriorityExperimentsWithFarOrNullDueDate)
                 .Concat(nullPriorityExperimentsWithFarOrNullDueDate)
+                .Where(e => e.ColumnId != 3)
                 .ToList();
 
             return sortedExperiments;
