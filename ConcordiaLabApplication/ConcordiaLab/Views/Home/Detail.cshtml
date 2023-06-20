@@ -1,11 +1,24 @@
-@model ConcordiaLab.Controllers.Mock_Data.ViewModel.ExperimentDetails
+@using ConcordiaLab.ViewModels;
+@model ViewMExperiment
 
 @{
     ViewData["Title"] = "Experiment Detail";
     Layout = "_Layout";
-    var experiment = Model.Experiment;
-    var selectedScientistId = ViewData["SelectedScientistId"] as int?;
+    var experiment = Model;
+
+    var selectedScientistId = ViewData["SelectedScientistId"];
+    var experimentScientistIds = ViewData["ExperimentScientistIds"] as List<int>;
+
+    var commentAuthorName = experiment.Scientists?
+        .Where(s => s.Id == (int)selectedScientistId!)
+        .Select(s => s.UserName)
+        .FirstOrDefault();
+
+    var canChangeStatus = (experimentScientistIds!.Contains((int)selectedScientistId!) || experimentScientistIds.Contains(0)) ? "" : "disabled=true";
+    var canComment = (experimentScientistIds!.Contains((int)selectedScientistId!) && (int)selectedScientistId != 0) ? "" : "disabled=true";
+
     var selectedViewMode = ViewData["SelectedViewMode"] as string ?? string.Empty;
+    var progressStatuses = ViewData["ProgressStatuses"] as List<ViewMColumn>;
 }
 
 <h1 class="display-5">@ViewData["Title"]</h1>
@@ -19,7 +32,7 @@
             <b>Scientists:</b><br />
             @{
                 var scientistsCount = experiment.Scientists.Count();
-                var scientistsList = string.Join(", ", experiment.Scientists.Select(s => $"{s.Name[0]}. {s.Surname}"));
+                var scientistsList = string.Join(", ", experiment.Scientists.Select(s => $"{s.UserName}"));
 
                 if (scientistsCount > 0)
                 {
@@ -28,34 +41,71 @@
             }
         </h6>
         <div>
-            <h6 class="card-subtitle mb-2">
-                <b>Last comment:</b><br />
+            <h6 class="card-subtitle">
+                <b>Last comment</b>@(experiment.AuthorComment?.Any() ?? false ? $" ({experiment.AuthorComment})" : string.Empty)<b>:</b><br />
             </h6>
+
             <p>@experiment.LastComment</p>
         </div>
         <div>
-            <h6 class="card-subtitle mb-2">
+            <button class="btn btn-outline-primary mb-2" id="leaveCommentButton" onclick="enableCommentField()" @canComment>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                </svg>
+            </button>
+        </div>
+        <form id="comment-form" method="post" asp-controller="Home" asp-action="PostNewComment">
+            <input type="hidden" name="experimentId" value="@ViewData["ExperimentId"]" />
+            <input type="hidden" name="selectedViewMode" value="@ViewData["SelectedViewMode"]" />
+            <input type="hidden" name="scientistId" value="@ViewData["SelectedScientistId"]" />
+            <input type="hidden" name="commentAuthorName" value="@commentAuthorName" />
+            <div id="commentContainer" style="display: none; flex-direction: column;">
+                <textarea class="mb-2 rounded-2" name="commentText" id="commentText" rows="4" cols="60"></textarea>
+                <a class="btn btn-outline-primary" onclick="document.getElementById('comment-form').submit()">post new comment</a>
+            </div>
+        </form>
+        <div>
+            <h6 class="card-subtitle my-2">
                 <b>Description:</b><br />
             </h6>
             <p>@experiment.Description</p>
         </div>
         <div class="d-flex">
             <div class="d-flex align-items-center w-50 bg-custom me-1 rounded-2">
-                <p class="segment"><b>priority</b></p>
-                <p class="priority"><b>@experiment.Priority</b></p>
+                <svg class="segment" xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M6 2a.5.5 0 0 1 .47.33L10 12.036l1.53-4.208A.5.5 0 0 1 12 7.5h3.5a.5.5 0 0 1 0 1h-3.15l-1.88 5.17a.5.5 0 0 1-.94 0L6 3.964 4.47 8.171A.5.5 0 0 1 4 8.5H.5a.5.5 0 0 1 0-1h3.15l1.88-5.17A.5.5 0 0 1 6 2Z" />
+                </svg>
+                <form class="select-dropdown" id="status-form" method="post" asp-controller="Home" asp-action="UpdateExperimentStatus">
+                    <input type="hidden" name="experimentId" value="@ViewData["ExperimentId"]" />
+                    <input type="hidden" name="selectedViewMode" value="@ViewData["SelectedViewMode"]" />
+                    <input type="hidden" name="scientistId" value="@ViewData["SelectedScientistId"]" />
+                    <select id="status-dropdown" class="form-select" name="statusId" onchange="document.getElementById('status-form').submit()" @canChangeStatus>
+                        @foreach (var status in progressStatuses!)
+                        {
+                            <option value="@status.Id" selected="@(status.Id == experiment.ColumnId)">@status.Name</option>
+                        }
+                    </select>
+                </form>
             </div>
-            <div class="d-flex align-items-center w-50 bg-custom ms-1 rounded-2">
+            <div class="d-flex align-items-center w-50 bg-custom me-1 rounded-2">
+                <svg class="segment" xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z" />
+                </svg>
+                <p class="priority"><b>@(experiment.Priority != null ? experiment.Priority : "none")</b></p>
+            </div>
+            <div class="d-flex align-items-center w-50 bg-custom rounded-2">
                 <svg class="segment" xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" viewBox="0 0 16 16">
                     <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z" />
                     <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z" />
                 </svg>
-                <p class="due-date">@(experiment.DueDate != null ? experiment.DueDate?.ToString("dd ") + experiment.DueDate?.ToString("MMM").Substring(0, 3).ToUpper() : "no date")</p>
+                <p class="due-date"><b>@(experiment.DueDate != null ? experiment.DueDate?.ToString("dd ") + experiment.DueDate?.ToString("MMM").Substring(0, 3).ToUpper() : "none")</b></p>
             </div>
         </div>
     </div>
 </div>
 
-<a class="btn btn-outline-primary" asp-action="@(selectedViewMode == "status" ? "index" : selectedViewMode)" asp-route-scientistId="@selectedScientistId">go back</a>
+<a class="btn btn-outline-primary ms-2 mt-2" asp-action="@(selectedViewMode == "status" ? "index" : selectedViewMode)" asp-route-scientistId="@selectedScientistId">go back</a>
 
 <style>
     .experiment-title {
@@ -99,6 +149,15 @@
         background-color: mistyrose;
     }
 
+    .none {
+        color: whitesmoke;
+        background-color: whitesmoke;
+    }
+
+    .present {
+        background-color: white
+    }
+
     .priority {
         width: 50%;
         text-align: center;
@@ -117,6 +176,7 @@
 
 <script>
     var elements = document.getElementsByClassName('priority');
+    
     var i = elements.length - 1;
 
     while (i >= 0) {
@@ -129,8 +189,32 @@
             element.classList.add('medium');
         } else if (priority === 'High') {
             element.classList.add('high');
+        } else if (priority === 'none') {
+            element.classList.add('none');
         }
 
         i--;
+    }
+
+    var elementsD = document.getElementsByClassName('due-date');
+
+    var z = elementsD.length - 1;
+
+    while (z >= 0) {
+        var elementD = elementsD[z];
+        var date = elementD.innerText.trim();
+
+        if (date === 'none') {
+            elementD.classList.add('none');
+        } else {
+            elementD.classList.add('present');
+        }
+
+        z--;
+    }
+
+    function enableCommentField() {
+        var commentContainer = document.getElementById("commentContainer");
+        commentContainer.style.display = commentContainer.style.display == "flex" ? "none" : "flex";
     }
 </script>

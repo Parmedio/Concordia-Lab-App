@@ -1,0 +1,18 @@
+﻿@{
+    ViewData["Title"] = "About";
+    var selectedViewMode = ViewData["SelectedViewMode"] as string ?? string.Empty;
+    var selectedScientistId = ViewData["SelectedScientistId"] as int?;
+}
+<h1 class="mb-5">@ViewData["Title"]</h1>
+
+<p>This application has been developed for Concordia scientific base in Antarctica.<br />The app is designed to let on field scientists communicate with fellow researchers around the globe.</p>
+<p>With this tool scientist can comment on experiments and update progress' status, allowing normal work flow thanks to the establishment of a local databae that conveniently load and retrive information when internet is available within the small window time during the day.<br />The app has been designed and developed by a group of rookie developers, team Charmander, during .NET Academy trial period.</p>
+<p>Team's member are:</p>
+<ul>
+    <li>Ferluga Alessandro</li>
+    <li>Cecutti Gabriele</li>
+    <li>Da Pieve Marco</li>
+</ul>
+
+
+<a class="btn btn-outline-primary mt-2" asp-action="@(selectedViewMode == "status" ? "index" : selectedViewMode)" asp-route-scientistId="@selectedScientistId">go back</a>

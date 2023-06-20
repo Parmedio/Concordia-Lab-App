@@ -1,5 +1,4 @@
 ﻿using BusinessLogic.DataTransferLogic.Abstract;
-using BusinessLogic.Exceptions;
 
 using Microsoft.IdentityModel.Tokens;
 
@@ -12,34 +11,69 @@ public class Uploader : IUploader
 {
     private readonly IApiSender _sender;
     private readonly IExperimentRepository _experimentRepository;
+    private readonly ICommentRepository _commentRepository;
 
-    public Uploader(IApiSender sender, IExperimentRepository experimentRepository)
+    public Uploader(IApiSender sender, IExperimentRepository experimentRepository, ICommentRepository commentRepository)
     {
         _sender = sender;
         _experimentRepository = experimentRepository;
+        _commentRepository = commentRepository;
     }
 
-    public async Task Upload()
+    public async Task<SyncResult<Experiment>> Upload()
     {
-        var experiments = _experimentRepository.GetAll();
-        await SyncTrelloWithAllUpdates(experiments);
+        SyncResult<Experiment> result = new SyncResult<Experiment>();
+        var experiments = _experimentRepository.GetAll().ToList();
+        result = await SyncTrelloWithAllUpdates(experiments);
+        return result;
     }
 
-    private async Task SyncTrelloWithAllUpdates(IEnumerable<Experiment> experiments)
+    private async Task<SyncResult<Experiment>> SyncTrelloWithAllUpdates(IEnumerable<Experiment> experiments)
     {
+        int addedCommentsCount = 0;
+        int addedExperimentsCount = 0;
+        SyncResult<Experiment> result = new SyncResult<Experiment>();
+        result.AppendLine($"Found {experiments.Count()} experiment to upload.");
+        result.AppendLine("======================================");
         foreach (var experiment in experiments)
         {
-            if (!await _sender.UpdateAnExperiment(experiment.TrelloId, experiment.List!.TrelloId))
-                throw new UploadFailedException($"The process failed while uploading experiments. Failed at experiment: {experiment.Title}");
-
+            result.Append($"{$" - {experiment.Title}",-50}");
+            if (!await _sender.UpdateAnExperiment(experiment.TrelloId, experiment.Column!.TrelloId))
+            {
+                result.AppendLine($" => The process failed while uploading experiments. Failed at experiment: {experiment.Title}");
+                continue;
+            }
+            addedExperimentsCount++;
             Comment? commentToAdd = null;
             if (!experiment.Comments.IsNullOrEmpty())
             {
-                commentToAdd = experiment.Comments!.Where(p => p.TrelloId is null && p.Date == experiment.Comments!.Max(g => g.Date)).FirstOrDefault();
-                if (!await _sender.AddAComment(experiment.TrelloId, commentToAdd!.Body, commentToAdd.Scientist!.TrelloToken))
-                    throw new UploadFailedException($"The process failed while uploading the experiment: {experiment.Title}. Error while trying to upload its latest comment: {commentToAdd.Body}");
-            }
+                result.AppendLine(" => Upload successful");
+                commentToAdd = _experimentRepository.GetLastLocalCommentNotOnTrello(experiment.Id);
 
+                if (commentToAdd is null)
+                    continue;
+
+                result.Append($"{$"        - \"{string.Concat(commentToAdd.Body.Take(15))}...\"",-50}");
+                try
+                {
+                    commentToAdd.TrelloId = await _sender.AddAComment(experiment.TrelloId, commentToAdd!.Body, commentToAdd.Scientist!.TrelloToken);
+                    _commentRepository.UpdateAComment(commentToAdd.Id, commentToAdd.TrelloId);
+                    result.AppendLine(" => Upload successful");
+                    addedCommentsCount++;
+                }
+                catch (Exception ex)
+                {
+                    result.AppendLine($" => Upload Failed: {ex.Message}");
+                }
+            }
+            else
+                result.AppendLine(" => Upload successful");
         }
+        result.AppendLine("======================================");
+        result.AppendLine("Uploaded ended successfully");
+        result.AppendLine($"{addedExperimentsCount} Experiments were updated.");
+        result.AppendLine($"{addedCommentsCount} Comments were added.");
+        result.AppendLine("======================================");
+        return result;
     }
 }

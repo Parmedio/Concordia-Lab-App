@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
 using PersistentLayer.Configurations;
 using PersistentLayer.Models;
 using PersistentLayer.Repositories.Abstract;
@@ -15,33 +14,15 @@ public class ExperimentRepository : IExperimentRepository
 
     public IEnumerable<Experiment> Add(IEnumerable<Experiment> experiments)
     {
-        _dbContext.AddRange(experiments);
-        _dbContext.SaveChanges();
-        return experiments;
+        var result = new List<Experiment>();
+        foreach (var experiment in experiments) result.Add(Add(experiment));
+        return result;
     }
 
     public Experiment Add(Experiment experiment)
     {
         var entity = _dbContext.Experiments.Add(experiment);
         _dbContext.SaveChanges();
-
-        if (experiment.ScientistsIds != null)
-        {
-            var scientists = _dbContext.Scientists.AsNoTracking().Where(s => experiment.ScientistsIds.Contains(s.Id));
-            entity.Entity.Scientists = scientists.ToList();
-        }
-
-        if (experiment.LabelId != 0)
-        {
-            var label = _dbContext.Labels.AsNoTracking().SingleOrDefault(l => l.Id == experiment.LabelId);
-            entity.Entity.Label = label;
-        }
-
-        if (experiment.ListId != 0)
-        {
-            var list = _dbContext.EntityLists.AsNoTracking().SingleOrDefault(l => l.Id == experiment.ListId);
-            entity.Entity.List = list;
-        }
         return entity.Entity;
     }
 
@@ -51,7 +32,7 @@ public class ExperimentRepository : IExperimentRepository
                       .Include(e => e.Scientists)
                       .Include(e => e.Comments)
                       .Include(e => e.Label)
-                      .Include(e => e.List)
+                      .Include(e => e.Column)
                       .AsNoTracking();
     }
 
@@ -60,19 +41,23 @@ public class ExperimentRepository : IExperimentRepository
         return _dbContext.Experiments.Include(e => e.Scientists)
                                      .Include(e => e.Comments)
                                      .Include(e => e.Label)
-                                     .Include(e => e.List)
+                                     .Include(e => e.Column)
                                      .AsNoTracking()
                                      .SingleOrDefault(e => e.Id == experimentId);
     }
 
-    public Comment? GetLastCommentWhereTrelloIdIsNull(int experimentId)
+    public Comment? GetLastLocalCommentNotOnTrello(int experimentId)
     {
-        return _dbContext.Experiments.AsNoTracking()
-            .Include(e => e.Comments)
-            .Where(e => e.Id == experimentId && e.TrelloId == null)
-            .SelectMany(e => e.Comments)
-            .OrderByDescending(c => c.Date)
+        var lastComment = _dbContext.Experiments
+            .Include(c => c.Comments!)
+            .ThenInclude(p => p.Scientist)
+            .Where(p => p.Comments!.Any())?
+            .SingleOrDefault(p => p.Id == experimentId)?
+            .Comments!
+            .OrderByDescending(p => p.Date)
             .FirstOrDefault();
+
+        return lastComment?.TrelloId is null ? lastComment : null;
     }
 
     public int? GetLocalIdByTrelloId(string trelloId)
@@ -84,12 +69,10 @@ public class ExperimentRepository : IExperimentRepository
 
     public int? GetLocalIdLabelByTrelloIdLabel(string trelloIdLabel)
     {
-        throw new NotImplementedException();
-    }
-
-    public Experiment? Move(int experimentId, int listId)
-    {
-        throw new NotImplementedException();
+        var label = _dbContext.Labels.AsNoTracking()
+            .SingleOrDefault(l => l!.TrelloId == trelloIdLabel);
+        if (label != null) return label.Id;
+        return null;
     }
 
     public Experiment? Remove(int experimentId)
@@ -103,28 +86,20 @@ public class ExperimentRepository : IExperimentRepository
         return experiment;
     }
 
-    public Experiment? Update(int experimentId, int listIdDestination)
+    public Experiment? Update(int experimentId, int ColumnIdDestination)
     {
-        var current = GetById(experimentId);
+        var current = _dbContext.Experiments
+            .Include(p => p.Scientists)
+            .Include(p => p.Comments)
+            .Include(p => p.Label)
+            .FirstOrDefault(x => x.Id == experimentId);
         if (current != null)
         {
-            current.ListId = listIdDestination;
+            current.ColumnId = ColumnIdDestination;
+            _dbContext.Update(current);
             _dbContext.SaveChanges();
-        }        
+            current.Column = _dbContext.Columns.SingleOrDefault(p => p.Id == current.ColumnId)!;
+        }
         return current;
-    }
-    public int? GetLabelId(string trelloId)
-
-    {
-        var experiment = _dbContext.Experiments.AsNoTracking()
-            .Include(e => e.Label)
-            .SingleOrDefault(e => e.TrelloId == trelloId);
-        if (experiment != null) return experiment.LabelId;
-        return null;
-    }
-
-    public Comment GetLastCommentWithTrelloIdNull(Experiment experiment)
-    {
-        throw new NotImplementedException();
     }
 }

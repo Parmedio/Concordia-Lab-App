@@ -1,3 +1,5 @@
+using FluentAssertions;
+
 using PersistentLayer.Configurations;
 using PersistentLayer.Models;
 using PersistentLayer.Repositories.Concrete;
@@ -26,28 +28,52 @@ namespace PersistentLayerTest
                 Description = "This is an experiment",
                 DeadLine = DateTime.Now.AddDays(7),
                 LabelId = 2,
-                ListId = 1,
-                ScientistsIds = new List<int> { 1, 2, 3 }
+                ColumnId = 1,
+                ScientistsIds = new List<int> { 4, 5, 6 },
+                Scientists = new List<Scientist>
+                        {
+                            new Scientist { TrelloToken = "wfrf445eef344rf", TrelloMemberId = "3434fv", Name = "gabriele" },
+                            new Scientist { TrelloToken = "wedecerfedef", TrelloMemberId = "324332d", Name = "marco" },
+                            new Scientist { TrelloToken = "wwdwx2rycecee23", TrelloMemberId = "dcwd2323c", Name = "alessandro" }
+                        }
             };
 
             var addedExperiment = _sut.Add(experiment);
 
-            Assert.NotNull(addedExperiment);
-            Assert.Equal(experiment.Id, addedExperiment.Id);
-            Assert.Equal(experiment.TrelloId, addedExperiment.TrelloId);
-            Assert.Equal(experiment.Title, addedExperiment.Title);
-            Assert.Equal(experiment.Description, addedExperiment.Description);
-            Assert.Equal(experiment.DeadLine, addedExperiment.DeadLine);
-            Assert.Equal(experiment.LabelId, addedExperiment.LabelId);
-            Assert.Equal(experiment.ListId, addedExperiment.ListId);
-            Assert.NotNull(addedExperiment.Scientists);
-            Assert.Equal(experiment.ScientistsIds, addedExperiment.Scientists.Select(s => s.Id));
+            Assert.Equal(experiment, addedExperiment);
             Assert.Equal(experiment.Label, addedExperiment.Label);
-            Assert.Equal(experiment.LabelId, addedExperiment.LabelId);
-            Assert.Equal(experiment.List, addedExperiment.List);
-            Assert.Equal(experiment.ListId, addedExperiment.ListId);
+            Assert.Equal(experiment.Column, addedExperiment.Column);
 
-            _dbContext.ChangeTracker.Clear();
+            Assert.NotNull(addedExperiment.Scientists);
+            foreach (var scientist in addedExperiment.Scientists) Assert.NotNull(scientist);
+
+            transaction.Rollback();
+        }
+
+        [Fact]
+        public void Add_Experiment_With_No_Scientist_And_DeadLine_Should_Add_Experiment_To_Database()
+        {
+            using var transaction = _dbContext.Database.BeginTransaction();
+            var experiment = new Experiment
+            {
+                TrelloId = "NewTrelloId",
+                Title = "New Experiment",
+                Description = "This is an experiment",
+                LabelId = 2,
+                ColumnId = 1
+            };
+
+            var addedExperiment = _sut.Add(experiment);
+
+            Assert.Equal(experiment, addedExperiment);
+            Assert.Equal(experiment.Label, addedExperiment.Label);
+            Assert.Equal(experiment.Column, addedExperiment.Column);
+
+            Assert.Null(addedExperiment.Scientists);
+
+            Assert.Null(addedExperiment.DeadLine);
+
+            transaction.Rollback();
         }
 
         [Fact]
@@ -61,7 +87,13 @@ namespace PersistentLayerTest
                     TrelloId = "TrelloId6",
                     Title = "Experiment 1",
                     Description = "This is experiment 1",
-                    ListId = 1,
+                    ScientistsIds = new List<int> {4, 5},
+                    Scientists = new List<Scientist>
+                        {
+                            new Scientist { TrelloToken = "wfrf445eef344rf", TrelloMemberId = "3434fv", Name = "gabriele" },
+                            new Scientist { TrelloToken = "wedecerfedef", TrelloMemberId = "324332d", Name = "marco" }
+                        },
+                    ColumnId = 1,
                     LabelId = 2
                 },
                 new Experiment
@@ -69,12 +101,37 @@ namespace PersistentLayerTest
                     TrelloId = "TrelloId7",
                     Title = "Experiment 2",
                     Description = "This is experiment 2",
-                    ListId = 2,
+                    ScientistsIds = new List<int> {4, 5},
+                    Scientists = new List<Scientist>
+                        {
+                            new Scientist { TrelloToken = "wfrf445eef344rf", TrelloMemberId = "3434fv", Name = "gabriele" },
+                            new Scientist { TrelloToken = "wedecerfedef", TrelloMemberId = "324332d", Name = "marco" }
+                        },
+                    ColumnId = 2,
                     LabelId = 3,
                 }
             };
-            var result = _sut.Add(experiments);
-            Assert.Equal(2, result.Count());
+            var result = _sut.Add(experiments).ToList();
+
+            result.Should().NotBeNull();
+            result.Should().HaveCount(2);
+            result.Should().BeEquivalentTo(experiments);
+
+            result.ForEach(experiment =>
+            {
+                experiment.Scientists.Should().NotBeNull();
+            });
+
+            result.ForEach(experiment =>
+            {
+                experiment.Column.Should().BeEquivalentTo(experiments.First(e => e.Id == experiment.Id).Column);
+            });
+
+            result.ForEach(experiment =>
+            {
+                experiment.Label.Should().BeEquivalentTo(experiments.First(e => e.Id == experiment.Id).Label);
+            });
+
             transaction.Rollback();
         }
 
@@ -84,13 +141,32 @@ namespace PersistentLayerTest
             var result = _sut.GetById(1);
 
             Assert.NotNull(result);
+
             Assert.Equal(1, result.Id);
             Assert.Equal("Experiment 1", result.Title);
             Assert.Equal("This is experiment 1", result.Description);
-            Assert.NotNull(result.Scientists);
-            Assert.NotNull(result.Comments);
+
+            result.Scientists.Should().NotBeNull();
+            result.Scientists!.ToList().ForEach(scientist =>
+            {
+                scientist.Should().NotBeNull();
+            });
+
+            result.Comments.Should().NotBeNull();
+            result.Comments!.ToList().ForEach(comment =>
+            {
+                comment.Should().NotBeNull();
+            });
+
             Assert.NotNull(result.Label);
-            Assert.NotNull(result.List);
+            Assert.Equal(9, result.Label.Id);
+            Assert.Equal("high priority", result.Label.Title);
+            Assert.Equal("TrelloLabelId3", result.Label.TrelloId);
+
+            Assert.NotNull(result.Column);
+            Assert.Equal(1, result.Column.Id);
+            Assert.Equal("64760804e47275c707e05d38", result.Column.TrelloId);
+            Assert.Equal("to do", result.Column.Title);
         }
 
         [Fact]
@@ -105,6 +181,12 @@ namespace PersistentLayerTest
         {
             var result = _sut.GetAll();
             Assert.Equal(4, result.Count());
+
+            result.ToList().ForEach(experiment =>
+            {
+                experiment.Should().NotBeNull();
+                experiment.Id.Should().NotBe(0);
+            });
         }
 
         [Fact]
@@ -114,11 +196,12 @@ namespace PersistentLayerTest
             Assert.Null(result);
         }
 
-        [Fact(Skip = "method not used")]
-        public void Should_Return_Last_Comment_Where_TrelloId_Is_null()
+        [Fact]
+        public void Should_Return_Last_Comment_Where_TrelloId_Is_Null()
         {
-            var result = _sut.GetLastCommentWhereTrelloIdIsNull(1);
-            Assert.NotNull(result);
+            var comment = _sut.GetLastCommentWithTrelloIdNull(3);
+            Assert.NotNull(comment);
+            Assert.True(comment.Id == 4);
         }
 
         [Fact]
@@ -128,7 +211,7 @@ namespace PersistentLayerTest
 
             var removedExperiment = _sut.Remove(3);
             Assert.NotNull(removedExperiment);
-            var retrievedExperiment = _sut.GetById(3);
+            var retrievedExperiment = _dbContext.Experiments.FirstOrDefault(e => e.Id == removedExperiment.Id);
             Assert.Null(retrievedExperiment);
 
             transaction.Rollback();
@@ -149,11 +232,19 @@ namespace PersistentLayerTest
             var updatedExperiment = _sut.Update(1, 2);
 
             Assert.NotNull(updatedExperiment);
-            Assert.Equal(updatedExperiment.Id, updatedExperiment.Id);
-            Assert.Equal(2, updatedExperiment.ListId);
+
+            Assert.Equal(1, updatedExperiment.Id);
+
+            Assert.Equal(2, updatedExperiment.ColumnId);
+
             Assert.NotNull(updatedExperiment.Scientists);
+            Assert.True(updatedExperiment.Scientists.VerifyAllPropertiesNotNull());
+
             Assert.NotNull(updatedExperiment.Comments);
+            Assert.True(updatedExperiment.Comments.VerifyAllPropertiesNotNull());
+
             Assert.NotNull(updatedExperiment.Label);
+            Assert.True(updatedExperiment.Label.VerifyAllPropertiesNotNull());
 
             transaction.Rollback();
         }
@@ -161,8 +252,8 @@ namespace PersistentLayerTest
         [Fact]
         public void Should_Return_LabelId_By_ExperimentTrelloId()
         {
-            var result = _sut.GetLabelId("TrelloId3");
-            Assert.Equal(result, 2);
+            var result = _sut.GetLocalIdLabelByTrelloIdLabel("TrelloLabelId2");
+            Assert.Equal(8, result);
         }
     }
 }

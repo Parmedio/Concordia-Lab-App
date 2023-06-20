@@ -6,9 +6,9 @@ namespace BusinessLogic.DataTransferLogic.Concrete;
 public class ClientService : IClientService
 {
     private static bool _connectionAvailable = false;
+    private readonly IDataHandlerFactory _dataHandlerFactory;
     private readonly IDataService _dataHandler;
     private readonly IDataSyncer _dataSyncer;
-    private readonly IDataHandlerFactory _dataHandlerFactory;
 
     public ClientService(IDataHandlerFactory dataHandlerFactory, IDataSyncer dataSyncer)
     {
@@ -27,27 +27,34 @@ public class ClientService : IClientService
     }
 
     public BusinessCommentDto AddComment(BusinessCommentDto businessCommentDto, int scientistId)
-    {
-        return _dataHandler.AddComment(businessCommentDto, scientistId);
-    }
+        => _dataHandler.AddComment(businessCommentDto, scientistId);
 
-    public IEnumerable<BusinessListDto> GetAllLists(int scientistId)
-    {
-        return _dataHandler.GetAllLists(scientistId);
-    }
+    public IEnumerable<BusinessColumnDto> GetAllColumns(int scientistId)
+        => _dataHandler.GetAllColumns(scientistId);
 
-    public BusinessExperimentDto MoveExperiment(BusinessExperimentDto businessExperimentDto)
-    {
-        return _dataHandler.MoveExperiment(businessExperimentDto);
-    }
+    public BusinessExperimentDto MoveExperiment(BusinessExperimentDto businessExperimentDto) 
+        => _dataHandler.MoveExperiment(businessExperimentDto);
 
     public async Task SyncDataAsyncs()
     {
-        if (_connectionAvailable)
-        {
-            await _dataSyncer.SynchronizeAsync();
-        }
+        if (_connectionAvailable) await _dataSyncer.SynchronizeAsync();
     }
 
+    public IEnumerable<BusinessColumnDto> GetAllColumns()
+        => _dataHandler.GetAllColumns();
 
+    public IEnumerable<BusinessExperimentDto> GetAllExperiments()
+        => _dataHandler.GetAllExperiments();
+
+    public IEnumerable<BusinessExperimentDto> GetAllExperiments(int scientistId)
+        => _dataHandler.GetAllExperiments(scientistId);
+
+    public IEnumerable<BusinessScientistDto> GetAllScientist()
+        => _dataHandler.GetAllScientist();
+
+    public BusinessExperimentDto GetExperimentById(int experimentId)
+        => _dataHandler.GetExperimentById(experimentId);
+
+    public IEnumerable<BusinessColumnDto> GetAllSimple()
+        => _dataHandler.GetAllSimple();
 }
