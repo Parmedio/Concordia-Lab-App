@@ -33,9 +33,8 @@ public class DataService : IDataService
         var addedComment = _commentRepository.AddComment(commentToAdd);
 
         if (addedComment is null)
-        {
             throw new AddACommentFailedException($"Failed to add comment: \"{businessCommentDto.CommentText}\" by scientist with Id: {scientistId} ");
-        }
+
         businessCommentDto.Id = addedComment.Id;
         businessCommentDto.TrelloCardId = addedComment.Experiment.TrelloId;
 
@@ -53,9 +52,7 @@ public class DataService : IDataService
         businessColumns = _mapper.Map<IEnumerable<BusinessColumnDto>?>(_columnRepository.GetByScientistId(scientistId));
 
         if (businessColumns.IsNullOrEmpty())
-        {
             throw new ColumnsNumberException("The database has no lists.");
-        }
 
         return businessColumns!;
     }
@@ -78,9 +75,7 @@ public class DataService : IDataService
         businessColumns = _mapper.Map<IEnumerable<Column>, IEnumerable<BusinessColumnDto>>(allColumns);
 
         if (!businessColumns.Any())
-        {
             throw new ColumnsNumberException("The database has no lists.");
-        }
 
         return businessColumns!;
     }

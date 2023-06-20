@@ -256,14 +256,14 @@ namespace PersistentLayer.Migrations
                         new
                         {
                             Id = 2,
-                            Name = "Marco de Piave",
+                            Name = "Marco Da Pieve",
                             TrelloMemberId = "639c692ed850f6055714fd55",
                             TrelloToken = "ATTAd93cf67ec0072d821ff32e199156a675ed9301feea0f899df160829b3f14082dAB1E41AD"
                         },
                         new
                         {
                             Id = 3,
-                            Name = "Gabriele Ceccutti",
+                            Name = "Gabriele Cecutti",
                             TrelloMemberId = "6474f28f0d4924c1eaff2824",
                             TrelloToken = "ATTA408bebeedb9948e62a1e38c11691049bc07e9329984c3897908a0127279faa4956E9CC86"
                         });
