@@ -35,10 +35,10 @@ public class MainProfile : Profile
             .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.DeadLine))
             .ForMember(dest => dest.ColumnId, opt => opt.MapFrom(src => src.ColumnId))
             .ForMember(dest => dest.ColumnName, opt => opt.MapFrom(src => src.Column.Title))
-            .ForMember(dest => dest.Priority, opt => opt.MapFrom(src => src.Label.Title))
+            .ForMember(dest => dest.Priority, opt => opt.MapFrom(src => src.Label!.Title))
             .ForMember(dest => dest.TrelloCardId, opt => opt.MapFrom(src => src.TrelloId))
             .ForMember(dest => dest.TrelloColumnId, opt => opt.MapFrom(src => src.Column.TrelloId))
-            .ForMember(dest => dest.LastComment, opt => opt.MapFrom(src => src.Comments.AsEnumerable()
+            .ForMember(dest => dest.LastComment, opt => opt.MapFrom(src => src.Comments!.AsEnumerable()
             .OrderByDescending(comment => comment.Date)
             .FirstOrDefault()));
 

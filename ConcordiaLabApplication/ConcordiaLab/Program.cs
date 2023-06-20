@@ -23,6 +23,10 @@ using Polly;
 using Polly.Contrib.WaitAndRetry;
 using Polly.Extensions.Http;
 
+using ReportSender;
+using ReportSender.FileSystemManager.Abstract;
+using ReportSender.FileSystemManager.Concrete;
+
 namespace ConcordiaLab;
 
 public class Program
@@ -71,6 +75,8 @@ public class Program
         builder.Services.AddScoped<IScientistRepository, ScientistRepository>();
 
         builder.Services.AddTransient<IDataSyncer, DataSyncer>();
+        builder.Services.AddTransient<IFileSystemDocumentManager, FileSystemDocumentManager>();
+        builder.Services.AddTransient<IConcordiaReportRunner, ConcordiaReportRunner>();
         builder.Services.AddTransient<IUriCreatorFactory, UriCreatorFactory>();
         builder.Services.AddTransient<IRetrieveConnectionTimeInterval, RetrieveConnectionTimeInterval>();
         builder.Services.AddTransient<IDataHandlerFactory, DataHandlerFactory>();

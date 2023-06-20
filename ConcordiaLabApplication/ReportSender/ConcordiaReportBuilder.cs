@@ -3,41 +3,14 @@
 using Gehtsoft.PDFFlow.Builder;
 using Gehtsoft.PDFFlow.Models.Enumerations;
 using Gehtsoft.PDFFlow.Models.Shared;
-using Gehtsoft.PDFFlow.UserUtils;
-using Gehtsoft.PDFFlow.Utils;
 
 using ReportSender.ReportDto;
 
-using System.Globalization;
-
+using static ReportSender.PdfFormatConstants;
 namespace ReportSender;
 
 internal class ConcordiaReportBuilder
 {
-    internal static readonly CultureInfo DocumentLocale
-         = new CultureInfo("en-US");
-    internal const PageOrientation Orientation
-        = PageOrientation.Portrait;
-    internal static readonly Box Margins = new Box(29, 20, 29, 20);
-    internal static readonly XUnit PageWidth =
-        (PredefinedSizeBuilder.ToSize(PaperSize.A4).Width -
-            (Margins.Left + Margins.Right));
-
-    internal static readonly FontBuilder FNT7 = Fonts.Helvetica(7f);
-    internal static readonly FontBuilder FNT9 = Fonts.Helvetica(9f);
-    internal static readonly FontBuilder FNT9B_G =
-        Fonts.Helvetica(9f).SetBold().SetColor(Color.Gray);
-    internal static readonly FontBuilder FNT10 = Fonts.Helvetica(10f);
-    internal static readonly FontBuilder FNT11 = Fonts.Helvetica(11f);
-    internal static readonly FontBuilder FNT11_B =
-        Fonts.Helvetica(11f).SetBold();
-    internal static readonly FontBuilder FNT20 = Fonts.Helvetica(20f);
-    internal static readonly FontBuilder FNT20B =
-        Fonts.Helvetica(20f).SetBold();
-
-    private static readonly string[] ColumnNames = {
-                "To Do", "In Progress", "Completed"
-            };
     private static int ticketNumber = 0;
     private static DateOnly currentDate;
 
@@ -56,50 +29,83 @@ internal class ConcordiaReportBuilder
     internal DocumentBuilder Build()
     {
         DocumentBuilder documentBuilder = DocumentBuilder.New();
+
         var sectionBuilder = documentBuilder.AddSection();
-        sectionBuilder.SetOrientation(Orientation)
+        sectionBuilder
+            .SetOrientation(Orientation)
             .SetMargins(Margins);
-        sectionBuilder.AddHeaderToBothPages(60, buildHeader);
+        sectionBuilder
+            .AddHeaderToBothPages(60, buildHeader);
         ReportInformation(sectionBuilder.AddTable());
         BuildProgressInfo(sectionBuilder);
+        IEnumerable<ScientistProductivity> projectedScientists = GetProjectedScientists();
 
-        IEnumerable<ScientistProductivity> projectedScientists = Scientists.Select(p => new ScientistProductivity() { Id = p.Id, Name = p.Name, Percentage = Math.Round(Convert.ToDouble(p.Experiments.Count(p => p.ColumnId == 3 || p.ColumnId == 6)) / Convert.ToDouble(p.Experiments.Count())) });
         var HighProductivityScientists = projectedScientists.Where(p => p.Percentage >= 60);
         var MediumProductivityScientists = projectedScientists.Where(p => p.Percentage < 60 && p.Percentage > 30);
         var LowProductivityScientists = projectedScientists.Where(p => p.Percentage <= 30);
+
         if (HighProductivityScientists.Any())
-            ScientistsInfo(sectionBuilder.AddTable(), HighProductivityScientists, Color.Green);
+            ScientistsInfo(sectionBuilder.AddTable(), HighProductivityScientists, highProductivityColor);
         if (MediumProductivityScientists.Any())
-            ScientistsInfo(sectionBuilder.AddTable(), MediumProductivityScientists, Color.Yellow);
+            ScientistsInfo(sectionBuilder.AddTable(), MediumProductivityScientists, mediumProductivityColor);
         if (LowProductivityScientists.Any())
-            ScientistsInfo(sectionBuilder.AddTable(), LowProductivityScientists, Color.Red);
+            ScientistsInfo(sectionBuilder.AddTable(), LowProductivityScientists, lowProductivityColor);
+
         return documentBuilder;
     }
+
+    private IEnumerable<ScientistProductivity> GetProjectedScientists()
+        => Scientists.Select(p => new ScientistProductivity() { Id = p.Id, Name = p.Name, Percentage = Math.Round((Convert.ToDouble(p.Experiments.Count(p => p.ColumnId == 3 || p.ColumnId == 6)) / (p.Experiments.Count() == 0 ? 1d : Convert.ToDouble(p.Experiments.Count()))) * 100d) }).OrderByDescending(p => p.Percentage);
 
     private void ScientistsInfo(TableBuilder tableBuilder, IEnumerable<ScientistProductivity> scientistsInfo, Color color)
     {
         tableBuilder
+            .SetWidth(XUnit.FromPercent(100f))
+            .SetMarginTop(15f)
             .SetRepeatHeaders(true)
             .SetBorderStroke(Stroke.None, Stroke.None, Stroke.None, Stroke.Solid)
             .SetBorderColor(color)
             .AddColumnPercentToTable("Id", 10f)
-            .AddColumnPercentToTable("Scientist", 65f)
-            .AddColumnPercentToTable("%", 25)
+            .AddColumnPercentToTable("Scientist", 55f)
+            .AddColumnPercentToTable("%", 15f)
+            .AddColumnPercentToTable(" ", 2f)
+            .AddColumnPercentToTable(" ", 2f)
+            .AddColumnPercentToTable(" ", 2f)
+            .AddColumnPercentToTable(" ", 2f)
+            .AddColumnPercentToTable(" ", 2f)
+            .AddColumnPercentToTable(" ", 2f)
+            .AddColumnPercentToTable(" ", 2f)
+            .AddColumnPercentToTable(" ", 2f)
+            .AddColumnPercentToTable(" ", 2f)
+            .AddColumnPercentToTable(" ", 2f)
             .SetHeaderRowStyleFont(FNT11_B)
             .SetHeaderRowStyleBackColor(color)
             .SetHeaderRowStyleHorizontalAlignment(HorizontalAlignment.Left);
 
         foreach (var scientist in scientistsInfo)
         {
-            var rowBuilder = tableBuilder.AddRow().ApplyStyle(StyleBuilder.New()
-                    .SetFont(FNT9)
-                    .SetPaddingTop(2.8f)
-                    .SetPaddingBottom(4.2f));
+
+            var separatorRowBuilder = tableBuilder.AddRow().ApplyStyle(ProgressBarRowStyle);
+            for (int i = 1; i <= 13; i++)
+            {
+                separatorRowBuilder.AddCell("");
+            }
+            var rowBuilder = tableBuilder.AddRow().ApplyStyle(ScientistProgressRowStyle);
+
             rowBuilder.AddCell(scientist.Id.ToString());
             rowBuilder.AddCell(scientist.Name);
             rowBuilder.AddCell(scientist.Percentage.ToString());
-        }
 
+            int decimalPercentage = (int)scientist.Percentage / 10 + 1 >= 10 ? 10 : (int)scientist.Percentage / 10 + 1;
+
+            for (int counter = 1; counter <= 10; counter++)
+            {
+                if (counter <= decimalPercentage)
+                    rowBuilder.AddCell("").SetBackColor(color);
+                else
+                    rowBuilder.AddCell("");
+            }
+        }
     }
 
     private void buildHeader(RepeatingAreaBuilder builder)
@@ -183,26 +189,16 @@ internal class ConcordiaReportBuilder
                 .AddColumnPercentToTable("", 33);
 
         var rowBuilder = tableBuilder.AddRow();
-        rowBuilder
-            .ApplyStyle(
-                StyleBuilder.New()
-                    .SetFont(FNT9B_G)
-                    .SetPaddingTop(4.8f)
-                    .SetPaddingBottom(8.2f)
-            );
+        rowBuilder.ApplyStyle(InfoTableHeaderStyle);
 
         foreach (string headName in ColumnNames)
         {
             rowBuilder.AddCell(headName);
         }
+
         rowBuilder = tableBuilder.AddRow();
-        rowBuilder
-            .ApplyStyle(
-                StyleBuilder.New()
-                    .SetFont(FNT10)
-                    .SetPaddingTop(3.5f)
-                    .SetPaddingBottom(7.5f)
-            );
+        rowBuilder.ApplyStyle(InfoTableContentStyle);
+
         foreach (var index in Enumerable.Range(1, 3))
         {
             rowBuilder.AddCell(GetCountOfColumn(index));

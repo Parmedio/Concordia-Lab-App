@@ -15,14 +15,16 @@ public class ClientService : IClientService
     private readonly IDataHandlerFactory _dataHandlerFactory;
     private readonly IDataService _dataHandler;
     private readonly IDataSyncer _dataSyncer;
+    private readonly IConcordiaReportRunner _reportCreator;
     private readonly IMapper _mapper;
 
-    public ClientService(IDataHandlerFactory dataHandlerFactory, IDataSyncer dataSyncer, IMapper mapper)
+    public ClientService(IDataHandlerFactory dataHandlerFactory, IDataSyncer dataSyncer, IMapper mapper, IConcordiaReportRunner reportCreator)
     {
         _dataHandlerFactory = dataHandlerFactory;
         _dataHandler = _dataHandlerFactory.DataServiceFactoryMethod(_connectionAvailable);
         _dataSyncer = dataSyncer;
         _mapper = mapper;
+        _reportCreator = reportCreator;
     }
 
     public async Task<bool> UpdateConnectionStateAsync(bool connectionState)
@@ -52,8 +54,9 @@ public class ClientService : IClientService
     {
         var experiments = _dataHandler.GetAllExperiments();
         var scientists = _dataHandler.GetAllScientistsWithExperiments();
-        ConcordiaReportRunner.Run(
-            _mapper.Map<IEnumerable<BusinessExperimentDto>, IEnumerable<ExperimentForReportDto>>(experiments),
+        _reportCreator.Run(
+            _mapper.Map<IEnumerable<BusinessExperimentDto>,
+            IEnumerable<ExperimentForReportDto>>(experiments),
             scientists);
     }
 
