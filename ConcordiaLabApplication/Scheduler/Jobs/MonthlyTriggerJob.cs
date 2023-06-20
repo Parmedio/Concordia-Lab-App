@@ -33,7 +33,7 @@ public class MonthlyTriggerJob : IJob
             {
                 var dataSyncJobTrigger = dataSyncJobTriggers.First();
                 var newTrigger = CreateNewTrigger();
-                await scheduler.RescheduleJob(dataSyncJobTrigger.Key, newTrigger); 
+                await scheduler.RescheduleJob(dataSyncJobTrigger.Key, newTrigger);
             }
             else
             {
@@ -76,14 +76,13 @@ public class MonthlyTriggerJob : IJob
                 var startTime = DateTimeOffset.Now.Date.Add(passingTimeSpan);
                 var endTime = DateTimeOffset.Now.Date.Add(sum);
 
-                ITrigger trigger = TriggerBuilder.Create()
-                    .WithIdentity("DynamicTrigger")
-                    .StartAt(startTime)
-                    .EndAt(endTime)
-                    .WithSimpleSchedule(builder =>
-                        builder.WithIntervalInSeconds(delay)
-                            .RepeatForever())
-                    .Build();
+                var trigger = TriggerBuilder.Create()
+                   .WithIdentity("dailyTrigger", "group1")
+                   .WithDailyTimeIntervalSchedule(builder =>
+                       builder.StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(startTime.Hour, startTime.Minute))
+                              .EndingDailyAt(TimeOfDay.HourAndMinuteOfDay(endTime.Hour, endTime.Minute))
+                              .WithIntervalInSeconds(delay))
+                   .Build();
 
                 _logger.LogInformation($"The synchronization to the {currentMonth} month of the year {currentYear} starts at {startTime.Hour}:{startTime.Minute} and ends at {endTime.Hour}:{endTime.Minute}.");
 
