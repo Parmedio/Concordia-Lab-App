@@ -1,5 +1,7 @@
 ﻿using BusinessLogic.DTOs.BusinessDTO;
 
+using ReportSender.ReportDto;
+
 namespace BusinessLogic.DataTransferLogic.Abstract;
 
 public interface IDataService
@@ -13,5 +15,6 @@ public interface IDataService
     public BusinessExperimentDto MoveExperiment(BusinessExperimentDto businessExperimentDto);
     public IEnumerable<BusinessScientistDto> GetAllScientist();
     public BusinessCommentDto AddComment(BusinessCommentDto businessCommentDto, int scientistId);
+    public IEnumerable<ScientistForReportDto> GetAllScientistsWithExperiments();
 
 }

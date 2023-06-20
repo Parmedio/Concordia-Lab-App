@@ -3,9 +3,12 @@ using AutoMapper;
 
 using BusinessLogic.DataTransferLogic.DateTimeConverter;
 using BusinessLogic.DTOs.BusinessDTO;
+using BusinessLogic.DTOs.ReportDto;
 using BusinessLogic.DTOs.TrelloDtos;
 
 using PersistentLayer.Models;
+
+using ReportSender.ReportDto;
 
 using static BusinessLogic.DataTransferLogic.DateTimeConverter.ConverterFromUTCToLocalTime;
 
@@ -75,5 +78,22 @@ public class MainProfile : Profile
                     src.Name,
                     src.Desc,
                     src.Due.ConvertToAntartideTimeZone()));
+
+        CreateMap<BusinessScientistDto, ScientistInExperimentForReportDto>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name));
+
+        CreateMap<BusinessExperimentDto, ExperimentForReportDto>()
+            .ForMember(dest => dest.ColumnId, opt => opt.MapFrom(src => src.ColumnId))
+            .ForMember(dest => dest.Scientists, opt => opt.MapFrom(src => src.Scientists));
+
+        CreateMap<Experiment, ExperimentOfScientistDto>()
+            .ForMember(dest => dest.ColumnId, opt => opt.MapFrom(src => src.ColumnId));
+
+        CreateMap<Scientist, ScientistForReportDto>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+            .ForMember(dest => dest.Experiments, opt => opt.MapFrom(src => src.Experiments));
+
     }
 }

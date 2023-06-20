@@ -50,6 +50,7 @@ public class ConnectionChecker : BackgroundService
                     {
                         _logger.LogInformation("Connection Established!");
                         ChangeConnectionState();
+                        dataService.GenerateReport();
                     }
 
                     connectionState = await dataService.UpdateConnectionStateAsync(true) ? "Online" : "Offline";

@@ -1,10 +1,15 @@
 ﻿using AutoMapper;
+
 using BusinessLogic.DataTransferLogic.Abstract;
 using BusinessLogic.DTOs.BusinessDTO;
 using BusinessLogic.Exceptions;
+
 using Microsoft.IdentityModel.Tokens;
+
 using PersistentLayer.Models;
 using PersistentLayer.Repositories.Abstract;
+
+using ReportSender.ReportDto;
 
 namespace BusinessLogic.DataTransferLogic.Concrete;
 
@@ -43,7 +48,7 @@ public class DataService : IDataService
 
         if (businessCommentDto.Scientist is null)
             throw new LocalCommentWithoutScientistException($"There was an error retrieving the author of the comment: {businessCommentDto.CommentText} with Id: {businessCommentDto.Id} on the experiment: {addedComment.Experiment.Title}");
-        
+
         return businessCommentDto;
     }
 
@@ -119,4 +124,7 @@ public class DataService : IDataService
             throw new ColumnsNumberException($"The number of columns present in the database is wrong, obtained count: {columns.Count()}");
         return _mapper.Map<IEnumerable<BusinessColumnDto>>(columns);
     }
+
+    public IEnumerable<ScientistForReportDto> GetAllScientistsWithExperiments()
+        => _mapper.Map<IEnumerable<ScientistForReportDto>>(_scientistRepository.GetAllWithExperimentsAndColumns());
 }

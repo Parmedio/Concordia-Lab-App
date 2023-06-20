@@ -1,4 +1,6 @@
-﻿using PersistentLayer.Configurations;
+﻿using Microsoft.EntityFrameworkCore;
+
+using PersistentLayer.Configurations;
 using PersistentLayer.Models;
 using PersistentLayer.Repositories.Abstract;
 
@@ -13,6 +15,13 @@ public class ScientistRepository : IScientistRepository
 
     public IEnumerable<Scientist> GetAll()
         => _dbContext.Scientists;
+
+    public IEnumerable<Scientist> GetAllWithExperimentsAndColumns()
+        => _dbContext.Scientists
+                        .Include(p => p.Experiments!)
+                        .ThenInclude(l => l.Column)
+                        .Where(p => p.Experiments!.Any())
+                        .ToList();
 
     public Scientist? GetById(int id)
         => _dbContext.Scientists.
