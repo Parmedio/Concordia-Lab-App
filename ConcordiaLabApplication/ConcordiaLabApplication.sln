@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcordiaAppTestLayer", "Co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackgroundServices", "BackgroundService\BackgroundServices.csproj", "{D857DE11-8239-4DA8-A55A-8B5FB7F6A6A0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportSender", "ReportSender\ReportSender.csproj", "{CDCA17AA-FD24-402D-8D90-4A2F2E1C1322}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{D857DE11-8239-4DA8-A55A-8B5FB7F6A6A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D857DE11-8239-4DA8-A55A-8B5FB7F6A6A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D857DE11-8239-4DA8-A55A-8B5FB7F6A6A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDCA17AA-FD24-402D-8D90-4A2F2E1C1322}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDCA17AA-FD24-402D-8D90-4A2F2E1C1322}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDCA17AA-FD24-402D-8D90-4A2F2E1C1322}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDCA17AA-FD24-402D-8D90-4A2F2E1C1322}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PersistentLayer\PersistentLayer.csproj" />
+    <ProjectReference Include="..\ReportSender\ReportSender.csproj" />
   </ItemGroup>
 
 </Project>

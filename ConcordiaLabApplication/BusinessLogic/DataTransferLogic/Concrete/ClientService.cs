@@ -1,5 +1,11 @@
-﻿using BusinessLogic.DataTransferLogic.Abstract;
+﻿using AutoMapper;
+
+using BusinessLogic.DataTransferLogic.Abstract;
 using BusinessLogic.DTOs.BusinessDTO;
+using BusinessLogic.DTOs.ReportDto;
+
+using ReportSender;
+using ReportSender.ReportDto;
 
 namespace BusinessLogic.DataTransferLogic.Concrete;
 
@@ -9,12 +15,14 @@ public class ClientService : IClientService
     private readonly IDataHandlerFactory _dataHandlerFactory;
     private readonly IDataService _dataHandler;
     private readonly IDataSyncer _dataSyncer;
+    private readonly IMapper _mapper;
 
-    public ClientService(IDataHandlerFactory dataHandlerFactory, IDataSyncer dataSyncer)
+    public ClientService(IDataHandlerFactory dataHandlerFactory, IDataSyncer dataSyncer, IMapper mapper)
     {
         _dataHandlerFactory = dataHandlerFactory;
         _dataHandler = _dataHandlerFactory.DataServiceFactoryMethod(_connectionAvailable);
         _dataSyncer = dataSyncer;
+        _mapper = mapper;
     }
 
     public async Task<bool> UpdateConnectionStateAsync(bool connectionState)
@@ -32,12 +40,21 @@ public class ClientService : IClientService
     public IEnumerable<BusinessColumnDto> GetAllColumns(int scientistId)
         => _dataHandler.GetAllColumns(scientistId);
 
-    public BusinessExperimentDto MoveExperiment(BusinessExperimentDto businessExperimentDto) 
+    public BusinessExperimentDto MoveExperiment(BusinessExperimentDto businessExperimentDto)
         => _dataHandler.MoveExperiment(businessExperimentDto);
 
     public async Task SyncDataAsyncs()
     {
         if (_connectionAvailable) await _dataSyncer.SynchronizeAsync();
+    }
+
+    public void GenerateReport()
+    {
+        var experiments = _dataHandler.GetAllExperiments();
+        var scientists = _dataHandler.GetAllScientistsWithExperiments();
+        ConcordiaReportRunner.Run(
+            _mapper.Map<IEnumerable<BusinessExperimentDto>, IEnumerable<ExperimentForReportDto>>(experiments),
+            scientists);
     }
 
     public IEnumerable<BusinessColumnDto> GetAllColumns()
@@ -57,4 +74,7 @@ public class ClientService : IClientService
 
     public IEnumerable<BusinessColumnDto> GetAllSimple()
         => _dataHandler.GetAllSimple();
+
+    public IEnumerable<ScientistForReportDto> GetAllScientistsWithExperiments()
+        => _dataHandler.GetAllScientistsWithExperiments();
 }
