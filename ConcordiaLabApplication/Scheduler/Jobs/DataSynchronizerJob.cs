@@ -1,7 +1,9 @@
 ﻿using BusinessLogic.DataTransferLogic.Abstract;
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+
 using Quartz;
 
 namespace Scheduler.Jobs;
@@ -12,11 +14,10 @@ public class DataSynchronizerJob : IJob
     private readonly TimeSpan _delay;
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly IConfiguration _configuration;
-    private bool _connectionAchieved;
+    private static bool _connectionAchieved = false;
 
     public DataSynchronizerJob(ILogger<DataSynchronizerJob> logger, IConfiguration configuration, IServiceScopeFactory scopeFactory)
     {
-        _connectionAchieved = false;
         _logger = logger;
         _configuration = configuration;
         _scopeFactory = scopeFactory;
@@ -40,6 +41,7 @@ public class DataSynchronizerJob : IJob
                 if (!_connectionAchieved)
                 {
                     _logger.LogInformation("Connection Established!");
+                    dataService.GenerateReport();
                     ChangeConnectionState();
                 }
 

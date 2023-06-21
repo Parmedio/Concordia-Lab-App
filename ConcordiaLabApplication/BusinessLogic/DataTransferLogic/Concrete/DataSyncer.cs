@@ -26,33 +26,48 @@ public class DataSyncer : IDataSyncer
         {
             _logger.LogInformation("Download experiments from Trello started...");
             var downloader = await _experimentDownloader.DownloadExperiments();
-            _logger.LogInformation(downloader.Message);
+            if (downloader._errorCount > 0)
+            {
+                _logger.LogWarning(downloader.Message);
+            }
+            else
+                _logger.LogInformation(downloader.Message);
         }
         catch (Exception ex)
         {
-            _logger.LogWarning($"Un unexpected Exception was caught while downloading experiments: {ex.Message}\n{ex.InnerException?.Message ?? ""}");
+            _logger.LogError($"Un unexpected Exception was caught while downloading experiments: {ex.Message}\n{ex.InnerException?.Message ?? ""}");
         }
 
         try
         {
             _logger.LogInformation("Download comments from Trello started...");
             var commentsDownloader = await _commentDownloader.DownloadComments();
-            _logger.LogInformation(commentsDownloader.Message);
+            if (commentsDownloader._errorCount > 0)
+            {
+                _logger.LogWarning(commentsDownloader.Message);
+            }
+            else
+                _logger.LogInformation(commentsDownloader.Message);
         }
         catch (Exception ex)
         {
-            _logger.LogWarning($"Un unexpected Exception was caught while downloading comments: {ex.Message}");
+            _logger.LogError($"Un unexpected Exception was caught while downloading comments: {ex.Message}\n{ex.InnerException?.Message ?? ""}");
         }
 
         try
         {
             _logger.LogInformation("Upload to Trello started...");
             var uploadLog = await _uploader.Upload();
-            _logger.LogInformation(uploadLog.Message);
+            if (uploadLog._errorCount > 0)
+            {
+                _logger.LogWarning(uploadLog.Message);
+            }
+            else
+                _logger.LogInformation(uploadLog.Message);
         }
         catch (Exception ex)
         {
-            _logger.LogWarning($"Un unexpected Exception was caught while uploading local data: {ex.Message}");
+            _logger.LogError($"Un unexpected Exception was caught while uploading local data: {ex.Message}\n{ex.InnerException?.Message ?? ""}");
         }
     }
 }
