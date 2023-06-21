@@ -2,8 +2,6 @@
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 
-using BackgroundServices;
-
 using BusinessLogic.APIConsumers.Abstract;
 using BusinessLogic.APIConsumers.Concrete;
 using BusinessLogic.APIConsumers.UriCreators;
@@ -22,6 +20,9 @@ using PersistentLayer.Repositories.Concrete;
 using Polly;
 using Polly.Contrib.WaitAndRetry;
 using Polly.Extensions.Http;
+using Quartz;
+using Scheduler;
+using Scheduler.Jobs;
 
 namespace ConcordiaLab;
 
@@ -55,11 +56,8 @@ public class Program
             cfg.AllowNullDestinationValues = true;
         });
 
-        builder.Services.AddHostedService(provider => provider.GetRequiredService<ConnectionChecker>());
 
         builder.Services.AddLogging();
-
-        builder.Services.AddSingleton<ConnectionChecker>();
 
         builder.Services.AddScoped<IApiSender, ApiSender>();
         builder.Services.AddScoped<IApiReceiver, ApiReceiver>();
@@ -72,12 +70,43 @@ public class Program
 
         builder.Services.AddTransient<IDataSyncer, DataSyncer>();
         builder.Services.AddTransient<IUriCreatorFactory, UriCreatorFactory>();
-        builder.Services.AddTransient<IRetrieveConnectionTimeInterval, RetrieveConnectionTimeInterval>();
         builder.Services.AddTransient<IDataHandlerFactory, DataHandlerFactory>();
         builder.Services.AddTransient<IClientService, ClientService>();
         builder.Services.AddTransient<ICommentDownloader, CommentDownloader>();
         builder.Services.AddTransient<IExperimentDownloader, ExperimentDownloader>();
         builder.Services.AddTransient<IUploader, Uploader>();
+
+        builder.Services.AddSingleton<IConnectionChecker, ConnectionChecker>();
+        builder.Services.AddSingleton<IConfiguration>(provider =>
+        {
+            return new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: false)
+                .Build();
+        });
+        builder.Services.AddScoped<DataSynchronizerJob>();
+        builder.Services.AddScoped<MonthlyTriggerJob>();
+
+        builder.Services.AddQuartz(q =>
+        {
+            q.UseMicrosoftDependencyInjectionJobFactory();
+
+            q.AddJob<MonthlyTriggerJob>(opts => opts.WithIdentity("MonthlyTriggerJob"))
+                .AddTrigger(opts => opts
+                    .ForJob("MonthlyTriggerJob")
+                    .StartNow()
+                    .WithSimpleSchedule(builder =>
+                        builder.WithIntervalInSeconds(5)
+                            .RepeatForever()));
+
+            q.AddJob<DataSynchronizerJob>(opts => opts.WithIdentity("DataSynchronizerJob"))
+                .AddTrigger(opts => opts
+                .WithIdentity("DynamicTrigger")
+                .ForJob("DataSynchronizerJob")
+                .StartAt(DateTimeOffset.MaxValue));
+
+            builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
+        });
 
         var app = builder.Build();
         await app.MigrateAsync();
