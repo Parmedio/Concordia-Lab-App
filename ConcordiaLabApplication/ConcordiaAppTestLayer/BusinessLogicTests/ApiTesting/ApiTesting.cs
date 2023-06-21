@@ -110,7 +110,6 @@ public class ApiTesting
         };
         var cardID = "6482fba0e13f2eaf24ec081f";
         var columnId = "6482fa39b72a7053b7b07e17";
-        var columnId2 = "6482fa302b3165154f5b6e99";
         Mock.Get(_factoryMock).Setup(_ => _.CreateClient("ApiConsumer")).Returns(client);
         Mock.Get(uriFactoryMock).Setup(p => p.UpdateAnExperiment(cardID, columnId)).Returns("cards/6482fba0e13f2eaf24ec081f?idList=6482fa39b72a7053b7b07e17&key=9ba27d32be683843dd1ffb346ae07641&token=ATTAd93cf67ec0072d821ff32e199156a675ed9301feea0f899df160829b3f14082dAB1E41AD");
         await _sender.Invoking(p => p.UpdateAnExperiment(cardID, columnId)).Should().NotThrowAsync();

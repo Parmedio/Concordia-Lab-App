@@ -3,9 +3,12 @@ using AutoMapper;
 
 using BusinessLogic.DataTransferLogic.DateTimeConverter;
 using BusinessLogic.DTOs.BusinessDTO;
+using BusinessLogic.DTOs.ReportDto;
 using BusinessLogic.DTOs.TrelloDtos;
 
 using PersistentLayer.Models;
+
+using ReportSender.ReportDto;
 
 using static BusinessLogic.DataTransferLogic.DateTimeConverter.ConverterFromUTCToLocalTime;
 
@@ -32,10 +35,10 @@ public class MainProfile : Profile
             .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.DeadLine))
             .ForMember(dest => dest.ColumnId, opt => opt.MapFrom(src => src.ColumnId))
             .ForMember(dest => dest.ColumnName, opt => opt.MapFrom(src => src.Column.Title))
-            .ForMember(dest => dest.Priority, opt => opt.MapFrom(src => src.Label.Title))
+            .ForMember(dest => dest.Priority, opt => opt.MapFrom(src => src.Label!.Title))
             .ForMember(dest => dest.TrelloCardId, opt => opt.MapFrom(src => src.TrelloId))
             .ForMember(dest => dest.TrelloColumnId, opt => opt.MapFrom(src => src.Column.TrelloId))
-            .ForMember(dest => dest.LastComment, opt => opt.MapFrom(src => src.Comments.AsEnumerable()
+            .ForMember(dest => dest.LastComment, opt => opt.MapFrom(src => src.Comments!.AsEnumerable()
             .OrderByDescending(comment => comment.Date)
             .FirstOrDefault()));
 
@@ -75,6 +78,23 @@ public class MainProfile : Profile
                     src.Name,
                     src.Desc,
                     src.Due.ConvertToAntartideTimeZone()));
+
+        CreateMap<BusinessScientistDto, ScientistInExperimentForReportDto>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name));
+
+        CreateMap<BusinessExperimentDto, ExperimentForReportDto>()
+            .ForMember(dest => dest.ColumnId, opt => opt.MapFrom(src => src.ColumnId))
+            .ForMember(dest => dest.Scientists, opt => opt.MapFrom(src => src.Scientists));
+
+        CreateMap<Experiment, ExperimentOfScientistDto>()
+            .ForMember(dest => dest.ColumnId, opt => opt.MapFrom(src => src.ColumnId));
+
+        CreateMap<Scientist, ScientistForReportDto>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+            .ForMember(dest => dest.Experiments, opt => opt.MapFrom(src => src.Experiments));
+
     }
 
     public static string FromatScientistName(string completeName)
