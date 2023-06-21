@@ -2,6 +2,13 @@
 
 public class ConnectionChecker : IConnectionChecker
 {
+    private readonly HttpClient _httpClient;
+
+    public ConnectionChecker(HttpClient httpClient)
+    {
+        _httpClient = httpClient;
+    }
+
     public async Task<bool> CheckConnection()
     {
         using var httpClient = new HttpClient();

@@ -62,6 +62,7 @@ public class Program
         builder.Services.AddScoped<IApiSender, ApiSender>();
         builder.Services.AddScoped<IApiReceiver, ApiReceiver>();
         builder.Services.AddScoped<DataService>();
+        builder.Services.AddSingleton<HttpClient>();
         builder.Services.AddScoped<IExperimentDownloader, ExperimentDownloader>();
         builder.Services.AddScoped<IExperimentRepository, ExperimentRepository>();
         builder.Services.AddScoped<ICommentRepository, CommentRepository>();
