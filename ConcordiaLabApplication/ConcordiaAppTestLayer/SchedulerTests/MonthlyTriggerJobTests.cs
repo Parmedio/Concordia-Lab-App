@@ -37,7 +37,7 @@ namespace ConcordiaAppTestLayer.SchedulerTests
             //schedulerMock.Setup(x => x.GetTriggersOfJob(It.IsAny<JobKey>())).ReturnsAsync(new[] { triggerMock.Object });
             //schedulerMock.Setup(x => x.RescheduleJob(It.IsAny<TriggerKey>(), It.IsAny<ITrigger>())).Returns(Task.CompletedTask);
             //_schedulerFactory.Setup(x => x.GetScheduler()).ReturnsAsync(schedulerMock.Object);
-
+             
             // Act
             await _sut.Execute(null);
 
