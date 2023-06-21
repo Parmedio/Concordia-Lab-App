@@ -72,13 +72,6 @@ public class Program
         builder.Services.AddTransient<IUploader, Uploader>();
 
         builder.Services.AddSingleton<IConnectionChecker, ConnectionChecker>();
-        builder.Services.AddSingleton<IConfiguration>(provider =>
-        {
-            return new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: false)
-                .Build();
-        });
         builder.Services.AddScoped<DataSynchronizerJob>();
         builder.Services.AddScoped<MonthlyTriggerJob>();
 

@@ -14,7 +14,7 @@ public class ConnectionCheckerTests
         _httpClient = Mock.Of<HttpClient>();
         _sut = new ConnectionChecker(_httpClient);
     }
-
+     
     [Fact]
     public async void Should_Return_True_With_Connection()
     {

@@ -16,7 +16,7 @@ public class UriCreatorFactory : IUriCreatorFactory
         _apiKey = _configuration.GetSection("TrelloAuthorization").GetSection("Key").Value!;
         _concordiaToken = _configuration.GetSection("TrelloAuthorization").GetSection("Token").Value!;
 #if DEBUG
-        _ToDoColumnId = _configuration.GetSection("TrelloTestEnvironment").GetSection("List").GetSection("idToDo").Value!;
+        _ToDoColumnId = _configuration.GetSection("TrelloTestEnvironment").GetSection("Column").GetSection("idToDo").Value!;
         _BoardId = _configuration.GetSection("TrelloTestEnvironment").GetSection("idBoard").Value!;
 #else
         _ToDoColumnId = _configuration.GetSection("TrelloIDsDevelopment").GetSection("Column").GetSection("idToDo").Value!;

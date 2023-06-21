@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -90,10 +91,10 @@ namespace PersistentLayer.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TrelloId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Body = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatorName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TrelloId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     ExperimentId = table.Column<int>(type: "int", nullable: false),
                     ScientistId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -142,9 +143,9 @@ namespace PersistentLayer.Migrations
                 columns: new[] { "Id", "Title", "TrelloId" },
                 values: new object[,]
                 {
-                    { 1, "to do", "64760975fbea80d6ef329080" },
-                    { 2, "in progress", "64760975fbea80d6ef329081" },
-                    { 3, "completed", "64760975fbea80d6ef329082" }
+                    { 1, "to do", "64760804e47275c707e05d38" },
+                    { 2, "in progress", "64760804e47275c707e05d39" },
+                    { 3, "completed", "64760804e47275c707e05d3a" }
                 });
 
             migrationBuilder.InsertData(
@@ -152,12 +153,12 @@ namespace PersistentLayer.Migrations
                 columns: new[] { "Id", "Title", "TrelloId" },
                 values: new object[,]
                 {
-                    { 1, "Medium", "647609751afdaf2b05536cd9" },
-                    { 2, "Low", "647609751afdaf2b05536cd7" },
+                    { 1, "Low", "647609751afdaf2b05536cd7" },
+                    { 2, "Medium", "647609751afdaf2b05536cd9" },
                     { 3, "High", "647609751afdaf2b05536cdf" },
-                    { 4, "Medium", "647608041afdaf2b0545a16c" },
-                    { 5, "High", "647608041afdaf2b0545a16b" },
-                    { 6, "Low", "647608041afdaf2b0545a160" }
+                    { 4, "Low", "647608041afdaf2b0545a160" },
+                    { 5, "Medium", "647608041afdaf2b0545a16c" },
+                    { 6, "High", "647608041afdaf2b0545a16b" }
                 });
 
             migrationBuilder.InsertData(
@@ -166,7 +167,7 @@ namespace PersistentLayer.Migrations
                 values: new object[,]
                 {
                     { 1, "Alessandro Ferluga", "5bf9f901921c336b20b29d25", "ATTA5c0a0bf47c1be3f495ebb81c42316684ff55e1134be71c0eba2cbecdd0614558CDCC81F8" },
-                    { 2, "Marco Da Pieve", "639c692ed850f6055714fd55", "ATTAd93cf67ec0072d821ff32e199156a675ed9301feea0f899df160829b3f14082dAB1E41AD" },
+                    { 2, "Marco da Pieve", "639c692ed850f6055714fd55", "ATTAd93cf67ec0072d821ff32e199156a675ed9301feea0f899df160829b3f14082dAB1E41AD" },
                     { 3, "Gabriele Cecutti", "6474f28f0d4924c1eaff2824", "ATTA408bebeedb9948e62a1e38c11691049bc07e9329984c3897908a0127279faa4956E9CC86" }
                 });
 

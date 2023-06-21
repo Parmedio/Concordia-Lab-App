@@ -12,7 +12,7 @@ using PersistentLayer.Configurations;
 namespace PersistentLayer.Migrations
 {
     [DbContext(typeof(ConcordiaDbContext))]
-    [Migration("20230615160625_Init")]
+    [Migration("20230621132323_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -65,19 +65,19 @@ namespace PersistentLayer.Migrations
                         {
                             Id = 1,
                             Title = "to do",
-                            TrelloId = "64760975fbea80d6ef329080"
+                            TrelloId = "64760804e47275c707e05d38"
                         },
                         new
                         {
                             Id = 2,
                             Title = "in progress",
-                            TrelloId = "64760975fbea80d6ef329081"
+                            TrelloId = "64760804e47275c707e05d39"
                         },
                         new
                         {
                             Id = 3,
                             Title = "completed",
-                            TrelloId = "64760975fbea80d6ef329082"
+                            TrelloId = "64760804e47275c707e05d3a"
                         });
                 });
 
@@ -189,14 +189,14 @@ namespace PersistentLayer.Migrations
                         new
                         {
                             Id = 1,
-                            Title = "Medium",
-                            TrelloId = "647609751afdaf2b05536cd9"
+                            Title = "Low",
+                            TrelloId = "647609751afdaf2b05536cd7"
                         },
                         new
                         {
                             Id = 2,
-                            Title = "Low",
-                            TrelloId = "647609751afdaf2b05536cd7"
+                            Title = "Medium",
+                            TrelloId = "647609751afdaf2b05536cd9"
                         },
                         new
                         {
@@ -207,20 +207,20 @@ namespace PersistentLayer.Migrations
                         new
                         {
                             Id = 4,
+                            Title = "Low",
+                            TrelloId = "647608041afdaf2b0545a160"
+                        },
+                        new
+                        {
+                            Id = 5,
                             Title = "Medium",
                             TrelloId = "647608041afdaf2b0545a16c"
                         },
                         new
                         {
-                            Id = 5,
+                            Id = 6,
                             Title = "High",
                             TrelloId = "647608041afdaf2b0545a16b"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Title = "Low",
-                            TrelloId = "647608041afdaf2b0545a160"
                         });
                 });
 
@@ -259,14 +259,14 @@ namespace PersistentLayer.Migrations
                         new
                         {
                             Id = 2,
-                            Name = "Marco de Piave",
+                            Name = "Marco da Pieve",
                             TrelloMemberId = "639c692ed850f6055714fd55",
                             TrelloToken = "ATTAd93cf67ec0072d821ff32e199156a675ed9301feea0f899df160829b3f14082dAB1E41AD"
                         },
                         new
                         {
                             Id = 3,
-                            Name = "Gabriele Ceccutti",
+                            Name = "Gabriele Cecutti",
                             TrelloMemberId = "6474f28f0d4924c1eaff2824",
                             TrelloToken = "ATTA408bebeedb9948e62a1e38c11691049bc07e9329984c3897908a0127279faa4956E9CC86"
                         });
