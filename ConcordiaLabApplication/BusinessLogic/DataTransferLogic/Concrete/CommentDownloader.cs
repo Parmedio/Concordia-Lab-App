@@ -3,7 +3,6 @@
 using BusinessLogic.APIConsumers.Abstract;
 using BusinessLogic.DataTransferLogic.Abstract;
 using BusinessLogic.DTOs.TrelloDtos;
-using BusinessLogic.Exceptions;
 
 using Microsoft.IdentityModel.Tokens;
 
@@ -29,38 +28,57 @@ public class CommentDownloader : ICommentDownloader
         _commentRepository = commentRepository;
     }
 
-    public async Task<IEnumerable<int>?> DownloadComments()
+    public async Task<SyncResult<Comment>> DownloadComments()
     {
-        IEnumerable<int>? addedCommentsId = null;
+        SyncResult<Comment> addedComments = new SyncResult<Comment>();
 
         var comments = await _receiver.GetAllComments();
+
         if (!comments.IsNullOrEmpty())
         {
             var latestCommentsToAdd = comments!.GroupBy(p => p.Data.Card.Id).Select(g => g.OrderByDescending(p => p.Date).First());
-            addedCommentsId = SyncDatabaseWithAllLatestComments(latestCommentsToAdd);
+            addedComments = SyncDatabaseWithAllLatestComments(latestCommentsToAdd);
+            return addedComments;
         }
-        return addedCommentsId;
+        addedComments.AppendLine("No comments found on Trello");
+        return addedComments;
     }
 
-    private List<int> SyncDatabaseWithAllLatestComments(IEnumerable<TrelloCommentDto> comments)
+    private SyncResult<Comment> SyncDatabaseWithAllLatestComments(IEnumerable<TrelloCommentDto> comments)
     {
-        List<int> addedCommentIds = new List<int>();
+        SyncResult<Comment> result = new SyncResult<Comment>();
+        List<Comment> newComments = new List<Comment>();
+        result.AppendLine($"Found {comments.Count()} downloadable comments candidates on Trello");
+        result.AppendLine("======================================");
         foreach (var comment in comments)
         {
+            result.Append($"{$" - \"{string.Concat(comment.Data.Text.Take(15))}...\"",-50}");
             if (_commentRepository.GetCommentByTrelloId(comment.Id!) is null)
             {
                 Comment commentToAdd = _mapper.Map<Comment>(comment);
                 commentToAdd.ScientistId = _scientistRepository.GetLocalIdByTrelloId(comment.IdMemberCreator);
-                commentToAdd.ExperimentId = _experimentRepository.GetLocalIdByTrelloId(comment.Data.Card.Id) ??
-                    throw new ExperimentNotPresentInLocalDatabaseException("The Experiment is not saved in the local database. Try Again.");
+                commentToAdd.ExperimentId = _experimentRepository.GetLocalIdByTrelloId(comment.Data.Card.Id) ?? -1;
+                if (commentToAdd.ExperimentId == -1)
+                {
+                    result.AppendLine($" => The Experiment with associated Trello ID: {comment.Data.Card.Id} is not saved in the local database. Try Again.");
+                    continue;
+                }
 
-                int? newId = _commentRepository.AddComment(commentToAdd);
-                if (newId is not null)
-                    addedCommentIds.Add(newId ?? -1);
+                Comment? newComment = _commentRepository.AddComment(commentToAdd);
+                if (newComment is not null)
+                    newComments.Add(newComment);
                 else
-                    throw new AddACommentFailedException("Failed To Add comment to Database during the Download Operation from Trello");
+                    result.AppendLine($" => Failed To Add comment with text: {commentToAdd.Body} and Id: {commentToAdd.TrelloId} to the Database during the Download Operation from Trello");
+                result.AppendLine(" => Comment saved successfully");
             }
+            else
+                result.AppendLine(" => Already saved in local Database.");
         }
-        return addedCommentIds;
+        result.AppendLine("======================================");
+        result.AppendLine("Download ended successfully");
+        result.AppendLine($"{newComments.Count()} NEW comments downloaded: ");
+        result.AppendLine("======================================");
+        result.Items = newComments;
+        return result;
     }
 }

@@ -1,13 +1,13 @@
-﻿@using ConcordiaLab.Controllers.Mock_Data.MockModels;
+﻿@using ConcordiaLab.ViewModels;
 
 @{
     var viewMode = ViewData["ViewMode"] as IEnumerable<string> ?? Enumerable.Empty<string>();
     var selectedViewMode = ViewData["SelectedViewMode"] as string ?? string.Empty;
 
     var experimentId = ViewData["ExperimentId"] as int?;
-
-    var scientists = ViewData["Scientists"] as IEnumerable<MockScientist> ?? Enumerable.Empty<MockScientist>();
     var selectedScientistId = ViewData["SelectedScientistId"] as int?;
+
+    var scientists = ViewData["Scientists"] as IEnumerable<ViewMScientist> ?? Enumerable.Empty<ViewMScientist>();
 }
 
 <!DOCTYPE html>
@@ -26,7 +26,7 @@
             <div class="d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center">
                     <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="About" asp-route-scientistId="@selectedScientistId" asp-route-selectedViewMode="@selectedViewMode">About</a>
                 </div>
                 <div class="d-flex justify-content-center align-items-center" style="width: 30%;">
                     <div class="select-box">
@@ -35,10 +35,10 @@
                             <input type="hidden" name="experimentId" value="@ViewData["ExperimentId"]" />
                             <input type="hidden" name="selectedViewMode" value="@ViewData["SelectedViewMode"]" />
                             <select id="scientist-dropdown" class="form-select" name="scientistId" onchange="document.getElementById('scientist-form').submit()">
-                                <option value="0" selected="@(selectedScientistId == 0)">All Scientist</option>
+                                <option value="0" selected="@(selectedScientistId == -1)">All Scientist</option>
                                 @foreach (var scientist in scientists)
                                 {
-                                    <option value="@scientist.Id" selected="@(scientist.Id == selectedScientistId)">@scientist.Name[0]. @scientist.Surname</option>
+                                    <option value="@scientist.Id" selected="@(scientist.Id == selectedScientistId)">@scientist.UserName</option>
                                 }
                             </select>
                         </form>
@@ -67,7 +67,7 @@
     </div>
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2023 - Concordia Lab - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2023 - Concordia Lab - <a asp-area="" asp-controller="Home" asp-action="About">About</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

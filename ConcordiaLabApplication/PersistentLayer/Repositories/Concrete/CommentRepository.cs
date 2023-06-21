@@ -4,23 +4,38 @@ using PersistentLayer.Configurations;
 using PersistentLayer.Models;
 using PersistentLayer.Repositories.Abstract;
 
-namespace PersistentLayer.Repositories.Concrete
+namespace PersistentLayer.Repositories.Concrete;
+
+public class CommentRepository : ICommentRepository
 {
-    public class CommentRepository : ICommentRepository
+    private readonly ConcordiaDbContext _dbContext;
+
+    public CommentRepository(ConcordiaDbContext dbContext)
+        => _dbContext = dbContext;
+
+    public Comment? AddComment(Comment comment)
     {
-        private readonly ConcordiaDbContext _dbContext;
+        var entity = _dbContext.Comments.Add(comment);
+        _dbContext.SaveChanges();
+        entity.Entity.Experiment = _dbContext.Experiments.SingleOrDefault(p => p.Id == comment.ExperimentId)!;
+        entity.Entity.Scientist = _dbContext.Scientists.SingleOrDefault(p => p.Id == comment.ScientistId)!;
+        return entity.Entity;
+    }
 
-        public CommentRepository(ConcordiaDbContext dbContext)
-            => _dbContext = dbContext;
+    public Comment? GetCommentByTrelloId(string trelloId)
+        => _dbContext.Comments.AsNoTracking()
+        .Include(c => c.Scientist)
+        .SingleOrDefault(c => c.TrelloId == trelloId);
 
-        public int? AddComment(Comment comment)
+    public Comment? UpdateAComment(int id, string trelloId)
+    {
+        var entity = _dbContext.Comments.SingleOrDefault(p => p.Id == id) ?? null;
+        if (entity is not null)
         {
-            var entity = _dbContext.Comments.Add(comment);
+            _dbContext.Update(entity);
+            entity.TrelloId = trelloId;
             _dbContext.SaveChanges();
-            return entity.Entity.Id;
         }
-
-        public Comment? GetCommentByTrelloId(string trelloId)
-            => _dbContext.Comments.AsNoTracking().SingleOrDefault(c => c.TrelloId == trelloId);      
+        return entity;
     }
 }

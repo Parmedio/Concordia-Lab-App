@@ -1,4 +1,6 @@
-﻿namespace BusinessLogic.DTOs.TrelloDtos;
+﻿using Newtonsoft.Json;
+
+namespace BusinessLogic.DTOs.TrelloDtos;
 
 public record TrelloExperimentDto
 {
@@ -7,6 +9,8 @@ public record TrelloExperimentDto
     public List<string>? IdMembers { get; set; }
     public DateTime? Due { get; set; }
     public List<string>? IdLabels { get; set; }
-    public string TrelloListId { get; set; } = null!;
+
+    [JsonProperty(PropertyName = "idList")]
+    public string TrelloColumnId { get; set; } = null!;
     public string? Desc { get; set; }
 }

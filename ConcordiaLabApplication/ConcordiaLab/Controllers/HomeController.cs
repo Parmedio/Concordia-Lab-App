@@ -1,82 +1,192 @@
-﻿using ConcordiaLab.Controllers.Mock_Data;
-using ConcordiaLab.Controllers.Mock_Data.Mock_Gateway;
-using ConcordiaLab.Controllers.Mock_Data.MockModels;
-using ConcordiaLab.Controllers.Mock_Data.ViewModel;
+﻿using AutoMapper;
+using BusinessLogic.DataTransferLogic.Abstract;
+using ConcordiaLab.ViewModels;
 using ConcordiaLab.Models;
-
 using Microsoft.AspNetCore.Mvc;
-using PersistentLayer.Models;
-using System.Collections;
 using System.Diagnostics;
-using System.Runtime.ConstrainedExecution;
+using BusinessLogic.DTOs.BusinessDTO;
+using System.Data.SqlClient;
+using PersistentLayer.Models;
 
 namespace ConcordiaLab.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly MockGatewayList _mockGatewayList;
-        private readonly MockGatewayExperiment _mockGatewayExperiment;
-        private readonly MockGatewayScientist _mockGatewayScientist;
-        private readonly UserSetting _userSetting;
+        private readonly IMapper _mapper;
+        private readonly IClientService _clientService;
+        private static readonly List<string> _viewMode = new List<string>() { "status", "priority" };
+        private static List<ViewMColumn> _progressStatuses = new List<ViewMColumn>();
+        private static List<ViewMScientist> _allScientist = new List<ViewMScientist>();
 
-        public HomeController(ILogger<HomeController> logger, MockGatewayList mockGatewayList, MockGatewayExperiment mockGatewayExperiment, MockGatewayScientist mockGatewayScientist, UserSetting userSetting)
+        public HomeController(ILogger<HomeController> logger, IMapper mapper, IClientService clientService)
         {
             _logger = logger;
-            _mockGatewayList = mockGatewayList;
-            _mockGatewayExperiment = mockGatewayExperiment;
-            _mockGatewayScientist = mockGatewayScientist;
-            _userSetting = userSetting;
+            _mapper = mapper;
+            _clientService = clientService;
+
+            if (!_progressStatuses.Any())
+                _progressStatuses = _mapper.Map<List<ViewMColumn>>(_clientService.GetAllSimple());
+
+            if (!_allScientist.Any())
+                _allScientist = _mapper.Map<List<ViewMScientist>>(_clientService.GetAllScientist());
         }
 
+        [HttpGet]
         public IActionResult Index(int scientistId = 0)
         {
             _logger.LogInformation("Index was called");
 
-            ViewData["SelectedScientistId"] = scientistId;
-            ViewData["Scientists"] = _mockGatewayScientist.GetAll();
+            IEnumerable<ViewMColumn> dashboard = new List<ViewMColumn>();
 
-            ViewData["ViewMode"] = new List<string>() { "status", "priority" };
+            try
+            {
+                dashboard = BuildIndex(scientistId);
+            }
+            catch (SqlException ex)
+            {
+                _logger.LogError(ex, "Error while retrieving columns in database.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while processing your request.");
+            }
+
+            ViewData["SelectedScientistId"] = scientistId;
+            ViewData["Scientists"] = _allScientist;
+
+            ViewData["ViewMode"] = _viewMode;
             ViewData["SelectedViewMode"] = "status";
 
-            var dashboard = BuildIndex(scientistId);
             return View(dashboard);
         }
 
+        [HttpGet]
         public IActionResult Priority(int scientistId = 0)
         {
             _logger.LogInformation("Priority was called");
 
-            ViewData["SelectedScientistId"] = scientistId;
-            ViewData["Scientists"] = _mockGatewayScientist.GetAll();
+            IEnumerable<ViewMExperiment> priorityList = new List<ViewMExperiment>();
 
-            ViewData["ViewMode"] = new List<string>() { "status", "priority"};
+            try
+            {
+                priorityList = BuildPriority(scientistId);
+            }
+            catch (SqlException ex)
+            {
+                _logger.LogError(ex, "Error while retrieving experiments in database.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while processing your request.");
+            }
+
+            ViewData["SelectedScientistId"] = scientistId;
+            ViewData["Scientists"] = _allScientist;
+
+            ViewData["ViewMode"] = _viewMode;
             ViewData["SelectedViewMode"] = "priority";
 
-            var priorityList = BuildPriority(scientistId);
             return View(priorityList);
         }
 
+        [HttpGet]
         public IActionResult Detail(int experimentId, int scientistId, string selectedViewMode)
         {
             _logger.LogInformation("Detail was called");
-            
-            var detail = BuildDetailedExperiment(experimentId);
+
+            var detail = new ViewMExperiment();
+
+            try
+            {
+                detail = BuildDetailedExperiment(experimentId);
+            }
+            catch (SqlException ex)
+            {
+                _logger.LogError(ex, "Error while retrieving experiment in database.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while processing your request.");
+            }
 
             ViewData["SelectedScientistId"] = scientistId;
-            ViewData["Scientists"] = _mockGatewayScientist.GetAll();
+            ViewData["Scientists"] = _allScientist;
 
-            ViewData["ViewMode"] = new List<string>() { "status", "priority" };
+            ViewData["ProgressStatuses"] = _progressStatuses;
+
+            ViewData["ViewMode"] = _viewMode;
             ViewData["SelectedViewMode"] = selectedViewMode;
 
             ViewData["ExperimentId"] = experimentId;
-            ViewData["ExperimentScientistIds"] = detail.Experiment.IntScientists;
-            
+            ViewData["ExperimentScientistIds"] = detail?.Scientists?.Any() ?? false ? detail.Scientists?.Select(x => x.Id).ToList() : new List<int> { 0 };
+
             return View(detail);
         }
 
-        public IActionResult Privacy()
+        [HttpPost]
+        public IActionResult UpdateExperimentStatus(int experimentId, int scientistId, string selectedViewMode, int statusId)
         {
+            _logger.LogInformation("Update experiment status was called");
+
+            var updatedExperiment = _clientService.GetExperimentById(experimentId);
+            updatedExperiment.ColumnName = _progressStatuses.FirstOrDefault(x => x.Id == statusId)!.Name;
+            updatedExperiment.ColumnId = statusId;
+
+            try
+            {
+                _clientService.MoveExperiment(updatedExperiment);
+            }
+            catch (SqlException ex)
+            {
+                _logger.LogError(ex, "Error while updating experiment status in database.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while processing your request.");
+            }
+
+            return RedirectToAction("Detail", new { experimentId, scientistId, selectedViewMode });
+        }
+
+        [HttpPost]
+        public IActionResult PostNewComment(int experimentId, int scientistId, string commentAuthorName, string selectedViewMode, string commentText)
+        {
+            _logger.LogInformation("Post new comment was called");
+
+            var newComment = new BusinessCommentDto
+            {
+                CardID = experimentId,
+                CommentText = commentText,
+                CreatorName = commentAuthorName
+            };
+
+            try
+            {
+                _clientService.AddComment(newComment, scientistId);
+            }
+            catch (SqlException ex)
+            {
+                _logger.LogError(ex, "Error while adding comment to database.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while processing your request.");
+            }
+
+            return RedirectToAction("Detail", new { experimentId, scientistId, selectedViewMode });
+        }
+
+        [HttpGet]
+        public IActionResult About(int scientistId, string selectedViewMode)
+        {
+            _logger.LogInformation("About was called");
+
+            ViewData["SelectedScientistId"] = scientistId;
+            ViewData["Scientists"] = _allScientist;
+
+            ViewData["ViewMode"] = _viewMode;
+            ViewData["SelectedViewMode"] = selectedViewMode;
             return View();
         }
 
@@ -86,98 +196,68 @@ namespace ConcordiaLab.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        private Dashboard BuildIndex(int scientistId)
+        private IEnumerable<ViewMColumn> BuildIndex(int scientistId)
         {
-            var experimentWithAssegnee = AssignScientistToExperiment(scientistId);
+            var Columns = scientistId == 0 ?
+                _mapper.Map<IEnumerable<ViewMColumn>>(_clientService.GetAllColumns()) :
+                _mapper.Map<IEnumerable<ViewMColumn>>(_clientService.GetAllColumns(scientistId));
 
-            var lists = _mockGatewayList.GetAll()
-                .Select(list =>
-                {
-                    var listExperiments = list.IntExperiments?
-                        .SelectMany(id => experimentWithAssegnee.Where(experiment => id == experiment.Id));
-
-                    return new MockList(list.Id, list.Name, list.IntExperiments)
-                    {
-                        Experiments = listExperiments
-                    };
-                });
-
-            return new Dashboard(lists);
+            return (Columns);
         }
 
-        private Priority BuildPriority(int scientistId)
+        private IEnumerable<ViewMExperiment> BuildPriority(int scientistId)
         {
-            var experimentWithAssegnee = AssignScientistToExperiment(scientistId);
-            
-            var sortedExperiments = OrderAccordingToPriority(experimentWithAssegnee);
+            var unorderedExperiments = scientistId == 0 ?
+                _mapper.Map<IEnumerable<ViewMExperiment>>(_clientService.GetAllExperiments()) :
+                _mapper.Map<IEnumerable<ViewMExperiment>>(_clientService.GetAllExperiments(scientistId));
 
-            return new Priority(sortedExperiments);
+            return OrderAccordingToPriority(unorderedExperiments);
         }
 
-        private ExperimentDetails BuildDetailedExperiment(int ExpId)
+        private ViewMExperiment BuildDetailedExperiment(int ExpId)
         {
-            var scientists = _mockGatewayScientist.GetAll();
+            var detailedExperiment = _mapper.Map<ViewMExperiment>(_clientService.GetExperimentById(ExpId));
 
-            var experiment = _mockGatewayExperiment.GetById(ExpId)!;
-
-            var expScientists = experiment.IntScientists?
-                .SelectMany(id => scientists.Where(scientist => id == scientist.Id));
-
-            var detailedExperiment = new MockExperiment(experiment.Id, experiment.Title, experiment.Description, experiment.DueDate, experiment.Priority, experiment.LastComment, experiment.IntScientists)
-            {
-                Scientists = expScientists
-            };
-
-            return new ExperimentDetails(detailedExperiment);
+            return detailedExperiment;
         }
 
-        private List<MockExperiment> OrderAccordingToPriority(IEnumerable<MockExperiment> listToOrder)
+        private List<ViewMExperiment> OrderAccordingToPriority(IEnumerable<ViewMExperiment> listToOrder)
         {
             var today = DateTime.Today;
             var dueDateThreshold = today.AddDays(5);
 
+            var nullPriorityExperimentsWithNearDueDate = listToOrder
+                .Where(e => e.Priority == null && e.DueDate <= dueDateThreshold).OrderBy(e => e.DueDate);
+
+            var nullPriorityExperimentsWithFarOrNullDueDate = listToOrder
+                .Where(e => e.Priority == null && (e.DueDate > dueDateThreshold || e.DueDate is null)).OrderBy(e => e.DueDate);
+
             var highPriorityExperiments = listToOrder
-                .Where(e => e.Priority.ToLower() == "high");
+                .Where(e => e.Priority?.ToLower() == "high").OrderBy(e => e.DueDate);
 
             var mediumPriorityExperimentsWithNearDueDate = listToOrder
-                .Where(e => e.Priority.ToLower() == "medium" && e.DueDate <= dueDateThreshold);
+                .Where(e => e.Priority?.ToLower() == "medium" && e.DueDate <= dueDateThreshold).OrderBy(e => e.DueDate);
 
             var lowPriorityExperimentsWithNearDueDate = listToOrder
-                .Where(e => e.Priority.ToLower() == "low" && e.DueDate <= dueDateThreshold);
+                .Where(e => e.Priority?.ToLower() == "low" && e.DueDate <= dueDateThreshold).OrderBy(e => e.DueDate);
 
-            var mediumPriorityExperiments = listToOrder
-                .Where(e => e.Priority.ToLower() == "medium" && (e.DueDate > dueDateThreshold || e.DueDate is null));
+            var mediumPriorityExperimentsWithFarOrNullDueDate = listToOrder
+                .Where(e => e.Priority?.ToLower() == "medium" && (e.DueDate > dueDateThreshold || e.DueDate is null)).OrderBy(e => e.DueDate);
 
-            var lowPriorityExperiments = listToOrder
-                .Where(e => e.Priority.ToLower() == "low" && (e.DueDate > dueDateThreshold || e.DueDate is null));
+            var lowPriorityExperimentsWithFarOrNullDueDate = listToOrder
+                .Where(e => e.Priority?.ToLower() == "low" && (e.DueDate > dueDateThreshold || e.DueDate is null)).OrderBy(e => e.DueDate);
 
             var sortedExperiments = highPriorityExperiments
                 .Concat(mediumPriorityExperimentsWithNearDueDate)
                 .Concat(lowPriorityExperimentsWithNearDueDate)
-                .Concat(mediumPriorityExperiments)
-                .Concat(lowPriorityExperiments)
+                .Concat(nullPriorityExperimentsWithNearDueDate)
+                .Concat(mediumPriorityExperimentsWithFarOrNullDueDate)
+                .Concat(lowPriorityExperimentsWithFarOrNullDueDate)
+                .Concat(nullPriorityExperimentsWithFarOrNullDueDate)
+                .Where(e => e.ColumnId != 3)
                 .ToList();
 
             return sortedExperiments;
-        }
-       
-        private IEnumerable<MockExperiment> AssignScientistToExperiment(int scientistId)
-        {
-            var scientists = _mockGatewayScientist.GetAll();
-
-            var experiments = (scientistId == 0 ? _mockGatewayExperiment.GetAll() : _mockGatewayExperiment.GetAllFromScientistId(scientistId))
-                .Select(experiment =>
-                {
-                    var expScientists = experiment.IntScientists?
-                        .SelectMany(id => scientists.Where(scientist => id == scientist.Id));
-
-                    return new MockExperiment(experiment.Id, experiment.Title, experiment.Description, experiment.DueDate, experiment.Priority, experiment.LastComment, experiment.IntScientists)
-                    {
-                        Scientists = expScientists
-                    };
-                });
-
-            return experiments;
         }
     }
 }

@@ -1,13 +1,23 @@
 ﻿using BusinessLogic.DTOs.BusinessDTO;
 
+using ReportSender.ReportDto;
+
 namespace BusinessLogic.DataTransferLogic.Abstract
 {
     public interface IClientService
     {
-        BusinessCommentDto AddComment(BusinessCommentDto businessCommentDto, int scientistId);
-        IEnumerable<BusinessListDto> GetAllLists(int scientistId);
-        BusinessExperimentDto MoveExperiment(BusinessExperimentDto businessExperimentDto);
-        Task SyncDataAsyncs();
-        Task<bool> UpdateConnectionStateAsync(bool connectionState);
+        public BusinessCommentDto AddComment(BusinessCommentDto businessCommentDto, int scientistId);
+        public IEnumerable<BusinessColumnDto> GetAllColumns();
+        public IEnumerable<BusinessColumnDto> GetAllColumns(int scientistId);
+        public IEnumerable<BusinessColumnDto> GetAllSimple();
+        public IEnumerable<BusinessExperimentDto> GetAllExperiments();
+        public IEnumerable<BusinessExperimentDto> GetAllExperiments(int scientistId);
+        public IEnumerable<BusinessScientistDto> GetAllScientist();
+        public IEnumerable<ScientistForReportDto> GetAllScientistsWithExperiments();
+        public BusinessExperimentDto GetExperimentById(int experimentId);
+        public BusinessExperimentDto MoveExperiment(BusinessExperimentDto businessExperimentDto);
+        public Task SyncDataAsyncs();
+        public void GenerateReport();
+        public Task<bool> UpdateConnectionStateAsync(bool connectionState);
     }
 }

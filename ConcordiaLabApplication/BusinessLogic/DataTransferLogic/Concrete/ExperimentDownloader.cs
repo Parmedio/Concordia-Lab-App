@@ -1,14 +1,12 @@
 ﻿using AutoMapper;
-
 using BusinessLogic.APIConsumers.Abstract;
 using BusinessLogic.DataTransferLogic.Abstract;
 using BusinessLogic.DTOs.TrelloDtos;
-using BusinessLogic.Exceptions;
-
 using Microsoft.IdentityModel.Tokens;
-
 using PersistentLayer.Models;
 using PersistentLayer.Repositories.Abstract;
+
+using System.Text;
 
 namespace BusinessLogic.DataTransferLogic.Concrete;
 
@@ -27,55 +25,63 @@ public class ExperimentDownloader : IExperimentDownloader
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<Experiment>?> DownloadExperiments()
+    public async Task<SyncResult<Experiment>> DownloadExperiments()
     {
-
-        IEnumerable<Experiment>? AddedExperiments = null;
-
-        var experimentsInToDoList = await _receiver.GetAllExperimentsInToDoList();
-
-        if (!experimentsInToDoList.IsNullOrEmpty())
+        SyncResult<Experiment> AddedExperiments = new SyncResult<Experiment>();
+        var experimentsInToDoColumn = await _receiver.GetAllExperimentsInToDoColumn();
+        if (!experimentsInToDoColumn.IsNullOrEmpty())
         {
-            var resultOfSyncNewExperiments = SyncDatabaseWithAllExperimentsInToDoList(experimentsInToDoList!);
-            AddedExperiments = resultOfSyncNewExperiments.Item2;
+            var resultOfSyncNewExperiments = SyncDatabaseWithAllExperimentsInToDoColumn(experimentsInToDoColumn!);
+            AddedExperiments = resultOfSyncNewExperiments;
+            return AddedExperiments;
         }
-
+        AddedExperiments.AppendLine("No experiments found on Trello");
         return AddedExperiments;
     }
 
-    private (int, IEnumerable<Experiment>) SyncDatabaseWithAllExperimentsInToDoList(IEnumerable<TrelloExperimentDto> experiments)
+    private SyncResult<Experiment> SyncDatabaseWithAllExperimentsInToDoColumn(IEnumerable<TrelloExperimentDto> experiments)
     {
-        int count = 0;
+        StringBuilder infoMessage = new StringBuilder();
         List<Experiment> addedExperiments = new List<Experiment>();
+        infoMessage.AppendLine($"Experiments found on To Do List : {experiments.Count()}");
+        infoMessage.AppendLine("Downloading...");
+        infoMessage.AppendLine("======================================");
         foreach (var experiment in experiments)
         {
+            infoMessage.Append($"{$" - {experiment.Name}",-50}");
             if (_experimentRepository.GetLocalIdByTrelloId(experiment.Id!) is null)
             {
-
-                var experimentToAdd = _mapper.Map<Experiment>(experiment);
-                experimentToAdd.ListId = 1;
-                var scientistIdList = experiment.IdMembers?.Select(p => _scientistRepository.GetLocalIdByTrelloId(p) ?? -1).ToList();
-
+                var experimentToAdd = _mapper.Map<TrelloExperimentDto, Experiment>(experiment);
+                experimentToAdd.ColumnId = 1;
+                var scientistIdList = experiment.IdMembers?.Select(p => new { id = _scientistRepository.GetLocalIdByTrelloId(p) ?? -1, trelloId = p }).ToList();
                 if (!scientistIdList.IsNullOrEmpty())
                 {
-                    if (scientistIdList!.Any(p => p == -1))
-                        throw new ScientistIdNotPresentOnDatabaseException("One of the assignee is not saved on the database, check Trello MemberId");
-                    experimentToAdd.ScientistsIds = scientistIdList;
+                    if (scientistIdList!.Any(p => p.id == -1))
+                    {
+                        infoMessage.Append($" => One or more of the assignees are not saved on the database, check Trello Members' Ids:\n" +
+                            $"Trello members Id: {string.Join(", \n", scientistIdList!.Where(g => g.id == -1).Select(p => $"{p.trelloId}"))}");
+                        continue;
+                    }
+                    experimentToAdd.ScientistsIds = scientistIdList!.Select(p => p.id);
+                    experimentToAdd.Scientists = scientistIdList!.Select(p => _scientistRepository.GetById(p.id)!).ToList() ?? new List<Scientist>();
                 }
-
                 if (!experiment.IdLabels.IsNullOrEmpty())
                 {
                     var labelsId = experiment.IdLabels!.Select(p => _experimentRepository.GetLocalIdLabelByTrelloIdLabel(p) ?? -1).Max();
                     if (labelsId != -1)
                         experimentToAdd.LabelId = labelsId;
                 }
-
                 var addedExperiment = _experimentRepository.Add(experimentToAdd);
-
                 addedExperiments.Add(addedExperiment);
-                count++;
+                infoMessage.AppendLine(" => Experiment saved successfully.");
             }
+            else
+                infoMessage.AppendLine(" => Already saved in local Database.");
         }
-        return (count, addedExperiments.AsEnumerable());
+        infoMessage.AppendLine("======================================");
+        infoMessage.AppendLine("Download ended successfully");
+        infoMessage.AppendLine($"{addedExperiments.Count()} Were added.");
+        infoMessage.AppendLine("======================================");
+        return new SyncResult<Experiment>(addedExperiments, infoMessage);
     }
 }

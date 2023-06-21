@@ -11,9 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLogic", "BusinessLo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcordiaAppTestLayer", "ConcordiaAppTestLayer\ConcordiaAppTestLayer.csproj", "{9A1E50E4-3423-40F0-9067-3345A97DA64C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackgroundServices", "BackgroundService\BackgroundServices.csproj", "{D857DE11-8239-4DA8-A55A-8B5FB7F6A6A0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scheduler", "Scheduler\Scheduler.csproj", "{E5C7C609-EA6C-425D-A8DF-BF2813DE653E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersistentLayerTest", "PersistentLayerTest\PersistentLayerTest.csproj", "{FF12A514-03A1-4DD0-AC38-3F3EEDD9E527}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportSender", "ReportSender\ReportSender.csproj", "{CDCA17AA-FD24-402D-8D90-4A2F2E1C1322}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,10 +41,14 @@ Global
 		{D857DE11-8239-4DA8-A55A-8B5FB7F6A6A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D857DE11-8239-4DA8-A55A-8B5FB7F6A6A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D857DE11-8239-4DA8-A55A-8B5FB7F6A6A0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FF12A514-03A1-4DD0-AC38-3F3EEDD9E527}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FF12A514-03A1-4DD0-AC38-3F3EEDD9E527}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FF12A514-03A1-4DD0-AC38-3F3EEDD9E527}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FF12A514-03A1-4DD0-AC38-3F3EEDD9E527}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDCA17AA-FD24-402D-8D90-4A2F2E1C1322}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDCA17AA-FD24-402D-8D90-4A2F2E1C1322}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDCA17AA-FD24-402D-8D90-4A2F2E1C1322}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDCA17AA-FD24-402D-8D90-4A2F2E1C1322}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5C7C609-EA6C-425D-A8DF-BF2813DE653E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5C7C609-EA6C-425D-A8DF-BF2813DE653E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5C7C609-EA6C-425D-A8DF-BF2813DE653E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5C7C609-EA6C-425D-A8DF-BF2813DE653E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

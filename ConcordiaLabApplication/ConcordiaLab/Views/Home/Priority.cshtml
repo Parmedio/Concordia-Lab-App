@@ -1,4 +1,5 @@
-﻿@model ConcordiaLab.Controllers.Mock_Data.ViewModel.Priority
+﻿@using ConcordiaLab.ViewModels;
+@model IEnumerable<ViewMExperiment>
 
 @{
     ViewData["Title"] = "Priority Dashboard";
@@ -30,7 +31,7 @@
                 <p class="placeholderz"></p>
             </div>
         </div>
-        @foreach (var experiment in Model.Experiments)
+        @foreach (var experiment in Model)
         {
             <div class="d-flex justify-content-between custom-card">
                 <h5 class="mt-2 ms-3 experiment-title">@experiment.Title</h5>
@@ -39,7 +40,7 @@
                     if (experiment.Scientists != null)
                     {
                         var scientistsCount = experiment.Scientists.Count();
-                        var scientistsList = string.Join(", ", experiment.Scientists.Select(s => $"{s.Name[0]}. {s.Surname}"));
+                        var scientistsList = string.Join(", ", experiment.Scientists.Select(s => $"{s.UserName}"));
 
                         if (scientistsCount > 0)
                         {
@@ -49,9 +50,9 @@
                 }
                 </h6>
                 <div class="segment">
-                    <p class="progressz"><b>@experiment.Priority</b></p>
+                    <p class="progressz"><b>@experiment.ColumnName</b></p>
                     <p class="priority"><b>@experiment.Priority</b></p>
-                    <p class="due-date">@(experiment.DueDate != null ? experiment.DueDate?.ToString("dd ") + experiment.DueDate?.ToString("MMM").Substring(0, 3).ToUpper() : "no date")</p>
+                    <p class="due-date"><b>@(experiment.DueDate != null ? experiment.DueDate?.ToString("dd ") + experiment.DueDate?.ToString("MMM").Substring(0, 3).ToUpper() : "none")</b></p>
                     <a class="btn btn-outline-secondary flex-shrink-1" asp-action="Detail" asp-route-experimentId="@experiment.Id" asp-route-scientistId="@selectedScientistId" asp-route-selectedViewMode="@selectedViewMode">details</a>
                 </div>
             </div>
@@ -120,6 +121,15 @@
         margin: 6px;
     }
 
+    .none {
+        color: white;
+        background-color: white;
+    }
+
+    .present {
+        background-color: whitesmoke
+    }
+
     .segment {
         width: 32%;
         display: flex;
@@ -182,14 +192,30 @@
         var pelement = pelements[z];
         var priority = pelement.innerText.trim();
 
-        if (priority === 'Low') {
+        if (priority === 'to do') {
             pelement.classList.add('to-do');
-        } else if (priority === 'Medium') {
+        } else if (priority === 'in progress') {
             pelement.classList.add('in-progress');
-        } else if (priority === 'High') {
+        } else if (priority === 'completed') {
             pelement.classList.add('completed');
         }
 
         z--;
+    }
+
+    var elementsD = document.getElementsByClassName('due-date');
+    var k = elementsD.length - 1;
+
+    while (k >= 0) {
+        var elementD = elementsD[k];
+        var date = elementD.innerText.trim();
+
+        if (date === 'none') {
+            elementD.classList.add('none');
+        } else {
+            elementD.classList.add('present');
+        }
+
+        k--;
     }
 </script>

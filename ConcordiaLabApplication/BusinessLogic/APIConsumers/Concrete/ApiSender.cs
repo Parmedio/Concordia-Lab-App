@@ -1,11 +1,11 @@
-
 using BusinessLogic.APIConsumers.UriCreators;
+
+using Newtonsoft.Json;
 
 namespace BusinessLogic.APIConsumers.Concrete;
 
 public class ApiSender : IApiSender
 {
-
     private readonly IHttpClientFactory _clientFactory;
     private readonly IUriCreatorFactory _uriCreatorFactory;
 
@@ -15,17 +15,25 @@ public class ApiSender : IApiSender
         _uriCreatorFactory = uriCreatorFactory;
     }
 
-    public async Task<bool> AddAComment(string cardId, string commentText, string authToken)
+    public async Task<string> AddAComment(string cardId, string commentText, string authToken)
     {
-        var client = _clientFactory.CreateClient();
+        var client = _clientFactory.CreateClient("ApiConsumer");
         var response = await client.PostAsync(_uriCreatorFactory.AddACommentOnACard(cardId, commentText, authToken), null);
-        return response.IsSuccessStatusCode;
+        response.EnsureSuccessStatusCode();
+        var Id = JsonConvert.DeserializeObject<TrelloId>(await response.Content.ReadAsStringAsync(), settings: null)?.Id ?? string.Empty;
+        return Id;
     }
 
     public async Task<bool> UpdateAnExperiment(string cardId, string newListId)
     {
-        var client = _clientFactory.CreateClient();
-        var response = await client.PostAsync(_uriCreatorFactory.UpdateAnExperiment(cardId, newListId), null);
+        var client = _clientFactory.CreateClient("ApiConsumer");
+        var response = await client.PutAsync(_uriCreatorFactory.UpdateAnExperiment(cardId, newListId), null);
         return response.IsSuccessStatusCode;
     }
+
+    private class TrelloId
+    {
+        public string Id { get; set; } = null!;
+    }
 }
+
