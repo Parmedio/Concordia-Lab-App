@@ -14,7 +14,7 @@ public class DataSynchronizerJob : IJob
     private readonly IConfiguration _configuration;
     private bool _connectionAchieved;
 
-    public DataSynchronizerJob(ILogger<ConnectionChecker> logger, IConfiguration configuration, IServiceScopeFactory scopeFactory)
+    public DataSynchronizerJob(ILogger<DataSynchronizerJob> logger, IConfiguration configuration, IServiceScopeFactory scopeFactory)
     {
         _connectionAchieved = false;
         _logger = logger;

@@ -1,22 +1,16 @@
-
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
-
 using BusinessLogic.APIConsumers.Abstract;
 using BusinessLogic.APIConsumers.Concrete;
 using BusinessLogic.APIConsumers.UriCreators;
 using BusinessLogic.AutomapperProfiles;
 using BusinessLogic.DataTransferLogic.Abstract;
 using BusinessLogic.DataTransferLogic.Concrete;
-
 using ConcordiaLab.AutomapperViewProfile;
-
 using Microsoft.EntityFrameworkCore;
-
 using PersistentLayer.Configurations;
 using PersistentLayer.Repositories.Abstract;
 using PersistentLayer.Repositories.Concrete;
-
 using Polly;
 using Polly.Contrib.WaitAndRetry;
 using Polly.Extensions.Http;
@@ -62,6 +56,7 @@ public class Program
         builder.Services.AddScoped<IApiSender, ApiSender>();
         builder.Services.AddScoped<IApiReceiver, ApiReceiver>();
         builder.Services.AddScoped<DataService>();
+        builder.Services.AddSingleton<HttpClient>();
         builder.Services.AddScoped<IExperimentDownloader, ExperimentDownloader>();
         builder.Services.AddScoped<IExperimentRepository, ExperimentRepository>();
         builder.Services.AddScoped<ICommentRepository, CommentRepository>();
@@ -77,13 +72,6 @@ public class Program
         builder.Services.AddTransient<IUploader, Uploader>();
 
         builder.Services.AddSingleton<IConnectionChecker, ConnectionChecker>();
-        builder.Services.AddSingleton<IConfiguration>(provider =>
-        {
-            return new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: false)
-                .Build();
-        });
         builder.Services.AddScoped<DataSynchronizerJob>();
         builder.Services.AddScoped<MonthlyTriggerJob>();
 
@@ -126,7 +114,7 @@ public class Program
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
-        app.Run();
+       app.Run();
     }
 
     static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
