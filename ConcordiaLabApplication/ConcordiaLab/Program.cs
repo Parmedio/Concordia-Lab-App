@@ -26,6 +26,9 @@ using Polly.Extensions.Http;
 using ReportSender;
 using ReportSender.FileSystemManager.Abstract;
 using ReportSender.FileSystemManager.Concrete;
+using ReportSender.Mail_Models;
+using ReportSender.MailSenderLogic.Abstract;
+using ReportSender.MailSenderLogic.Concrete;
 
 namespace ConcordiaLab;
 
@@ -84,6 +87,10 @@ public class Program
         builder.Services.AddTransient<ICommentDownloader, CommentDownloader>();
         builder.Services.AddTransient<IExperimentDownloader, ExperimentDownloader>();
         builder.Services.AddTransient<IUploader, Uploader>();
+        builder.Services.AddTransient<IMailSender, MailSender>();
+
+        builder.Services.Configure<MailInformation>(builder.Configuration.GetSection("MailInformation"));
+        builder.Services.Configure<List<MailReceivers>>(builder.Configuration.GetSection("MailReceivers"));
 
         var app = builder.Build();
         await app.MigrateAsync();
