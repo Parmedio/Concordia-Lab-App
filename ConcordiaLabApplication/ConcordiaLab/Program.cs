@@ -1,22 +1,16 @@
-
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
-
 using BusinessLogic.APIConsumers.Abstract;
 using BusinessLogic.APIConsumers.Concrete;
 using BusinessLogic.APIConsumers.UriCreators;
 using BusinessLogic.AutomapperProfiles;
 using BusinessLogic.DataTransferLogic.Abstract;
 using BusinessLogic.DataTransferLogic.Concrete;
-
 using ConcordiaLab.AutomapperViewProfile;
-
 using Microsoft.EntityFrameworkCore;
-
 using PersistentLayer.Configurations;
 using PersistentLayer.Repositories.Abstract;
 using PersistentLayer.Repositories.Concrete;
-
 using Polly;
 using Polly.Contrib.WaitAndRetry;
 using Polly.Extensions.Http;
@@ -127,7 +121,7 @@ public class Program
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
-        app.Run();
+       app.Run();
     }
 
     static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
