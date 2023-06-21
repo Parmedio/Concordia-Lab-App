@@ -80,10 +80,9 @@ public class MainProfile : Profile
     public static string FromatScientistName(string completeName)
     {
         int indexOfFirstSpace = completeName.IndexOf(' ');
+
         if (indexOfFirstSpace < 0)
-        {
             return completeName;
-        }
 
         string name = completeName.Substring(0, 1).ToUpper() + ".";
         string surname = completeName.Substring(indexOfFirstSpace + 1);
