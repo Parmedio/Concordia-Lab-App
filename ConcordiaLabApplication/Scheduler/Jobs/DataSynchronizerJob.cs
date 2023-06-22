@@ -1,4 +1,11 @@
-﻿namespace Scheduler.Jobs;
+﻿using BusinessLogic.DataTransferLogic.Abstract;
+
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+
+using Quartz;
+
+namespace Scheduler.Jobs;
 
 public class DataSynchronizerJob : IJob
 {
