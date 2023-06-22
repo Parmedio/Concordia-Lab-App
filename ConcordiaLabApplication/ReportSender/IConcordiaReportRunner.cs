@@ -6,6 +6,6 @@ namespace ReportSender
 {
     public interface IConcordiaReportRunner
     {
-        Task Run(IEnumerable<ExperimentForReportDto> experiments, IEnumerable<ScientistForReportDto> scientists);
+        Task<string> Run(IEnumerable<ExperimentForReportDto> experiments, IEnumerable<ScientistForReportDto> scientists, bool sendMail);
     }
 }

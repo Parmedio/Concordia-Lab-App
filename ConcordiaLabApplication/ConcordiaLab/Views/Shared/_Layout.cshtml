@@ -8,6 +8,10 @@
     var selectedScientistId = ViewData["SelectedScientistId"] as int?;
 
     var scientists = ViewData["Scientists"] as IEnumerable<ViewMScientist> ?? Enumerable.Empty<ViewMScientist>();
+    
+    var thereIsConnection = ViewData["Connection"] as bool?;
+    var connectionLightIndicator = (bool)thereIsConnection ? "light-on" : "light-off";
+    var connectionMessage = (bool)thereIsConnection ? "active connection" : "no connection";
 }
 
 <!DOCTYPE html>
@@ -28,7 +32,10 @@
                     <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                     <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="About" asp-route-scientistId="@selectedScientistId" asp-route-selectedViewMode="@selectedViewMode">About</a>
                 </div>
-                <div class="d-flex justify-content-center align-items-center" style="width: 30%;">
+                <div class="d-flex justify-content-center align-items-center" style="width: 40%;">
+                    <form class="d-flex justify-content-end align-items-center me-1" style="width: 20%;" method="get" action="@Url.Action("DownloadReport", "Home")">
+                        <button class="btn btn-outline-secondary" type="submit" id="downloadButton">get report</button>
+                    </form>
                     <div class="select-box">
                         <h6 class="select-topic">user</h6>
                         <form class="select-dropdown" id="scientist-form" method="get" asp-controller="Home" asp-action="@ViewContext.RouteData.Values["action"]">
@@ -55,6 +62,9 @@
                                 }
                             </select>
                         </form>
+                    </div>
+                    <div class="spia" title="@connectionMessage">
+                        <div class="@connectionLightIndicator"></div>
                     </div>
                 </div>
             </div>
@@ -140,7 +150,7 @@
         align-items: center;
         justify-content: start;
         background-color: whitesmoke;
-        width: 50%;
+        width: 36%;
         border-radius: 4px;
         margin: 4px 6px 4px 0px;
     }
@@ -155,19 +165,39 @@
         width: 60%;
     }
 
-    .user-name {
-        background-color: white;
-        width: 60%;
-        text-align: center;
-        border-radius: 4px;
-        margin: 2px;
-    }
-
     .login {
-        width: 40%;
+        width: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         margin: 2px;
+    }
+
+    .spia {
+        width: 20px;
+        height: 20px;
+        padding: 0px;
+        border-radius: 50%;
+        margin: 0px 12px 0px 6px;
+        background-color: gray;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .light-off {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background-color: darkgreen;
+    }
+
+    .light-on {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background-color: lightgreen;
+        box-shadow: 2px 2px 6px 2px rgba(40, 255, 50, 0.5);
     }
 </style>
