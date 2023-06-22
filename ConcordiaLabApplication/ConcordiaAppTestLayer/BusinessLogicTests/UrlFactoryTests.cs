@@ -20,9 +20,11 @@ namespace ConcordiaAppTestLayer.BusinessLogicTests
 #if DEBUG
             Mock.Get(configuration).Setup(x => x.GetSection("TrelloTestEnvironment").GetSection("idBoard").Value).Returns("64760975fbea80d6ef329079");
             Mock.Get(configuration).Setup(x => x.GetSection("TrelloTestEnvironment").GetSection("Column").GetSection("idToDo").Value).Returns("64760975fbea80d6ef329080");
+            Mock.Get(configuration).Setup(x => x.GetSection("TrelloTestEnvironment").GetSection("Column").GetSection("idInProgress").Value).Returns("64760975fbea80d6ef329081");
 #else
             Mock.Get(configuration).Setup(x => x.GetSection("TrelloIDsDevelopment").GetSection("idBoard").Value).Returns("64760804e47275c707e05d31");
-            Mock.Get(configuration).Setup(x => x.GetSection("TrelloIDsDevelopment").GetSection("List").GetSection("idToDo").Value).Returns("64760804e47275c707e05d38");
+            Mock.Get(configuration).Setup(x => x.GetSection("TrelloIDsDevelopment").GetSection("Column").GetSection("idToDo").Value).Returns("64760804e47275c707e05d38");
+            Mock.Get(configuration).Setup(x => x.GetSection("TrelloIDsDevelopment").GetSection("Column").GetSection("idInProgress").Value).Returns("64760804e47275c707e05d39");
 #endif
             _sut = new UriCreatorFactory(configuration);
         }
