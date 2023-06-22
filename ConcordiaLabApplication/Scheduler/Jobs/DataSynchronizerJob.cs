@@ -1,4 +1,11 @@
-﻿namespace Scheduler.Jobs;
+﻿using BusinessLogic.DataTransferLogic.Abstract;
+
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+
+using Quartz;
+
+namespace Scheduler.Jobs;
 
 public class DataSynchronizerJob : IJob
 {
@@ -11,7 +18,6 @@ public class DataSynchronizerJob : IJob
     {
         _connectionAchieved = false;
         _logger = logger;
-        _configuration = configuration;
         _scopeFactory = scopeFactory;
     }
 
