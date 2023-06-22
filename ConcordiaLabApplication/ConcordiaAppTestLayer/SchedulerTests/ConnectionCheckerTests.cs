@@ -1,4 +1,5 @@
 ﻿using Moq;
+using Moq.Protected;
 using Scheduler;
 using System.Net;
 
@@ -6,42 +7,40 @@ namespace ConcordiaAppTestLayer.SchedulerTests;
 
 public class ConnectionCheckerTests
 {
+    private readonly Mock<HttpMessageHandler> _httpMessageHandlerMock;
     private readonly HttpClient _httpClient;
-    private readonly ConnectionChecker _sut;
+    private readonly IConnectionChecker _sut;
 
     public ConnectionCheckerTests()
     {
-        _httpClient = Mock.Of<HttpClient>();
+        _httpMessageHandlerMock = new Mock<HttpMessageHandler>();
+        _httpClient = new HttpClient(_httpMessageHandlerMock.Object);
         _sut = new ConnectionChecker(_httpClient);
     }
-     
+
     [Fact]
-    public async void Should_Return_True_With_Connection()
+    public async Task Should_Return_True_With_Connection()
     {
-        IHttpClientWrapper httpClient = new HttpClientWrapper();
-        HttpResponseMessage response = await httpClient.GetAsync("https://api.trello.com");
+        _httpMessageHandlerMock
+            .Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK));
 
-        var httpClientMock = new Mock<IHttpClientWrapper>();
-        var expectedResponse = new HttpResponseMessage(HttpStatusCode.OK);
-        httpClientMock
-            .Setup(x => x.GetAsync("https://api.trello.com"))
-            .ReturnsAsync(expectedResponse);
+        var connection = await _sut.CheckConnection();
 
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.True(connection);
     }
-        
+
     [Fact]
     public async void Should_Return_False_With_No_Connection()
     {
-        IHttpClientWrapper httpClient = new HttpClientWrapper();
-        HttpResponseMessage response = await httpClient.GetAsync("https://api.trello.com");
+        _httpMessageHandlerMock
+    .Protected()
+    .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+    .ReturnsAsync(new HttpResponseMessage(HttpStatusCode.BadRequest));
 
-        var httpClientMock = new Mock<IHttpClientWrapper>();
-        var expectedResponse = new HttpResponseMessage(HttpStatusCode.BadRequest);
-        httpClientMock
-            .Setup(x => x.GetAsync("https://api.trello.com"))
-            .ReturnsAsync(expectedResponse);
+        var connection = await _sut.CheckConnection();
 
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.False(connection);
     }
 }

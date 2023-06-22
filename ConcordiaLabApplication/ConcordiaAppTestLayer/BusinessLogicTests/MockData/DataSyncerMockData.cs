@@ -83,10 +83,11 @@ public static class DataSyncerMockData
                 1,
                 "aaa",
                 "esperimento1",
-                null,
-                DateTime.Parse("2023-07-02T21:00:00.000Z")
+                null
+
             )
         {
+            DeadLine = DateTime.Parse("2023-07-02T21:00:00.000Z"),
             LabelId = 3,
             ColumnId = 1,
             ScientistsIds = new List<int>() { 2 }
@@ -96,7 +97,6 @@ public static class DataSyncerMockData
                 2,
                 "bbb",
                 "esperimento2",
-                null,
                 null
             )
         {
@@ -108,7 +108,6 @@ public static class DataSyncerMockData
                 3,
                 "ccc",
                 "esperimento3",
-                null,
                 null
             )
         {
@@ -121,10 +120,10 @@ public static class DataSyncerMockData
                 5,
                 "ddd",
                 "esperimento4",
-                null,
-                DateTime.Parse("2023-07-02T21:00:00.000Z")
+                null
             )
         {
+            DeadLine = DateTime.Parse("2023-07-02T21:00:00.000Z"),
             LabelId = 3,
             ColumnId = 1,
 
@@ -133,7 +132,6 @@ public static class DataSyncerMockData
                 4,
                 "eee",
                 "esperimento5",
-                null,
                 null
             )
         {
@@ -146,18 +144,16 @@ public static class DataSyncerMockData
                0,
                "aaa",
                "esperimento1",
-               null,
-               DateTime.Parse("2023-07-02T21:00:00.000Z")
+               null
            )
         {
-
+            DeadLine = DateTime.Parse("2023-07-02T21:00:00.000Z")
         };
 
         experiment2map = new Experiment(
                 0,
                 "bbb",
                 "esperimento2",
-                null,
                 null
             )
         {
@@ -168,34 +164,14 @@ public static class DataSyncerMockData
                 0,
                 "ccc",
                 "esperimento3",
-                null,
                 null
             )
         {
 
         };
-        experiment4map = new Experiment(
-                0,
-                "ddd",
-                "esperimento4",
-                null,
-                DateTime.Parse("2023-07-02T21:00:00.000Z")
-            )
-        {
+        experiment4map = new Experiment(0, "ddd", "esperimento4", null) { DeadLine = DateTime.Parse("2023-07-02T21:00:00.000Z") };
 
-        };
-
-        experimentAdded = new Experiment(
-                0,
-                "ddd",
-                "esperimento4",
-                null,
-                DateTime.Parse("2023-07-02T21:00:00.000Z")
-            )
-        {
-            LabelId = 3,
-            ColumnId = 1,
-        };
+        experimentAdded = new Experiment(0, "ddd", "esperimento4", null) { DeadLine = DateTime.Parse("2023-07-02T21:00:00.000Z"), LabelId = 3, ColumnId = 1 };
 
 
 

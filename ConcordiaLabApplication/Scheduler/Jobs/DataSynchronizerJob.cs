@@ -1,9 +1,9 @@
 ﻿using BusinessLogic.DataTransferLogic.Abstract;
-using Microsoft.Extensions.Configuration;
+
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+
 using Quartz;
-using ReportSender;
 
 namespace Scheduler.Jobs;
 

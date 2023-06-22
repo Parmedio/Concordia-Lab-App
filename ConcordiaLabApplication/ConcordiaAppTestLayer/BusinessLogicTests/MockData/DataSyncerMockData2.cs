@@ -48,10 +48,10 @@ public class DataSyncerMockData2
             1,
             "aaa",
             "esperimentoVecchio1",
-            "simpleDescription",
-            DateTime.Parse("2022-4-11T12:00:00.000Z")
+            "simpleDescription"
             )
         {
+            DeadLine = DateTime.Parse("2022-4-11T12:00:00.000Z"),
             LabelId = 1,
             Column = new Column(1, "aaa", "To Do"),
             ColumnId = 1,
@@ -62,35 +62,24 @@ public class DataSyncerMockData2
             1,
             "aaa",
             "esperimentoVecchio1",
-            "simpleDescription",
-            DateTime.Parse("2022-4-11T12:00:00.000Z")
+            "simpleDescription"
+
             )
         {
+            DeadLine = DateTime.Parse("2022-4-11T12:00:00.000Z"),
             Comments = new List<Comment>() { LocalComment1OnCard1 },
             LabelId = 1,
             ColumnId = 1,
             ScientistsIds = new List<int>() { 1 }
         };
 
-        LocalExperiment2InToDo = new Experiment(
-            2,
-            "bbb",
-            "esperimentoVecchio2",
-            null,
-            DateTime.Parse("2022-4-11T12:00:00.000Z")
-            )
-        {
-            LabelId = 2,
-            ColumnId = 1,
-            ScientistsIds = new List<int>() { 2 }
-        };
+        LocalExperiment2InToDo = new Experiment(2, "bbb", "esperimentoVecchio2", null) { DeadLine = DateTime.Parse("2022-4-11T12:00:00.000Z"), LabelId = 2, ColumnId = 1, ScientistsIds = new List<int>() { 2 } };
 
         LocalExperiment3InProgress = new Experiment(
             3,
             "ccc",
             "esperimentoVecchio3",
-            "simpleDescription2",
-            null
+            "simpleDescription2"
             )
         {
             LabelId = 3,
@@ -145,7 +134,6 @@ public class DataSyncerMockData2
             0,
             "ddd",
             "esperimentoNuovo1",
-            null,
             null
             )
         {
@@ -158,7 +146,6 @@ public class DataSyncerMockData2
             0,
             "ddd",
             "esperimentoNuovo1",
-            null,
             null
             )
         {
@@ -171,7 +158,6 @@ public class DataSyncerMockData2
             4,
             "ddd",
             "esperimentoNuovo1",
-            null,
             null
             )
         {
@@ -184,38 +170,15 @@ public class DataSyncerMockData2
             0,
             "eee",
             "esperimentoNuovo2",
-            "nuovoEsperimento",
-            DateTime.Parse("2022-4-11T12:00:00.000Z")
+            "nuovoEsperimento"
             )
         {
-
+            DeadLine = DateTime.Parse("2022-4-11T12:00:00.000Z")
         };
 
-        ToBeAddedExperiment5NewWithInfo = new Experiment(
-            0,
-            "eee",
-            "esperimentoNuovo2",
-            "nuovoEsperimento",
-            DateTime.Parse("2022-4-11T12:00:00.000Z")
-            )
-        {
+        ToBeAddedExperiment5NewWithInfo = new Experiment(0, "eee", "esperimentoNuovo2", "nuovoEsperimento") { DeadLine = DateTime.Parse("2022-4-11T12:00:00.000Z"), ColumnId = 1 };
 
-            ColumnId = 1,
-
-        };
-
-        AddedExperiment5NewWithInfo = new Experiment(
-            5,
-            "eee",
-            "esperimentoNuovo2",
-            "nuovoEsperimento",
-            DateTime.Parse("2022-4-11T12:00:00.000Z")
-            )
-        {
-
-            ColumnId = 1,
-
-        };
+        AddedExperiment5NewWithInfo = new Experiment(5, "eee", "esperimentoNuovo2", "nuovoEsperimento") { DeadLine = DateTime.Parse("2022-4-11T12:00:00.000Z"), ColumnId = 1 };
 
 
         TrelloComment1OnCard1 = new TrelloCommentDto()
