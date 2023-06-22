@@ -11,7 +11,7 @@ namespace BusinessLogic.DataTransferLogic.Concrete;
 
 public class ClientService : IClientService
 {
-    private static bool _connectionAvailable = false;
+    public static bool ConnectionIsAvailable { get; private set; } = false;
     private readonly IDataHandlerFactory _dataHandlerFactory;
     private readonly IDataService _dataHandler;
     private readonly IDataSyncer _dataSyncer;
@@ -21,7 +21,7 @@ public class ClientService : IClientService
     public ClientService(IDataHandlerFactory dataHandlerFactory, IDataSyncer dataSyncer, IMapper mapper, IConcordiaReportRunner reportCreator)
     {
         _dataHandlerFactory = dataHandlerFactory;
-        _dataHandler = _dataHandlerFactory.DataServiceFactoryMethod(_connectionAvailable);
+        _dataHandler = _dataHandlerFactory.DataServiceFactoryMethod(ConnectionIsAvailable);
         _dataSyncer = dataSyncer;
         _mapper = mapper;
         _reportCreator = reportCreator;
@@ -31,8 +31,8 @@ public class ClientService : IClientService
     {
         return await Task.Run(() =>
         {
-            _connectionAvailable = connectionState;
-            return _connectionAvailable;
+            ConnectionIsAvailable = connectionState;
+            return ConnectionIsAvailable;
         });
     }
 
@@ -47,17 +47,17 @@ public class ClientService : IClientService
 
     public async Task SyncDataAsyncs()
     {
-        if (_connectionAvailable) await _dataSyncer.SynchronizeAsync();
+        if (ConnectionIsAvailable) await _dataSyncer.SynchronizeAsync();
     }
 
-    public void GenerateReport()
+    public Task<string> GenerateReport(bool sendMail = true)
     {
         var experiments = _dataHandler.GetAllExperiments();
         var scientists = _dataHandler.GetAllScientistsWithExperiments();
-        _reportCreator.Run(
+        return _reportCreator.Run(
             _mapper.Map<IEnumerable<BusinessExperimentDto>,
             IEnumerable<ExperimentForReportDto>>(experiments),
-            scientists);
+            scientists, sendMail);
     }
 
     public IEnumerable<BusinessColumnDto> GetAllColumns()
@@ -80,4 +80,9 @@ public class ClientService : IClientService
 
     public IEnumerable<ScientistForReportDto> GetAllScientistsWithExperiments()
         => _dataHandler.GetAllScientistsWithExperiments();
+
+    public bool GetConnection()
+    {
+        return ConnectionIsAvailable;
+    }
 }

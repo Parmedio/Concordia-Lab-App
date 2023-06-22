@@ -31,10 +31,11 @@ public class ExperimentDownloader : IExperimentDownloader
     public async Task<SyncResult<Experiment>> DownloadExperiments()
     {
         SyncResult<Experiment> AddedExperiments = new SyncResult<Experiment>();
-        var experimentsInToDoColumn = await _receiver.GetAllExperimentsInToDoColumn();
-        if (!experimentsInToDoColumn.IsNullOrEmpty())
+        var experimentsOnTrello = await _receiver.GetAllExperimentsInToDoColumn();
+        var materializedExperimentsOnTrello = experimentsOnTrello?.ToList();
+        if (!materializedExperimentsOnTrello.IsNullOrEmpty())
         {
-            var resultOfSyncNewExperiments = SyncDatabaseWithAllExperimentsInToDoColumn(experimentsInToDoColumn!);
+            var resultOfSyncNewExperiments = SyncDatabaseWithAllExperimentsInToDoColumn(materializedExperimentsOnTrello!);
             AddedExperiments = resultOfSyncNewExperiments;
             return AddedExperiments;
         }

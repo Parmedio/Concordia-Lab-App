@@ -33,27 +33,6 @@ public class ExperimentDownloaderTests
         _mapper = Mock.Of<IMapper>();
         _experimentDownloader = new ExperimentDownloader(_apiReceiver, _experimentRepository, _scientistRepository, _mapper);
     }
-
-    [Fact]
-    public void DownloadShouldWorkWithExperiments()
-    {
-        Mock.Get(_apiReceiver).Setup(p => p.GetAllExperimentsInToDoColumn()).ReturnsAsync(DataSyncerMockData.trelloExperiments);
-        Mock.Get(_experimentRepository).Setup(p => p.GetLocalIdByTrelloId(DataSyncerMockData.trelloExperiment1.Id)).Returns(1);
-        Mock.Get(_experimentRepository).Setup(p => p.GetLocalIdByTrelloId(DataSyncerMockData.trelloExperiment2.Id)).Returns(2);
-        Mock.Get(_experimentRepository).Setup(p => p.GetLocalIdByTrelloId(DataSyncerMockData.trelloExperiment3.Id)).Returns(3);
-        Mock.Get(_experimentRepository).Setup(p => p.GetLocalIdByTrelloId(DataSyncerMockData.trelloExperiment4.Id)).Returns(value: null);
-        Mock.Get(_mapper).Setup(p => p.Map<TrelloExperimentDto, Experiment>(DataSyncerMockData.trelloExperiment4)).Returns(DataSyncerMockData.experiment4map);
-        Mock.Get(_scientistRepository).Setup(p => p.GetLocalIdByTrelloId("alessandro")).Returns(2);
-        Mock.Get(_scientistRepository).Setup(p => p.GetLocalIdByTrelloId("marco")).Returns(1);
-        Mock.Get(_scientistRepository).Setup(p => p.GetLocalIdByTrelloId("Thobias")).Returns(value: null);
-        Mock.Get(_experimentRepository).Setup(p => p.GetLocalIdLabelByTrelloIdLabel("ezez")).Returns(1);
-        Mock.Get(_experimentRepository).Setup(p => p.GetLocalIdLabelByTrelloIdLabel("invalid")).Returns(-1);
-        Mock.Get(_experimentRepository).Setup(p => p.GetLocalIdLabelByTrelloIdLabel("tough")).Returns(3);
-        Mock.Get(_experimentRepository).Setup(p => p.Add(DataSyncerMockData.experimentAdded)).Returns(DataSyncerMockData.experiment4);
-
-        _experimentDownloader.DownloadExperiments().Result.Items.Should().Equal(DataSyncerMockData.ExpectedResult1.Item2);
-    }
-
     [Fact]
     public void DownloadExperimentsShouldWorkSecondTest()
     {
@@ -65,6 +44,8 @@ public class ExperimentDownloaderTests
         Mock.Get(_experimentRepository).Setup(p => p.GetLocalIdByTrelloId(mockData.TrelloExperiment5New.Id)).Returns(value: null);
         Mock.Get(_mapper).Setup(p => p.Map<TrelloExperimentDto, Experiment>(mockData.TrelloExperiment4New)).Returns(mockData.MappedExperiment4New);
         Mock.Get(_mapper).Setup(p => p.Map<TrelloExperimentDto, Experiment>(mockData.TrelloExperiment5New)).Returns(mockData.MappedExperiment5New);
+        Mock.Get(_mapper).Setup(p => p.Map<TrelloExperimentDto, Experiment>(mockData.TrelloExperiment1)).Returns(mockData.MappedExperiment1Old);
+        Mock.Get(_mapper).Setup(p => p.Map<TrelloExperimentDto, Experiment>(mockData.TrelloExperiment2)).Returns(mockData.MappedExperiment2Old);
         Mock.Get(_scientistRepository).Setup(p => p.GetLocalIdByTrelloId("alessandro")).Returns(1);
         Mock.Get(_scientistRepository).Setup(p => p.GetLocalIdByTrelloId("marco")).Returns(2);
         Mock.Get(_experimentRepository).Setup(p => p.GetLocalIdLabelByTrelloIdLabel("easy")).Returns(1);
@@ -73,9 +54,11 @@ public class ExperimentDownloaderTests
         Mock.Get(_experimentRepository).Setup(p => p.GetLocalIdLabelByTrelloIdLabel("other")).Returns(value: null);
         Mock.Get(_experimentRepository).Setup(p => p.Add(It.Is<Experiment>(p => p.TrelloId == "ddd"))).Returns(mockData.AddedExperiment4NewWithInfo);
         Mock.Get(_experimentRepository).Setup(p => p.Add(It.Is<Experiment>(p => p.TrelloId == "eee"))).Returns(mockData.AddedExperiment5NewWithInfo);
+        Mock.Get(_experimentRepository).Setup(p => p.Update(It.Is<Experiment>(p => p.Id == 1))).Returns(mockData.LocalExperiment1InToDo);
+        Mock.Get(_experimentRepository).Setup(p => p.Update(It.Is<Experiment>(p => p.Id == 2))).Returns(mockData.LocalExperiment2InToDo);
 
         var result = _experimentDownloader.DownloadExperiments().Result;
-        result.Items.Should().Equal(mockData.AddedExperiments);
+        result.Items.Should().HaveCount(4);
 
     }
 

@@ -6,6 +6,7 @@ namespace BusinessLogic.DataTransferLogic.Abstract
 {
     public interface IClientService
     {
+        public bool GetConnection();
         public BusinessCommentDto AddComment(BusinessCommentDto businessCommentDto, int scientistId);
         public IEnumerable<BusinessColumnDto> GetAllColumns();
         public IEnumerable<BusinessColumnDto> GetAllColumns(int scientistId);
@@ -17,7 +18,7 @@ namespace BusinessLogic.DataTransferLogic.Abstract
         public BusinessExperimentDto GetExperimentById(int experimentId);
         public BusinessExperimentDto MoveExperiment(BusinessExperimentDto businessExperimentDto);
         public Task SyncDataAsyncs();
-        public void GenerateReport();
+        public Task<string> GenerateReport(bool sendMail = true);
         public Task<bool> UpdateConnectionStateAsync(bool connectionState);
     }
 }

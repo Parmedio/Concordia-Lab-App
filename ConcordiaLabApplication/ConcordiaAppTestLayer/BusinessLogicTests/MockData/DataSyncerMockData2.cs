@@ -18,6 +18,8 @@ public class DataSyncerMockData2
     public TrelloExperimentDto TrelloExperiment2 { get; set; }
     public TrelloExperimentDto TrelloExperiment4New { get; set; }
     public TrelloExperimentDto TrelloExperiment5New { get; set; }
+    public Experiment MappedExperiment2Old { get; set; }
+    public Experiment MappedExperiment1Old { get; set; }
     public Experiment MappedExperiment4New { get; set; }
     public Experiment MappedExperiment5New { get; set; }
     public Experiment ToBeAddedExperiment4NewWithInfo { get; set; }
@@ -128,6 +130,26 @@ public class DataSyncerMockData2
             IdLabels = null,
             TrelloColumnId = "todo",
             Desc = "nuovoEsperimento"
+        };
+
+        MappedExperiment1Old = new Experiment(
+            0,
+            "aaa",
+            "esperimentoVecchio1",
+           " simpleDescription"
+           )
+        {
+
+        };
+
+        MappedExperiment2Old = new Experiment(
+            0,
+            "bbb",
+            "esperimentoVecchio2",
+           null
+           )
+        {
+            DeadLine = DateTime.Parse("2022-4-11T12:00:00.000Z")
         };
 
         MappedExperiment4New = new Experiment(

@@ -1,28 +1,36 @@
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
+
 using BusinessLogic.APIConsumers.Abstract;
 using BusinessLogic.APIConsumers.Concrete;
 using BusinessLogic.APIConsumers.UriCreators;
 using BusinessLogic.AutomapperProfiles;
 using BusinessLogic.DataTransferLogic.Abstract;
 using BusinessLogic.DataTransferLogic.Concrete;
+
 using ConcordiaLab.AutomapperViewProfile;
+
 using Microsoft.EntityFrameworkCore;
+
 using PersistentLayer.Configurations;
 using PersistentLayer.Repositories.Abstract;
 using PersistentLayer.Repositories.Concrete;
+
 using Polly;
 using Polly.Contrib.WaitAndRetry;
 using Polly.Extensions.Http;
+
 using Quartz;
-using Scheduler;
-using Scheduler.Jobs;
+
 using ReportSender;
 using ReportSender.FileSystemManager.Abstract;
 using ReportSender.FileSystemManager.Concrete;
 using ReportSender.Mail_Models;
 using ReportSender.MailSenderLogic.Abstract;
 using ReportSender.MailSenderLogic.Concrete;
+
+using Scheduler;
+using Scheduler.Jobs;
 
 namespace ConcordiaLab;
 
@@ -96,7 +104,7 @@ public class Program
                     .ForJob("MonthlyTriggerJob")
                     .StartNow()
                     .WithSimpleSchedule(builder =>
-                        builder.WithInterval(TimeSpan.FromDays(28))
+                        builder.WithInterval(TimeSpan.FromSeconds(5))
                             .RepeatForever()));
 
             q.AddJob<DataSynchronizerJob>(opts => opts.WithIdentity("DataSynchronizerJob"))
@@ -126,7 +134,7 @@ public class Program
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
-       app.Run();
+        app.Run();
     }
 
     static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()

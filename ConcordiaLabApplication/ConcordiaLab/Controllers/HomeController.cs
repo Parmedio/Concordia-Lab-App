@@ -12,17 +12,17 @@ namespace ConcordiaLab.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private readonly IMapper _mapper;
+        private readonly ILogger<HomeController> _logger;
         private readonly IClientService _clientService;
-        private static readonly List<string> _viewMode = new List<string>() { "status", "priority" };
         private static List<ViewMColumn> _progressStatuses = new List<ViewMColumn>();
         private static List<ViewMScientist> _allScientist = new List<ViewMScientist>();
+        private static readonly List<string> _viewMode = new List<string>() { "status", "priority" };
 
-        public HomeController(ILogger<HomeController> logger, IMapper mapper, IClientService clientService)
+        public HomeController(IMapper mapper, ILogger<HomeController> logger, IClientService clientService)
         {
-            _logger = logger;
             _mapper = mapper;
+            _logger = logger;
             _clientService = clientService;
 
             if (!_progressStatuses.Any())
@@ -57,6 +57,7 @@ namespace ConcordiaLab.Controllers
 
             ViewData["ViewMode"] = _viewMode;
             ViewData["SelectedViewMode"] = "status";
+            ViewData["Connection"] = _clientService.GetConnection();
 
             return View(dashboard);
         }
@@ -86,6 +87,7 @@ namespace ConcordiaLab.Controllers
 
             ViewData["ViewMode"] = _viewMode;
             ViewData["SelectedViewMode"] = "priority";
+            ViewData["Connection"] = _clientService.GetConnection();
 
             return View(priorityList);
         }
@@ -120,6 +122,7 @@ namespace ConcordiaLab.Controllers
 
             ViewData["ExperimentId"] = experimentId;
             ViewData["ExperimentScientistIds"] = detail?.Scientists?.Any() ?? false ? detail.Scientists?.Select(x => x.Id).ToList() : new List<int> { 0 };
+            ViewData["Connection"] = _clientService.GetConnection();
 
             return View(detail);
         }
@@ -187,7 +190,30 @@ namespace ConcordiaLab.Controllers
 
             ViewData["ViewMode"] = _viewMode;
             ViewData["SelectedViewMode"] = selectedViewMode;
+            ViewData["Connection"] = _clientService.GetConnection();
+
             return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DownloadReport()
+        {
+            _logger.LogInformation("Phoenix Download report was called");
+
+            var filePath = await _clientService.GenerateReport(false);
+            FileInfo file = new FileInfo(filePath);
+
+            if (System.IO.File.Exists(filePath))
+            {
+                byte[] fileBytes = System.IO.File.ReadAllBytes(filePath);
+                string fileName = file.Name;
+
+                return File(fileBytes, "application/pdf", fileName);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
