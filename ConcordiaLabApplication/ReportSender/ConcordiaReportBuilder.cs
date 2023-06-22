@@ -11,19 +11,17 @@ namespace ReportSender;
 
 internal class ConcordiaReportBuilder
 {
-    private static int ticketNumber = 0;
-    private static DateOnly currentDate;
-
+    private readonly string _reportId;
+    private readonly DateTime _currentDate;
     public IEnumerable<ExperimentForReportDto> Experiments { get; internal set; }
     public IEnumerable<ScientistForReportDto> Scientists { get; internal set; }
 
-    public ConcordiaReportBuilder(IEnumerable<ExperimentForReportDto> experiments, IEnumerable<ScientistForReportDto> scientists, int reportNumber)
+    public ConcordiaReportBuilder(IEnumerable<ExperimentForReportDto> experiments, IEnumerable<ScientistForReportDto> scientists, string reportId, DateTime currentDate)
     {
+        _reportId = reportId;
         Experiments = experiments;
         Scientists = scientists;
-        var currentDateTime = DateTime.UtcNow;
-        currentDate = new DateOnly(currentDateTime.Year, currentDateTime.Month, currentDateTime.Day);
-        ticketNumber = reportNumber;
+        _currentDate = currentDate;
     }
 
     internal DocumentBuilder Build()
@@ -138,13 +136,13 @@ internal class ConcordiaReportBuilder
                 .AddColumnPercentToTable("", 25);
 
         var rowBuilder = tableBuilder.AddRow();
-        var cellBuilder = rowBuilder.AddCell("Report Number: ");
+        var cellBuilder = rowBuilder.AddCell("Report Id: ");
         cellBuilder
             .SetPadding(0, 3.5f, 0, 8.5f)
             .SetBorderWidth(0, 0, 0, 0.5f)
             .SetBorderStroke(
                 Stroke.None, Stroke.None, Stroke.None, Stroke.Solid);
-        cellBuilder = rowBuilder.AddCell(ticketNumber.ToString());
+        cellBuilder = rowBuilder.AddCell($"{_reportId}");
         cellBuilder
             .SetHorizontalAlignment(HorizontalAlignment.Right)
             .SetPadding(0, 3.5f, 0, 8.5f)
@@ -161,7 +159,7 @@ internal class ConcordiaReportBuilder
                 Color.White, Color.Black, Color.Black, Color.Black)
             .SetBorderStroke(
                 Stroke.Solid, Stroke.None, Stroke.None, Stroke.Solid);
-        cellBuilder = rowBuilder.AddCell(currentDate.ToString("yyyy MM dd"));
+        cellBuilder = rowBuilder.AddCell(_currentDate.ToString("yyyy MM dd"));
         cellBuilder
             .SetHorizontalAlignment(HorizontalAlignment.Right)
             .SetPadding(0, 3.5f, 0, 8.5f)

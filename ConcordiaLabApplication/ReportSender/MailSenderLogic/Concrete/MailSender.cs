@@ -20,7 +20,7 @@ public class MailSender : IMailSender
         _information = information.Value;
         _receivers = receivers.Value;
     }
-    (bool, string) IMailSender.SendEmail(int reportNumber, string attachmentPath)
+    (bool, string) IMailSender.SendEmail(string reportId, string attachmentPath)
     {
         try
         {
@@ -28,7 +28,7 @@ public class MailSender : IMailSender
             MailboxAddress emailFrom = new MailboxAddress(_information.SenderName, _information.SenderEmail);
             emailMessage.From.Add(emailFrom);
             emailMessage.To.AddRange(_receivers.Select(p => new MailboxAddress(p.Name, p.Email)));
-            emailMessage.Subject = $"Report n. {reportNumber.ToString()}";
+            emailMessage.Subject = $"Report n. {reportId}";
             BodyBuilder emailBodyBuilder = new BodyBuilder();
             //FileStream stream = new FileStream(attachmentPath, FileMode.Open, FileAccess.Read);
             emailBodyBuilder.Attachments.Add(attachmentPath);

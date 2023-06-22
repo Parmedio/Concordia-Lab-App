@@ -2,5 +2,5 @@
 
 public interface IFileSystemDocumentManager
 {
-    internal string CheckAndGenerateFileStructure();
+    internal (string path, int count) CheckAndGenerateFileStructure();
 }

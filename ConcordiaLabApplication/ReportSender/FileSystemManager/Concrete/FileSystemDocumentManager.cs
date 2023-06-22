@@ -35,10 +35,11 @@ public class FileSystemDocumentManager : IFileSystemDocumentManager
         }
     }
 
-    string IFileSystemDocumentManager.CheckAndGenerateFileStructure()
+    (string path, int count) IFileSystemDocumentManager.CheckAndGenerateFileStructure()
     {
         DirectoryInfo reportsDirectory = GetWorkingDirectory();
-        return Path.Combine(reportsDirectory.FullName, $"Report_{(reportsDirectory.EnumerateFiles().Count() + 1).ToString()}.pdf");
+        int fileCount = reportsDirectory.EnumerateFiles().Count();
+        return (Path.Combine(reportsDirectory.FullName, $"Report_{(fileCount + 1).ToString()}.pdf"), fileCount);
     }
 
     private DirectoryInfo GetWorkingDirectory()

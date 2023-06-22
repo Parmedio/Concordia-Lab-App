@@ -2,5 +2,5 @@
 
 public interface IMailSender
 {
-    internal (bool, string) SendEmail(int reportNumber, string attachmentPath);
+    internal (bool, string) SendEmail(string reportId, string attachmentPath);
 }

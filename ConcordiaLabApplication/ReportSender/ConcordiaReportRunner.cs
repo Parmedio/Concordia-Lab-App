@@ -10,7 +10,6 @@ namespace ReportSender;
 
 public class ConcordiaReportRunner : IConcordiaReportRunner
 {
-    private static int reportNumber = 0;
     private readonly IFileSystemDocumentManager _systemDocumentManager;
     private readonly ILogger<ConcordiaReportRunner> _logger;
     private readonly IMailSender _mailSender;
@@ -22,21 +21,23 @@ public class ConcordiaReportRunner : IConcordiaReportRunner
         _mailSender = mailSender;
     }
 
-    public async Task<string> Run(IEnumerable<ExperimentForReportDto> experiments, IEnumerable<ScientistForReportDto> scientists, bool sendMail)
+    public async Task<string> Run(IEnumerable<ExperimentForReportDto> experiments, IEnumerable<ScientistForReportDto> scientists, bool sendMail, DateTime currentDate)
     {
+
         _logger.LogInformation("Initiating Report Generation...");
         string path = String.Empty;
         await Task.Run(() =>
         {
-            path = _systemDocumentManager.CheckAndGenerateFileStructure();
-            ConcordiaReportBuilder builder = new ConcordiaReportBuilder(experiments, scientists, reportNumber);
-            reportNumber++;
+            var fileInformations = _systemDocumentManager.CheckAndGenerateFileStructure();
+            path = fileInformations.path;
+            string reportId = $"{currentDate.Year}{currentDate.Day}{currentDate.Month}{fileInformations.count}";
+            ConcordiaReportBuilder builder = new ConcordiaReportBuilder(experiments, scientists, reportId, currentDate);
             builder.Build().Build(path);
 
             if (sendMail)
             {
                 _logger.LogInformation("Sending email");
-                var result = _mailSender.SendEmail(reportNumber, path);
+                var result = _mailSender.SendEmail(reportId, path);
                 if (result.Item1)
                     _logger.LogInformation(result.Item2);
                 else

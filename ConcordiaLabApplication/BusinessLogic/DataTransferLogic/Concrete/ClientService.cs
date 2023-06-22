@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 
 using BusinessLogic.DataTransferLogic.Abstract;
+using BusinessLogic.DataTransferLogic.DateTimeConverter;
 using BusinessLogic.DTOs.BusinessDTO;
 using BusinessLogic.DTOs.ReportDto;
 
@@ -52,12 +53,16 @@ public class ClientService : IClientService
 
     public Task<string> GenerateReport(bool sendMail = true)
     {
+        var currentDate = DateTime.UtcNow;
+        DateTime localCurrentDate = (DateTime)ConverterFromUTCToLocalTime.ConvertToAntartideTimeZone(currentDate)!;
         var experiments = _dataHandler.GetAllExperiments();
         var scientists = _dataHandler.GetAllScientistsWithExperiments();
         return _reportCreator.Run(
             _mapper.Map<IEnumerable<BusinessExperimentDto>,
             IEnumerable<ExperimentForReportDto>>(experiments),
-            scientists, sendMail);
+            scientists,
+            sendMail,
+            localCurrentDate!);
     }
 
     public IEnumerable<BusinessColumnDto> GetAllColumns()
