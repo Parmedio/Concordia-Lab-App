@@ -94,10 +94,11 @@ public class Program
 
             q.AddJob<MonthlyTriggerJob>(opts => opts.WithIdentity("MonthlyTriggerJob"))
                 .AddTrigger(opts => opts
+                    .WithIdentity("MonthlyTrigger")
                     .ForJob("MonthlyTriggerJob")
                     .StartNow()
                     .WithSimpleSchedule(builder =>
-                        builder.WithIntervalInSeconds(5)
+                        builder.WithInterval(TimeSpan.FromDays(28))
                             .RepeatForever()));
 
             q.AddJob<DataSynchronizerJob>(opts => opts.WithIdentity("DataSynchronizerJob"))

@@ -160,8 +160,8 @@ public class ExperimentRepositoryTests
 
         Assert.NotNull(result.Label);
         Assert.Equal(1, result.Label.Id);
-        Assert.Equal("Medium", result.Label.Title);
-        Assert.Equal("647609751afdaf2b05536cd9", result.Label.TrelloId);
+        Assert.Equal("Low", result.Label.Title);
+        Assert.Equal("647609751afdaf2b05536cd7", result.Label.TrelloId);
 
         Assert.NotNull(result.Column);
         Assert.Equal(1, result.Column.Id);
@@ -261,6 +261,6 @@ public class ExperimentRepositoryTests
     public void Should_Return_LabelId_By_ExperimentTrelloId()
     {
         var result = _sut.GetLocalIdLabelByTrelloIdLabel("647609751afdaf2b05536cd9");
-        Assert.Equal(1, result);
+        Assert.Equal(2, result);
     }
 }

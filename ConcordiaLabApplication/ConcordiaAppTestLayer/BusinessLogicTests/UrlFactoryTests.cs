@@ -19,7 +19,7 @@ namespace ConcordiaAppTestLayer.BusinessLogicTests
             Mock.Get(configuration).Setup(x => x.GetSection("TrelloAuthorization").GetSection("Token").Value).Returns("ATTAd93cf67ec0072d821ff32e199156a675ed9301feea0f899df160829b3f14082dAB1E41AD");
 #if DEBUG
             Mock.Get(configuration).Setup(x => x.GetSection("TrelloTestEnvironment").GetSection("idBoard").Value).Returns("64760975fbea80d6ef329079");
-            Mock.Get(configuration).Setup(x => x.GetSection("TrelloTestEnvironment").GetSection("List").GetSection("idToDo").Value).Returns("64760975fbea80d6ef329080");
+            Mock.Get(configuration).Setup(x => x.GetSection("TrelloTestEnvironment").GetSection("Column").GetSection("idToDo").Value).Returns("64760975fbea80d6ef329080");
 #else
             Mock.Get(configuration).Setup(x => x.GetSection("TrelloIDsDevelopment").GetSection("idBoard").Value).Returns("64760804e47275c707e05d31");
             Mock.Get(configuration).Setup(x => x.GetSection("TrelloIDsDevelopment").GetSection("List").GetSection("idToDo").Value).Returns("64760804e47275c707e05d38");
