@@ -40,7 +40,7 @@ public class Uploader : IUploader
             result.Append($"{$" - {experiment.Title}",-50}");
             if (!await _sender.UpdateAnExperiment(experiment.TrelloId, experiment.Column!.TrelloId))
             {
-                result.AppendLine($" => The process failed while uploading experiments. Failed at experiment: {experiment.Title}");
+                result.AppendLine($" => The process failed while uploading experiments. Failed at experiment: {experiment.Title}", true);
                 continue;
             }
             addedExperimentsCount++;
@@ -63,16 +63,26 @@ public class Uploader : IUploader
                 }
                 catch (Exception ex)
                 {
-                    result.AppendLine($" => Upload Failed: {ex.Message}");
+                    result.AppendLine($" => Upload Failed: {ex.Message}", true);
                 }
             }
             else
                 result.AppendLine(" => Upload successful");
         }
         result.AppendLine("======================================");
-        result.AppendLine("Uploaded ended successfully");
-        result.AppendLine($"{addedExperimentsCount} Experiments were updated.");
-        result.AppendLine($"{addedCommentsCount} Comments were added.");
+        if (result._errorCount > 0)
+        {
+            result.AppendLine("Uploaded ended with errors");
+            result.AppendLine($"{addedExperimentsCount} Experiments were updated.");
+            result.AppendLine($"{addedCommentsCount} Comments were added.");
+            result.AppendLine($"{result._errorCount} Errors found while uploading.");
+        }
+        else
+        {
+            result.AppendLine("Uploaded ended successfully");
+            result.AppendLine($"{addedExperimentsCount} Experiments were updated.");
+            result.AppendLine($"{addedCommentsCount} Comments were added.");
+        }
         result.AppendLine("======================================");
         return result;
     }

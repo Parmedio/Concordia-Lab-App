@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+
 using BusinessLogic.APIConsumers.Abstract;
 using BusinessLogic.DataTransferLogic.Abstract;
 using BusinessLogic.DTOs.TrelloDtos;
+
 using Microsoft.IdentityModel.Tokens;
+
 using PersistentLayer.Models;
 using PersistentLayer.Repositories.Abstract;
 
@@ -41,6 +44,7 @@ public class ExperimentDownloader : IExperimentDownloader
 
     private SyncResult<Experiment> SyncDatabaseWithAllExperimentsInToDoColumn(IEnumerable<TrelloExperimentDto> experiments)
     {
+        int errorCount = 0;
         StringBuilder infoMessage = new StringBuilder();
         List<Experiment> addedExperiments = new List<Experiment>();
         infoMessage.AppendLine($"Experiments found on To Do List : {experiments.Count()}");
@@ -60,6 +64,7 @@ public class ExperimentDownloader : IExperimentDownloader
                     {
                         infoMessage.Append($" => One or more of the assignees are not saved on the database, check Trello Members' Ids:\n" +
                             $"Trello members Id: {string.Join(", \n", scientistIdList!.Where(g => g.id == -1).Select(p => $"{p.trelloId}"))}");
+                        errorCount++;
                         continue;
                     }
                     experimentToAdd.ScientistsIds = scientistIdList!.Select(p => p.id);
@@ -79,9 +84,18 @@ public class ExperimentDownloader : IExperimentDownloader
                 infoMessage.AppendLine(" => Already saved in local Database.");
         }
         infoMessage.AppendLine("======================================");
-        infoMessage.AppendLine("Download ended successfully");
-        infoMessage.AppendLine($"{addedExperiments.Count()} Were added.");
+        if (errorCount == 0)
+        {
+            infoMessage.AppendLine("Download ended successfully");
+            infoMessage.AppendLine($"{addedExperiments.Count()} Were added.");
+        }
+        else
+        {
+            infoMessage.AppendLine("Download Ended With Errors");
+            infoMessage.AppendLine($"{addedExperiments.Count()} Experiments Were added.");
+            infoMessage.AppendLine($"{errorCount} Downloads failed due to errors...");
+        }
         infoMessage.AppendLine("======================================");
-        return new SyncResult<Experiment>(addedExperiments, infoMessage);
+        return new SyncResult<Experiment>(addedExperiments, infoMessage, errorCount);
     }
 }

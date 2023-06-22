@@ -60,7 +60,7 @@ public class CommentDownloader : ICommentDownloader
                 commentToAdd.ExperimentId = _experimentRepository.GetLocalIdByTrelloId(comment.Data.Card.Id) ?? -1;
                 if (commentToAdd.ExperimentId == -1)
                 {
-                    result.AppendLine($" => The Experiment with associated Trello ID: {comment.Data.Card.Id} is not saved in the local database. Try Again.");
+                    result.AppendLine($" => The Experiment with associated Trello ID: {comment.Data.Card.Id} is not saved in the local database. Try Again.", true);
                     continue;
                 }
 
@@ -68,15 +68,24 @@ public class CommentDownloader : ICommentDownloader
                 if (newComment is not null)
                     newComments.Add(newComment);
                 else
-                    result.AppendLine($" => Failed To Add comment with text: {commentToAdd.Body} and Id: {commentToAdd.TrelloId} to the Database during the Download Operation from Trello");
+                    result.AppendLine($" => Failed To Add comment with text: {commentToAdd.Body} and Id: {commentToAdd.TrelloId} to the Database during the Download Operation from Trello", true);
                 result.AppendLine(" => Comment saved successfully");
             }
             else
                 result.AppendLine(" => Already saved in local Database.");
         }
         result.AppendLine("======================================");
-        result.AppendLine("Download ended successfully");
-        result.AppendLine($"{newComments.Count()} NEW comments downloaded: ");
+        if (result._errorCount > 0)
+        {
+            result.AppendLine("Download ended with errors");
+            result.AppendLine($"{newComments.Count()} NEW comments downloaded: ");
+            result.AppendLine($"{result._errorCount} Downloads failed.");
+        }
+        else
+        {
+            result.AppendLine("Download ended successfully");
+            result.AppendLine($"{newComments.Count()} NEW comments downloaded: ");
+        }
         result.AppendLine("======================================");
         result.Items = newComments;
         return result;

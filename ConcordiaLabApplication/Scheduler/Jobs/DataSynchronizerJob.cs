@@ -1,21 +1,17 @@
-﻿using BusinessLogic.DataTransferLogic.Abstract;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Quartz;
-using ReportSender;
-
-namespace Scheduler.Jobs;
+﻿namespace Scheduler.Jobs;
 
 public class DataSynchronizerJob : IJob
 {
     private readonly ILogger _logger;
+    private readonly TimeSpan _delay;
     private readonly IServiceScopeFactory _scopeFactory;
     private static bool _connectionAchieved = false;
 
     public DataSynchronizerJob(ILogger<DataSynchronizerJob> logger, IServiceScopeFactory scopeFactory)
     {
+        _connectionAchieved = false;
         _logger = logger;
+        _configuration = configuration;
         _scopeFactory = scopeFactory;
     }
 
