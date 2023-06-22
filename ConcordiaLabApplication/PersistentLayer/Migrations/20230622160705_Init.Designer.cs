@@ -12,11 +12,7 @@ using PersistentLayer.Configurations;
 namespace PersistentLayer.Migrations
 {
     [DbContext(typeof(ConcordiaDbContext))]
-<<<<<<<< HEAD:ConcordiaLabApplication/PersistentLayer/Migrations/20230622152956_Init.Designer.cs
-    [Migration("20230622152956_Init")]
-========
-    [Migration("20230622145120_Init")]
->>>>>>>> 25805ce35f08c038a59f37034071f97ce3dcf0d7:ConcordiaLabApplication/PersistentLayer/Migrations/20230622145120_Init.Designer.cs
+    [Migration("20230622160705_Init")]
     partial class Init
     {
         /// <inheritdoc />
