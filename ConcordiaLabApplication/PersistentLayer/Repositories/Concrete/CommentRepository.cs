@@ -25,6 +25,7 @@ public class CommentRepository : ICommentRepository
     public Comment? GetCommentByTrelloId(string trelloId)
         => _dbContext.Comments.AsNoTracking()
         .Include(c => c.Scientist)
+        .AsSplitQuery()
         .SingleOrDefault(c => c.TrelloId == trelloId);
 
     public Comment? UpdateAComment(int id, string trelloId)

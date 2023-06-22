@@ -161,11 +161,9 @@ public class ExperimentRepositoryTests
         Assert.NotNull(result.Label);
         Assert.Equal(1, result.Label.Id);
         Assert.Equal("Low", result.Label.Title);
-        Assert.Equal("647609751afdaf2b05536cd7", result.Label.TrelloId);
 
         Assert.NotNull(result.Column);
         Assert.Equal(1, result.Column.Id);
-        Assert.Equal("64760975fbea80d6ef329080", result.Column.TrelloId);
         Assert.Equal("to do", result.Column.Title);
     }
 

@@ -20,6 +20,7 @@ public class ScientistRepository : IScientistRepository
         => _dbContext.Scientists
                         .Include(p => p.Experiments!)
                         .ThenInclude(l => l.Column)
+                        .AsSplitQuery()
                         .Where(p => p.Experiments!.Any())
                         .ToList();
 

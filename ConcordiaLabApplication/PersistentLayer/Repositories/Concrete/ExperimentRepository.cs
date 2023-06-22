@@ -34,6 +34,7 @@ public class ExperimentRepository : IExperimentRepository
                       .Include(e => e.Comments)
                       .Include(e => e.Label)
                       .Include(e => e.Column)
+                      .AsSplitQuery()
                       .AsNoTracking();
     }
 
@@ -43,6 +44,7 @@ public class ExperimentRepository : IExperimentRepository
                                      .Include(e => e.Comments)
                                      .Include(e => e.Label)
                                      .Include(e => e.Column)
+                                     .AsSplitQuery()
                                      .AsNoTracking()
                                      .SingleOrDefault(e => e.Id == experimentId);
     }
@@ -52,10 +54,11 @@ public class ExperimentRepository : IExperimentRepository
         var lastComment = _dbContext.Experiments
             .Include(c => c.Comments!)
             .ThenInclude(p => p.Scientist)
+            .AsSplitQuery()
             .Where(p => p.Comments!.Any())?
             .SingleOrDefault(p => p.Id == experimentId)?
             .Comments!
-            .OrderByDescending(p => p.Date)
+            .OrderByDescending(p => p.Date)  
             .FirstOrDefault();
 
         return lastComment?.TrelloId is null ? lastComment : null;
@@ -93,6 +96,7 @@ public class ExperimentRepository : IExperimentRepository
             .Include(p => p.Scientists)
             .Include(p => p.Comments)
             .Include(p => p.Label)
+            .AsSplitQuery()
             .FirstOrDefault(x => x.Id == experimentId);
         if (current != null)
         {
@@ -110,6 +114,7 @@ public class ExperimentRepository : IExperimentRepository
            .Include(p => p.Scientists)
            .Include(p => p.Comments)
            .Include(p => p.Label)
+           .AsSplitQuery()
            .FirstOrDefault(x => x.Id == experiment.Id)!;
 
         current.DeadLine = experiment.DeadLine;
