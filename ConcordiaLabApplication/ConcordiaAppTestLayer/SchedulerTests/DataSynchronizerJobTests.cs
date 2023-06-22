@@ -1,11 +1,15 @@
 ﻿using BusinessLogic.DataTransferLogic.Abstract;
-using Microsoft.Extensions.Logging;
-using Moq;
-using Quartz;
-using Scheduler.Jobs;
-using Scheduler;
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+
+using Moq;
+
+using Quartz;
+
+using Scheduler;
+using Scheduler.Jobs;
 
 namespace ConcordiaAppTestLayer.SchedulerTests;
 public class DataSynchronizerJobTests
@@ -24,7 +28,7 @@ public class DataSynchronizerJobTests
         _clientService = Mock.Of<IClientService>();
         _serviceScopeFactory = Mock.Of<IServiceScopeFactory>();
         _connectionChecker = Mock.Of<IConnectionChecker>();
-        _sut = new DataSynchronizerJob(_logger, _configuration, _serviceScopeFactory);
+        _sut = new DataSynchronizerJob(_logger, _serviceScopeFactory);
     }
 
     [Fact]

@@ -8,6 +8,7 @@ public class UriCreatorFactory : IUriCreatorFactory
     private readonly string _apiKey;
     private readonly string _concordiaToken;
     private readonly string _ToDoColumnId;
+    private readonly string _progressColumnId;
     private readonly string _BoardId;
 
     public UriCreatorFactory(IConfiguration configuration)
@@ -17,16 +18,18 @@ public class UriCreatorFactory : IUriCreatorFactory
         _concordiaToken = _configuration.GetSection("TrelloAuthorization").GetSection("Token").Value!;
 #if DEBUG
         _ToDoColumnId = _configuration.GetSection("TrelloTestEnvironment").GetSection("Column").GetSection("idToDo").Value!;
+        _progressColumnId = _configuration.GetSection("TrelloTestEnvironment").GetSection("Column").GetSection("idInProgress").Value!;
         _BoardId = _configuration.GetSection("TrelloTestEnvironment").GetSection("idBoard").Value!;
 #else
         _ToDoColumnId = _configuration.GetSection("TrelloIDsDevelopment").GetSection("Column").GetSection("idToDo").Value!;
+        _progressColumnId = _configuration.GetSection("TrelloIDsDevelopment").GetSection("Column").GetSection("idInProgress").Value!;
         _BoardId = _configuration.GetSection("TrelloIDsDevelopment").GetSection("idBoard").Value!;
 #endif
     }
 
     public string GetAllCardsOnToDoColumn()
         => $"lists/{_ToDoColumnId}/cards?{GetBaseAuth()}";
- 
+
     public string GetAllCommentsOnABoard()
         => $"boards/{_BoardId}/actions?filter=commentCard&{GetBaseAuth()}";
 
@@ -38,4 +41,7 @@ public class UriCreatorFactory : IUriCreatorFactory
 
     private string GetBaseAuth()
         => $"key={_apiKey}&token={_concordiaToken}";
+
+    public string GetAllCardsOnProgressColumn()
+        => $"lists/{_progressColumnId}/cards?{GetBaseAuth()}";
 }

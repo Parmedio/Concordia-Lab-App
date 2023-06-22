@@ -65,9 +65,9 @@ namespace PersistentLayer.Migrations
                     TrelloId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DeadLine = table.Column<DateTime>(type: "datetime2", nullable: true),
                     LabelId = table.Column<int>(type: "int", nullable: true),
-                    ColumnId = table.Column<int>(type: "int", nullable: false)
+                    ColumnId = table.Column<int>(type: "int", nullable: false),
+                    DeadLine = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {

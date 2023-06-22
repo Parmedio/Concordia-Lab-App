@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+
 using PersistentLayer.Configurations;
 using PersistentLayer.Models;
 using PersistentLayer.Repositories.Abstract;
@@ -101,5 +102,23 @@ public class ExperimentRepository : IExperimentRepository
             current.Column = _dbContext.Columns.SingleOrDefault(p => p.Id == current.ColumnId)!;
         }
         return current;
+    }
+
+    public Experiment? Update(Experiment experiment)
+    {
+        var current = _dbContext.Experiments
+           .Include(p => p.Scientists)
+           .Include(p => p.Comments)
+           .Include(p => p.Label)
+           .FirstOrDefault(x => x.Id == experiment.Id)!;
+
+        current.DeadLine = experiment.DeadLine;
+        current.LabelId = experiment.LabelId;
+        current.Scientists = experiment.Scientists;
+        current.ScientistsIds = experiment.ScientistsIds;
+
+        _dbContext.Update(current);
+        _dbContext.SaveChanges();
+        return experiment;
     }
 }

@@ -53,7 +53,7 @@ public class DataServiceTests
 
         Scientist scientistWithId2 = new Scientist(2, "TrelloToken", "TrelloMemberId", "Giovanni");
         BusinessScientistDto businessScientistDto = new BusinessScientistDto() { Id = 2, Name = "Giovanni", TrelloToken = "TrelloToken" };
-        Experiment experimentThatContainsComment = new Experiment(1, "TrelloCardId", "Esperimento di Prova", null, null);
+        Experiment experimentThatContainsComment = new Experiment(1, "TrelloCardId", "Esperimento di Prova", null);
 
         Mock.Get(_mapper).Setup(p => p.Map<Comment>(bcomment1)).Returns(comment1);
         comment1.Scientist = scientistWithId2;
