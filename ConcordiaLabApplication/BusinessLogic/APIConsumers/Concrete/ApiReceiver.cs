@@ -19,7 +19,8 @@ public class ApiReceiver : IApiReceiver
     {
         var client = _httpClientFactory.CreateClient("ApiConsumer");
         var response = await client.GetFromJsonAsync<IEnumerable<TrelloExperimentDto>?>(_uriCreator.GetAllCardsOnToDoColumn());
-        return response;
+        var responseFromProgress = await client.GetFromJsonAsync<IEnumerable<TrelloExperimentDto>?>(_uriCreator.GetAllCardsOnProgressColumn());
+        return response?.Union(responseFromProgress ?? new List<TrelloExperimentDto> { });
     }
 
     public async Task<IEnumerable<TrelloCommentDto>?> GetAllComments()

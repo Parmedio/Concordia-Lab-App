@@ -12,7 +12,7 @@ using PersistentLayer.Configurations;
 namespace PersistentLayer.Migrations
 {
     [DbContext(typeof(ConcordiaDbContext))]
-    [Migration("20230621132323_Init")]
+    [Migration("20230622101032_Init")]
     partial class Init
     {
         /// <inheritdoc />

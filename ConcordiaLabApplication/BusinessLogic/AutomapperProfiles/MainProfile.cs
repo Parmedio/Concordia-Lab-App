@@ -76,8 +76,11 @@ public class MainProfile : Profile
                     0,
                     src.Id,
                     src.Name,
-                    src.Desc,
-                    src.Due.ConvertToAntartideTimeZone()));
+                    src.Desc
+                    )
+            {
+                DeadLine = src.Due.ConvertToAntartideTimeZone()
+            });
 
         CreateMap<BusinessScientistDto, ScientistInExperimentForReportDto>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
