@@ -143,9 +143,9 @@ namespace PersistentLayer.Migrations
                 columns: new[] { "Id", "Title", "TrelloId" },
                 values: new object[,]
                 {
-                    { 1, "to do", "64760975fbea80d6ef329080" },
-                    { 2, "in progress", "64760975fbea80d6ef329081" },
-                    { 3, "completed", "64760975fbea80d6ef329082" }
+                    { 1, "to do", "64760804e47275c707e05d38" },
+                    { 2, "in progress", "64760804e47275c707e05d39" },
+                    { 3, "completed", "64760804e47275c707e05d3a" }
                 });
 
             migrationBuilder.InsertData(

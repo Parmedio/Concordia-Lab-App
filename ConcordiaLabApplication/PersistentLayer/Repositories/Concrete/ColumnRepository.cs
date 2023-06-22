@@ -20,7 +20,7 @@ public class ColumnRepository : IColumnRepository
             .Include(l => l.Experiments!)
                 .ThenInclude(l => l.Comments)
             .Include(l => l.Experiments!)
-                .ThenInclude(e => e.Label).AsEnumerable();
+                .ThenInclude(e => e.Label).AsSplitQuery().AsEnumerable();
         return allColumns;
     }
 
@@ -43,6 +43,7 @@ public class ColumnRepository : IColumnRepository
             .Include(l => l.Experiments!)
                 .ThenInclude(e => e.Label)
             .AsNoTracking()
+            .AsSplitQuery()
             .ToList();
 
         var filteredColumns = allColumns.Select(column =>

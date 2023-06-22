@@ -12,7 +12,7 @@ using PersistentLayer.Configurations;
 namespace PersistentLayer.Migrations
 {
     [DbContext(typeof(ConcordiaDbContext))]
-    [Migration("20230622124943_Init")]
+    [Migration("20230622145120_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -65,19 +65,19 @@ namespace PersistentLayer.Migrations
                         {
                             Id = 1,
                             Title = "to do",
-                            TrelloId = "64760975fbea80d6ef329080"
+                            TrelloId = "64760804e47275c707e05d38"
                         },
                         new
                         {
                             Id = 2,
                             Title = "in progress",
-                            TrelloId = "64760975fbea80d6ef329081"
+                            TrelloId = "64760804e47275c707e05d39"
                         },
                         new
                         {
                             Id = 3,
                             Title = "completed",
-                            TrelloId = "64760975fbea80d6ef329082"
+                            TrelloId = "64760804e47275c707e05d3a"
                         });
                 });
 

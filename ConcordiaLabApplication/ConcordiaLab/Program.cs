@@ -17,7 +17,6 @@ using Polly.Extensions.Http;
 using Quartz;
 using Scheduler;
 using Scheduler.Jobs;
-
 using ReportSender;
 using ReportSender.FileSystemManager.Abstract;
 using ReportSender.FileSystemManager.Concrete;
@@ -94,7 +93,6 @@ public class Program
 
             q.AddJob<MonthlyTriggerJob>(opts => opts.WithIdentity("MonthlyTriggerJob"))
                 .AddTrigger(opts => opts
-                    .WithIdentity("MonthlyTrigger")
                     .ForJob("MonthlyTriggerJob")
                     .StartNow()
                     .WithSimpleSchedule(builder =>
