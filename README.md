@@ -1,22 +1,15 @@
 # LabManagerApp
 
-Create an application that:
-- Retrieve and send informations to a Trello Board using Trello's Api.
-- Is able to communicate with the API in the limited time in which the satellite is available to the station.
-- Allows scientists to interact with a custom view of the board even when the connection is not available.
-- Scientists should be able to update the experiments' status at all times.
-- (*Optional*) Scientists should be able to obtain a report of their projects' current status, such as a percentage of the work done.
-  
-Time-Estimation
-- Architectural Design (1/6/2023)
-- Trello Api Testing / Studying (2/6/2023) (AFerlu)
-- Database (2/6/2023) (GCe)
-- Repository + Test (7/6/2023) (GCe)
-- Dtos (Wait Trello And DB) (7/6/2023) (MarcoB)
-- ApiController (Testare Metodi Endpoint API nel controller) (7/6) (AFerlu)
-- Automapper (8/6) (MarcoB)
-- ConnectionChecker (11/6) (AFerlu)
-- Services + Testing (10/6) (GCe)
-- Views (13/6) (MarcoB)
-- Controllers (17/6/2023) -- DeploymentVersionTesting
--- (22/6) Release
+La Stazione Concordia, centro di ricerca internazionale situato in antartide, ha richiesto una applicazione per 
+gestire lo scambio di informazioni tra la comunità scientifica internazionale e il gruppo di ricerca presso la 
+base scientifica, l’applicazione permetterà di:
+
+- dare visibilità circa l’avanzamento degli esperimenti a livello macroscopico
+- gestire a livello puntuale ogni songolo esperimento, con la possiblità di lasciare commenti e modificare 
+lo stato di avanzamento
+
+L’applicazione sarà fruibile dal personale della base scientifica con dei tablet, strumento con il quale possono 
+sia consultare che fare modifiche agli esperimenti.
+L’applicazione dovrà altresì gestire la conciliazione dei dati tra le richieste sugli esperimenti che arrivano dalla csi
+e l’aggiornamento degli stessi da parte dei ricercatori della stazione perché la connessione internet (fornita 
+tramite satellite) è disponibilie per un lasso di tempo breve durante il giorno.
